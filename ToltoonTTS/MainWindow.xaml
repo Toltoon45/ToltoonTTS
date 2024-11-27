@@ -1,0 +1,145 @@
+﻿<Window x:Class="ToltoonTTS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToltoonTTS"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="684" Closing="Window_Closing" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="67*"/>
+            <ColumnDefinition Width="161*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Initialized="StackPanel_Initialized" Orientation="Horizontal" Grid.ColumnSpan="2">
+            <TabControl x:Name="TabControlMainWindow" MinWidth="450">
+                <TabItem x:Name="TabItemConnection" Header="Подключение">
+                    <StackPanel>
+                        <!-- часть-->
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <PasswordBox x:Name="PasswordboxTwitchApi" Margin="10,0,0,0" VerticalAlignment="Center" Width="120" PasswordChanged="PasswordboxTwitchApi_PasswordChanged"/>
+                                <Label x:Name="LabelTwitchApi" Content="Acess token" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="0,5,0,0" Checked="CheckBoxConnectToTwitch_Checked"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBox x:Name="TextboxTwitchClientId" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="TextBox" Width="120" TextChanged="TextboxTwitchClientId_TextChanged"/>
+                                <Label x:Name="labelClientID" Content="Client ID" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <Button x:Name="ButtonOpenProgramData" Margin="10,0,10,0" Content="Файлы программы" VerticalAlignment="Top" Click="ButtonOpenProgramData_Click"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="TextBox" Width="120" TextChanged="TextboxTwitchNickName_TextChanged"/>
+                                <Label x:Name="labelTwitchNick" Content="Никнейм" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                                
+                            </StackPanel>
+                            <StackPanel x:Name="StackPanelGoodgameConnection" Orientation="Horizontal" Margin="10,0,0,0">
+                                <TextBox x:Name="TextBoxGoodgameLogin" Width="120" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBoxGoodgameLogin_TextChanged"></TextBox>
+                                <Label x:Name="LabelGoodgameLogin" Content="GG логин" ></Label>
+                                <CheckBox x:Name="CheckBoxConnectToGoodgame" Content="Подключиться к GoodGame" Margin="0,5,0,0" Checked="CheckBoxConnectToGoodgame_Checked"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,10,10,10">
+                            <Button x:Name="buttonSaveJsonProfile" Content="Сохранить" Margin="10,0,0,0" Click="buttonSaveJsonProfile_Click" MouseEnter="buttonSaveJsonProfile_MouseEnter" MouseLeave="buttonSaveJsonProfile_MouseLeave"></Button>
+                            <TextBox x:Name="textboxJsonProfileNameToSave" Width="80" Height="20" Margin="10,0,0,0"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <Button x:Name="buttonLoadJsonProfile" Content="Загрузить" Margin="10,0,5,0" Click="buttonLoadJsonProfile_Click" MouseEnter="buttonLoadJsonProfile_MouseEnter" MouseLeave="buttonLoadJsonProfile_MouseLeave"/>
+                            <ComboBox x:Name="comboBoxProfileSelect" Width="80" Margin="10,0,0,0" SelectionChanged="comboBoxProfileSelect_SelectionChanged"></ComboBox>
+                            <Button x:Name="ButtonDeleteProfile" Content="Удалить" Margin="10,0,0,0" MouseEnter="ButtonDeleteProfile_MouseEnter" MouseLeave="ButtonDeleteProfile_MouseLeave" Click="ButtonDeleteProfile_Click"></Button>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem x:Name="TabItemTTS" Header="Text to speech">
+                    <StackPanel>
+                        <CheckBox x:Name="checkBoxRemoveEmoji" Content="Удалять эмодзи" Checked="checkBoxRemoveEmoji_Checked" Unchecked="checkBoxRemoveEmoji_Checked" Margin="10,10,0,10"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="comboBoxInstalledVoices" Width="120" HorizontalAlignment="Left" Margin="10,0,0,10" SelectionChanged="comboBoxInstalledVoices_SelectionChanged" ToolTipService.InitialShowDelay="0"/>
+
+                            <Label x:Name="labelInstalledVoices" Content="Установленные голоса"></Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Slider x:Name="sliderTtsSpeedValue" IsSnapToTickEnabled="true" Minimum="-10" Margin="10,0,0,0" Width="200" ValueChanged="sliderTtsSpeedValue_ValueChanged"/>
+                            <Label x:Name="labelTtsSpeedValue" Content="" Margin="10,0,0,0"></Label>
+                            <Label x:Name="labelTtsSpeed" Content="Скорость озвучки текста"></Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Slider x:Name="sliderTtsVolumeValue" IsSnapToTickEnabled="true" Minimum="0" Margin="10,0,0,0" Maximum="100" Width="200" ValueChanged="sliderTtsVolumeValue_ValueChanged"></Slider>
+                            <Label x:Name="labelVolumeValue" Content="" Margin="10,0,0,0"></Label>
+                            <Label x:Name="labelVolume" Content="Громкость" Margin="10,0,0,0"></Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <Label x:Name="LabelTtsDoNotTtsIfStartWith" Content="Не озвучивать, если начинается с" Margin="10,0,0,0"></Label>
+                            <TextBox x:Name="TextBoxTtsDoNotTtsIfStartWith" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxTtsDoNotTtsIfStartWith_TextChanged"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <Label x:Name="LabelSkipMessage" Margin="10,0,0,0" Content="Пропустить одно сообщение"></Label>
+                            <TextBox x:Name="TextBoxSkipMessage" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxSkipMessage_TextChanged"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <Label x:Name="LabelSkipMessageAll" Margin="10,0,0,0" Content="Пропустить все сообщения"></Label>
+                            <TextBox x:Name="TextBoxSkipMessageAll" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxSkipMessageAll_TextChanged"></TextBox>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem x:Name="TabItemIndividualVoices" Header="Индив. голоса">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="ButtonIndividualVoices" Content="Голоса каждому" Margin="10,10,0,10" Click="ButtonIndividualVoices_Click"/>
+                            <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов" Margin="10,10,0,10" Checked="checkBoxVoiceIndividualVoices_Checked"/>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem x:Name="TabItemBlackList" Header="Чёрный список">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="LabelBlackList" Content="Чёрный список пользователей" Width="180" HorizontalAlignment="Left" Margin="0,10,0,0"></Label>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <ListBox x:Name="ListBoxBlackList" Width="150" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Margin="10,0,0,0">
+                                </ListBox>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBox x:Name="TextBoxBlackList" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" Margin="10,10,10,0"/>
+                                    <Button x:Name="ButtonBlackListAdd" Content="Добавить" Margin="10" Click="ButtonBlackListAdd_Click"></Button>
+                                    <Button x:Name="ButtonBlackListDelete" Content="Удалить" Margin="10" Click="ButtonBlackListDelete_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ListBox x:Name="ListBoxWhatToReplace" Margin="10,10,10,0" Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplace_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" MaxHeight="250"/>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                </StackPanel>
+                                <ListBox x:Name="ListBoxWhatToReplaceWith" Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplaceWith_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBox x:Name="TextBoxWhatToReplace" TextWrapping="Wrap" Width="120" Margin="10,10,10,10"/>
+                                    <TextBox x:Name="TextBoxWhatToReplaceWith" TextWrapping="Wrap" Width="120" Margin="10,10,10,10"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Button x:Name="ButtonReplaceWordAdd" Content="Добавить" Margin="10,10,10,10" Click="ButtonReplaceWordAdd_Click"/>
+                                    <Button x:Name="ButtonReplaceWordDelete" Content="Удалить" Margin="10,10,10,10" Click="ButtonReplaceWordDelete_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Margin="10,0,15,0" Content="Что заменять"></Label>
+                                <Label Content="На что заменять"></Label>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+            <StackPanel Orientation="Vertical">
+                <Label x:Name="LabelErrorMessage" Content=""/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="buttonConnect" Content="Connect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchConnect_Click"/>
+                        <Button x:Name="buttonTwitchDisconnect" Content="Disconnect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchDisconnect_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+
+
+
+    </Grid>
+</Window>
