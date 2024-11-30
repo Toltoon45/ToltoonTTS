@@ -14,6 +14,12 @@ namespace ToltoonTTS.Scripts.GoodGame
             LoadContainers.LoadJsonFileIndividualVoicesUserList("goodgame", StackPanelUserIndividualVoicesList);
         }
 
+        internal void UpdateUserList()
+        {
+            StackPanelUserIndividualVoicesList.Children.Clear();
+            LoadContainers.LoadJsonFileIndividualVoicesUserList("goodgame", StackPanelUserIndividualVoicesList);
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;

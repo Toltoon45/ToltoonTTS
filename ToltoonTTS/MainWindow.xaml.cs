@@ -27,7 +27,8 @@ namespace ToltoonTTS
             LoadContainers.ReadJsonProfiles(comboBoxProfileSelect);
             AddVoiceToPool.InstalledVoices = new List<string>();
             TwitchConnection.TwitchBlackList = new ListBox();
-            TwitchConnection.LabelError = LabelErrorMessage;
+            TwitchConnection.LabelTwitchStatusMessage = LabelTwitchStatusMessage;
+            GoodGameConnection.LabelGoodgameStatusMessage = LabelGoodgameStatusMessage;
 
             //загрузка данных в listbox
             ListBoxBlackList = LoadContainers.LoadBlackListUser(ListBoxBlackList, "DataForProgram/BlackList/BlackListUsers.json");
@@ -37,10 +38,21 @@ namespace ToltoonTTS
             TextToSpeech.WhatToReplace = ListBoxWhatToReplace.Items.Cast<string>().ToList();
             TextToSpeech.WhatToReplaceWith = ListBoxWhatToReplaceWith.Items.Cast<string>().ToList();
 
+            Zaglushka();
             foreach (var items in ListBoxBlackList.Items)
             {
                 TwitchConnection.TwitchBlackList.Items.Add(items);
             }
+        }
+        //из-за отсутствия некоторых значений программа может не запуститься
+        private void Zaglushka()
+        {
+            if (comboBoxInstalledVoices.SelectedIndex == -1)
+                comboBoxInstalledVoices.SelectedIndex = 0;
+            if (sliderTtsSpeedValue == null || sliderTtsSpeedValue.Value == 0)
+                sliderTtsVolumeValue.Value = 50;
+            //if (TextBoxTtsDoNotTtsIfStartWith.Text == "" || TextBoxTtsDoNotTtsIfStartWith.Text == null)
+            //    TextBoxTtsDoNotTtsIfStartWith.Text = "!";
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -66,6 +78,7 @@ namespace ToltoonTTS
             Properties.Settings.Default.TextBoxMessageSkipAll = TextBoxSkipMessageAll.Text;
             Properties.Settings.Default.TextBoxGoodgameLogin = TextBoxGoodgameLogin.Text;
             Properties.Settings.Default.CheckBoxConnectToGoodgame = CheckBoxConnectToGoodgame.IsChecked ?? false;
+            Properties.Settings.Default.TextBoxIndividualVoicesChannelPoints = TextBoxIndividualVoicesChannelPoints.Text;
             Properties.Settings.Default.Save();
 
             //сохранение содержимого чёрного списка, замены слов и чёрного списка букв
@@ -89,6 +102,7 @@ namespace ToltoonTTS
             TextBoxSkipMessageAll.Text = Properties.Settings.Default.TextBoxMessageSkipAll;
             TextBoxGoodgameLogin.Text = Properties.Settings.Default.TextBoxGoodgameLogin;
             CheckBoxConnectToGoodgame.IsChecked = Properties.Settings.Default.CheckBoxConnectToGoodgame;
+            TextBoxIndividualVoicesChannelPoints.Text = Properties.Settings.Default.TextBoxIndividualVoicesChannelPoints;
         }
 
         private async void buttonTwitchConnect_Click(object sender, RoutedEventArgs e)
@@ -98,7 +112,11 @@ namespace ToltoonTTS
                 //синглтон подключения твича
                 TwitchConnection TClient = TwitchConnection.Instance;
             }
-            GoodGameConnection.GoodGameConnect(TextBoxGoodgameLogin.Text);
+            if (CheckBoxConnectToGoodgame.IsChecked == true)
+            {
+                GoodGameConnection.GoodGameConnect(TextBoxGoodgameLogin.Text);
+            }
+                
 
 
 
@@ -185,6 +203,7 @@ namespace ToltoonTTS
                     TextBoxSkipMessageAll.Text = jsonFile["MessageSkipAll"].ToString();
                     TextBoxGoodgameLogin.Text = jsonFile["goodgameLogin"].ToString();
                     CheckBoxConnectToGoodgame.IsChecked = (bool)jsonFile["checkboxConnectToGoodgame"];
+                    TextBoxIndividualVoicesChannelPoints.Text = jsonFile["twitchChannelPointsIndividualVoiceChange"].ToString();
                 }
                 catch { }
 
@@ -411,6 +430,16 @@ namespace ToltoonTTS
         private void CheckBoxConnectToGoodgame_Checked(object sender, RoutedEventArgs e)
         {
             SaveContainers.JsonCheckBoxConnectToGoodgame = CheckBoxConnectToTwitch.IsChecked ?? false;
+        }
+        private void HyperLinkTwitchGetTokens(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("explorer","https://twitchtokengenerator.com/");
+        }
+
+        private void TextBoxIndividualVoicesChannelPoints_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SaveContainers.JsonTextBoxIndividualVoicesChannelPoints = TextBoxIndividualVoicesChannelPoints.Text;
+            TwitchConnection.ChangeVoiceChannelPointsRewardName = TextBoxIndividualVoicesChannelPoints.Text;
         }
     }
 }

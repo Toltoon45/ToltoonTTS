@@ -104,7 +104,7 @@ namespace ToltoonTTS.Scripts
                     newPanel.Children.Add(textBoxVolume);
                     newPanel.Children.Add(textBoxSpeed);
                     newPanel.Children.Add(buttonDelete);
-                    newPanel.Children.Add(textBoxYourVoiceName);
+                    //newPanel.Children.Add(textBoxYourVoiceName);
                     stackPanel.Children.Add(newPanel);
 
                     elementIndex++;
@@ -140,42 +140,43 @@ namespace ToltoonTTS.Scripts
 
         public static void LoadJsonFileIndividualVoicesUserList(string platform, StackPanel stackPanel)
         {
-            
-            string filePath = platform switch
+            try
             {
-                "twitch" => $@"DataForProgram/IndividualVoices/TwitchIndividualVoices.json",
-                "goodgame" => $@"DataForProgram/IndividualVoices/GoodgameIndividualVoices.json",
-                _ => throw new ArgumentException("Неподдерживаемая платформа", nameof(platform))
-            };
-            JArray jsonArray = JArray.Parse(File.ReadAllText(filePath));
-            var sortedItems = jsonArray.OrderBy(item => (string)item["Nickname"]).ToArray();
-            foreach (JObject item in sortedItems)
-            {
-                StackPanel newStackPanel = new StackPanel
+                string filePath = platform switch
                 {
-                    Orientation = Orientation.Horizontal,
+                    "twitch" => $@"DataForProgram/IndividualVoices/TwitchIndividualVoices.json",
+                    "goodgame" => $@"DataForProgram/IndividualVoices/GoodgameIndividualVoices.json",
+                    _ => throw new ArgumentException("Неподдерживаемая платформа", nameof(platform))
                 };
-                string nickname = (string)item["Nickname"];
-                string voice = (string)item["Voice"];
+                JArray jsonArray = JArray.Parse(File.ReadAllText(filePath));
+                var sortedItems = jsonArray.OrderBy(item => (string)item["Nickname"]).ToArray();
+                foreach (JObject item in sortedItems)
+                {
+                    StackPanel newStackPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                    };
+                    string nickname = (string)item["Nickname"];
+                    string voice = (string)item["Voice"];
 
-                Label nicknameLabel = new Label
-                {
-                    Content = nickname,
-                    Margin = new System.Windows.Thickness(10),
-                    HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
-                    Width = 100
-                };
-                ComboBox voiceCombobox = new ComboBox
-                {
-                    ItemsSource = TextToSpeech.availableRandomVoices,
-                    SelectedItem = voice,
-                    Height = 25,
-                };
-                Button buttonDelete = new Button();
-                {
-                    buttonDelete.Content = "Удалить";
-                    buttonDelete.Height = 25;
-                    buttonDelete.Margin = new Thickness(10,0,0,0);
+                    Label nicknameLabel = new Label
+                    {
+                        Content = nickname,
+                        Margin = new System.Windows.Thickness(10),
+                        HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                        Width = 100
+                    };
+                    ComboBox voiceCombobox = new ComboBox
+                    {
+                        ItemsSource = TextToSpeech.availableRandomVoices,
+                        SelectedItem = voice,
+                        Height = 25,
+                    };
+                    Button buttonDelete = new Button();
+                    {
+                        buttonDelete.Content = "Удалить";
+                        buttonDelete.Height = 25;
+                        buttonDelete.Margin = new Thickness(10, 0, 0, 0);
 
 
                         buttonDelete.Click += (sender, e) =>
@@ -184,12 +185,15 @@ namespace ToltoonTTS.Scripts
                             var parentStackPanel = currentButton.Parent as StackPanel;
                             stackPanel.Children.Remove(parentStackPanel);
                         };
-                };
-                newStackPanel.Children.Add(nicknameLabel);
-                newStackPanel.Children.Add(voiceCombobox);
-                newStackPanel.Children.Add((Button)buttonDelete);
-                stackPanel.Children.Add(newStackPanel);
+                    };
+                    newStackPanel.Children.Add(nicknameLabel);
+                    newStackPanel.Children.Add(voiceCombobox);
+                    newStackPanel.Children.Add((Button)buttonDelete);
+                    stackPanel.Children.Add(newStackPanel);
+                }
             }
+            catch { }
+
             
         }
     }

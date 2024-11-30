@@ -202,5 +202,17 @@ namespace ToltoonTTS.Properties {
                 this["CheckBoxConnectToGoodgame"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TextBoxIndividualVoicesChannelPoints {
+            get {
+                return ((string)(this["TextBoxIndividualVoicesChannelPoints"]));
+            }
+            set {
+                this["TextBoxIndividualVoicesChannelPoints"] = value;
+            }
+        }
     }
 }

@@ -24,8 +24,19 @@ namespace ToltoonTTS
 
         private void ButtonAddNewVoiceToPool_Click(object sender, RoutedEventArgs e)
         {
-            //добавить сохранение для всех голосов
-            StackPanelAddedVoices.Children.Add(AddVoiceToPool.AddNewVoice(StackPanelAddedVoices));
+            //добавить слот голоса
+            // Добавить слот голоса, если AddNewVoice возвращает не null
+            var newVoiceSlot = AddVoiceToPool.AddNewVoice(StackPanelAddedVoices);
+
+            if (newVoiceSlot != null)
+            {
+                StackPanelAddedVoices.Children.Add(newVoiceSlot);
+            }
+            else
+            {
+                // Выполнить альтернативный код
+                MessageBox.Show("Все голоса заняты", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void IndividualVoicesWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -71,12 +82,13 @@ namespace ToltoonTTS
 
         private void ButtonIndividualVoicesShowTwitchVoicesList_Click(object sender, RoutedEventArgs e)
         {
-            //twitchIndividualVoicesList.UpdateUserList();
+            twitchIndividualVoicesList.UpdateUserList();
             twitchIndividualVoicesList.Show();
         }
 
         private void ButtonIndividualVoicesShowGoodgameVoicesList_Click(object sender, RoutedEventArgs e)
         {
+            goodgameIndividualVoiceList.UpdateUserList();
             goodgameIndividualVoiceList.Show();
         }
     }

@@ -43,7 +43,7 @@ public static class TextToSpeech
         whatPlatformMessageFrom = whatService;
         // Добавляем сообщение в очередь
         messageQueue.Enqueue((message, username));
-        if (DoNotTtsIfStartWith != null)
+        if (!string.IsNullOrEmpty(DoNotTtsIfStartWith))
             if (message.StartsWith(DoNotTtsIfStartWith))
             {
                 return;
@@ -119,33 +119,45 @@ public static class TextToSpeech
                 {
                     targetVoice = GoodGameConnection.goodgameUserVoicesDict.TryGetValue(username, out var voice) ? voice : null;
                 }
-
-                foreach (var item in voiceFullInfo)
+                if (targetVoice != null)
                 {
-                    try
+                    foreach (var item in voiceFullInfo)
                     {
-                        if (targetVoice == item["ComboBoxValue"]?.ToString())
+                        try
                         {
-                            Synth.SelectVoice(item["ComboBoxValue"]?.ToString());
-                            Synth.Volume = Convert.ToInt32(item["TextBoxVoice"]);
-                            Synth.Rate = Convert.ToInt32(item["TextBoxSpeed"]);
-                            Synth.SpeakAsync(erredactedMessage);
-                            break; // После настройки голоса выходим из цикла
+                            if (targetVoice == item["ComboBoxValue"]?.ToString())
+                            {
+                                Synth.SelectVoice(item["ComboBoxValue"]?.ToString());
+                                Synth.Volume = Convert.ToInt32(item["TextBoxVoice"]);
+                                Synth.Rate = Convert.ToInt32(item["TextBoxSpeed"]);
+                                Synth.SpeakAsync(erredactedMessage);
+                                break; // После настройки голоса выходим из цикла
+                            }
                         }
-                    } catch
-                    {
-                        Synth.SelectVoice("Anatol");
-                        Synth.Volume = 0;
-                        Synth.Rate= 0;
-                        Synth.SpeakAsync(erredactedMessage);
-                    }
+                        catch
+                        {
+                            //Synth.SelectVoice(availableRandomVoices[0]);
+                            //Synth.Volume = 0;
+                            //Synth.Rate = 0;
+                            //Synth.SpeakAsync(erredactedMessage);
+                        }
 
+                    }
                 }
+                else
+                {
+                    Synth.SelectVoice(availableRandomVoices[0]);
+                    Synth.Volume = 0;
+                    Synth.Rate = 0;
+                    Synth.SpeakAsync(erredactedMessage);
+                }
+
             }
             else
             {
                 try
                 {
+                    var installedVoices = Synth.GetInstalledVoices();
                     Synth.Rate = TtsSpeed;
                     Synth.Volume = TtsVolume;
                     Synth.SelectVoice(TtsVoiceName);

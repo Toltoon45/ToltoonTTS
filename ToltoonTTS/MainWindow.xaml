@@ -20,13 +20,16 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <PasswordBox x:Name="PasswordboxTwitchApi" Margin="10,0,0,0" VerticalAlignment="Center" Width="120" PasswordChanged="PasswordboxTwitchApi_PasswordChanged"/>
-                                <Label x:Name="LabelTwitchApi" Content="Acess token" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <Label x:Name="LabelTwitchApi"  VerticalAlignment="Center" Margin="0,0,5,0">
+                                    <Hyperlink Click="HyperLinkTwitchGetTokens">Access Token</Hyperlink>
+                                </Label>
                                 <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="0,5,0,0" Checked="CheckBoxConnectToTwitch_Checked"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <TextBox x:Name="TextboxTwitchClientId" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="TextBox" Width="120" TextChanged="TextboxTwitchClientId_TextChanged"/>
-                                <Label x:Name="labelClientID" Content="Client ID" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <Button x:Name="ButtonOpenProgramData" Margin="10,0,10,0" Content="Файлы программы" VerticalAlignment="Top" Click="ButtonOpenProgramData_Click"/>
+                                <Label x:Name="labelClientID" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Hyperlink Click="HyperLinkTwitchGetTokens">Client ID</Hyperlink>
+                                </Label>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="TextBox" Width="120" TextChanged="TextboxTwitchNickName_TextChanged"/>
@@ -88,6 +91,11 @@
                             <Button x:Name="ButtonIndividualVoices" Content="Голоса каждому" Margin="10,10,0,10" Click="ButtonIndividualVoices_Click"/>
                             <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов" Margin="10,10,0,10" Checked="checkBoxVoiceIndividualVoices_Checked"/>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <Label x:Name="LabelIndividualVoicesChannelPoints" Content="Название команды за баллы канала для смены голоса" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)"></Label>
+                            <TextBox x:Name="TextBoxIndividualVoicesChannelPoints" TextWrapping="Wrap" Width="120" Margin="0,5,0,10" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)" TextChanged="TextBoxIndividualVoicesChannelPoints_TextChanged" />
+                        </StackPanel>
+                        
                     </StackPanel>
                 </TabItem>
                 <TabItem x:Name="TabItemBlackList" Header="Чёрный список">
@@ -128,11 +136,15 @@
                 </TabItem>
             </TabControl>
             <StackPanel Orientation="Vertical">
-                <Label x:Name="LabelErrorMessage" Content=""/>
+                <Label x:Name="LabelTwitchStatusMessage"></Label>
+                <Label x:Name="LabelGoodgameStatusMessage"></Label>
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="buttonConnect" Content="Connect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchConnect_Click"/>
                         <Button x:Name="buttonTwitchDisconnect" Content="Disconnect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchDisconnect_Click"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <Button x:Name="ButtonOpenProgramData" Margin="15,10,10,0" Content="Файлы программы" VerticalAlignment="Top" Click="ButtonOpenProgramData_Click"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

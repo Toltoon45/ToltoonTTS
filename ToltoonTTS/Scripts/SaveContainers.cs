@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
+using ToltoonTTS.Scripts.GoodGame;
 
 namespace ToltoonTTS.Scripts
 {
@@ -24,6 +25,7 @@ namespace ToltoonTTS.Scripts
         public static string? JsonTextBoxGoodgamePassword;
         public static bool? JsonCheckBoxConnectToGoodgame;
         private const string DefaultJsonContent = "[]";
+        public static string? JsonTextBoxIndividualVoicesChannelPoints; 
 
         private static readonly string ProfilesDirectory = "DataForProgram/Profiles";
 
@@ -45,7 +47,8 @@ namespace ToltoonTTS.Scripts
                 MessageSkipAll = JsonMessageSkipAll,
                 goodgameLogin = JsonTextBoxGoodgameLogin,
                 goodgamePassword = JsonTextBoxGoodgamePassword,
-                checkboxConnectToGoodgame = JsonCheckBoxConnectToGoodgame
+                checkboxConnectToGoodgame = JsonCheckBoxConnectToGoodgame,
+                twitchChannelPointsIndividualVoiceChange = JsonTextBoxIndividualVoicesChannelPoints
             };
 
             string filePath = Path.Combine(ProfilesDirectory, $"{fileName}.json");
@@ -132,7 +135,7 @@ namespace ToltoonTTS.Scripts
             var jsonData = JsonSerializer.Serialize(stackPanelsData, new JsonSerializerOptions { WriteIndented = true });
 
             File.WriteAllText(filePath, jsonData);
-            //TextToSpeech.voiceFullInfo = JArray.Parse(File.ReadAllText(filePath));
+            TextToSpeech.voiceFullInfo = JArray.Parse(File.ReadAllText(filePath));
             
         }
 
@@ -176,6 +179,8 @@ namespace ToltoonTTS.Scripts
 
         public static void JsonIndividualVoicesListClosing(StackPanel stackPanelUserIndividualVoicesList, string platform)
         {
+            if (stackPanelUserIndividualVoicesList.Children.Count == 0)
+                return;
             // Создаем массив для хранения объектов JObject
             JArray jsonArray = new JArray();
 
@@ -208,6 +213,20 @@ namespace ToltoonTTS.Scripts
                 "goodgame" => $@"DataForProgram/IndividualVoices/GoodgameIndividualVoices.json",
                 _ => throw new ArgumentException("Неподдерживаемая платформа", nameof(platform))
             };
+
+            if (platform == "twitch")
+            {
+                TextToSpeech.twitchUserVoicesDict = jsonArray.ToDictionary(
+item => item["Nickname"].ToString(),
+item => item["Voice"].ToString());
+            }
+            if (platform == "goodgame")
+            {
+                GoodGameConnection.goodgameUserVoicesDict = jsonArray.ToDictionary(
+item => item["Nickname"].ToString(),
+item => item["Voice"].ToString());
+            }
+
 
             // Записываем JSON в файл
             File.WriteAllText(filePath, jsonArray.ToString());

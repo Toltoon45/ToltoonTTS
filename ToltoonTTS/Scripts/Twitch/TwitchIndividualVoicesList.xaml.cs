@@ -18,6 +18,7 @@ namespace ToltoonTTS.Scripts.Twitch
         
         public void UpdateUserList()
         {
+            StackPanelUserIndividualVoicesList.Children.Clear();
             LoadContainers.LoadJsonFileIndividualVoicesUserList("twitch", StackPanelUserIndividualVoicesList);
 
         }
@@ -25,6 +26,7 @@ namespace ToltoonTTS.Scripts.Twitch
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
+            TwitchConnection.UpdateTwitchNicknameSet();
             this.Visibility = Visibility.Hidden;
             SaveContainers.JsonIndividualVoicesListClosing(StackPanelUserIndividualVoicesList,"twitch");
             UpdateVoices.LoadVoicesOnProgramStart(true, "twitch");
