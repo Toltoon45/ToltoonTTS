@@ -11,6 +11,9 @@ using ToltoonTTS.Scripts.IndividualVoices;
 using System.Security.Policy;
 using Newtonsoft.Json;
 using System.IO;
+using System.Drawing;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ToltoonTTS.Scripts.GoodGame
 {
@@ -21,10 +24,13 @@ namespace ToltoonTTS.Scripts.GoodGame
         public static Dictionary<string, string> goodgameUserVoicesDict;
         private static JArray newJsonForSaveGoodgame = UpdateVoices.LoadVoicesOnProgramStart(false, "goodgame");
         public static HashSet<string> goodgameNicknameSet = new HashSet<string>(newJsonForSaveGoodgame.Select(item => item["Nickname"]?.ToString()).Where(nick => nick != null));
+
+        public static Label LabelGoodgameStatusMessage = new Label();
+
         public static async Task GoodGameConnect(string login)
         {
             string ggid;
-
+            UpdateGoodgameStatus("GG: Ща ща подожди", System.Windows.Media.Colors.Black);
 
             JArray individualVoicesGoodgame = UpdateVoices.LoadVoicesOnProgramStart(false, "goodgame");
             // Убедитесь, что URL правильный
@@ -58,11 +64,6 @@ namespace ToltoonTTS.Scripts.GoodGame
                     // Формируем сообщение в формате JSON
                     var message = new
                     {
-                        //data = new
-                        //{
-                        //    login = "toltoon45",
-                        //    password = SaveContainers.JsonTextBoxGoodgamePassword
-                        //}
                         type = "join",
                         data = new
                         {
@@ -74,23 +75,24 @@ namespace ToltoonTTS.Scripts.GoodGame
 
                     // Отправляем сообщение на сервер
                     await webSocket.SendAsync(new ArraySegment<byte>(bufferToSend), WebSocketMessageType.Text, true, CancellationToken.None);
-
+                    UpdateGoodgameStatus("GG работает", System.Windows.Media.Colors.Green);
                     // Бесконечный цикл получения сообщений от сервера
                     while (webSocket.State == WebSocketState.Open)
                     {
-                        var bufferToReceive = new byte[1024];
+                        var bufferToReceive = new byte[4096];
                         WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(bufferToReceive), CancellationToken.None);
 
                         // Если сервер закрыл соединение
                         if (result.MessageType == WebSocketMessageType.Close)
                         {
-                            Console.WriteLine("Сервер закрыл соединение.");
+                            UpdateGoodgameStatus("GG: Отключился(", System.Windows.Media.Colors.Red);
                             break;
                         }
 
                         // Преобразуем полученные данные в строку
                         string receivedMessage = Encoding.UTF8.GetString(bufferToReceive, 0, result.Count);
                         JObject jsonObj = JObject.Parse(receivedMessage);
+                        string textUserName2 = jsonObj["data"]?["user_name"]?.ToString();
                         string textValue = jsonObj["data"]?["text"]?.ToString();
                         if (textValue != null)
                         {
@@ -133,6 +135,15 @@ namespace ToltoonTTS.Scripts.GoodGame
                     Console.WriteLine("Ошибка при подключении или получении данных: " + ex.Message);
                 }
             }
+        }
+
+        private static void UpdateGoodgameStatus(string statusText, System.Windows.Media.Color color)
+        {
+            LabelGoodgameStatusMessage.Dispatcher.Invoke(() =>
+            {
+                LabelGoodgameStatusMessage.Content = $"{statusText}";
+                LabelGoodgameStatusMessage.Foreground = new SolidColorBrush(color);
+            });
         }
 
         //чтение и запоминание индивидуальных голосов
