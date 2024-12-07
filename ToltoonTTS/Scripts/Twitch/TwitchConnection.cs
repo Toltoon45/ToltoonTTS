@@ -187,35 +187,41 @@ namespace ToltoonTTS.Scripts.Twitch
             {
                 if (!TwitchBlackList.Items.Contains(e.ChatMessage.Username))
                 {
-                    if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
-                    { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
-                      //чтобы для каждого сервиса логика могла быть своей при необходимости
-                        JObject newUser = new JObject
+                    if (TextToSpeech.availableRandomVoices.Count > 0)
+                    {
+                        if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
+                        { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
+                          //чтобы для каждого сервиса логика могла быть своей при необходимости
+                            JObject newUser = new JObject
                     {
                         { "Nickname", e.ChatMessage.Username },
                         { "Voice", TextToSpeech.availableRandomVoices[random.Next(TextToSpeech.availableRandomVoices.Count)]}
                     };
-                        //добавить нового человека, сохранить список и сразу его прочитать чтобы не было ошибок со сменой голоса пользователем
-                        individualVoicesTwitch.Add(newUser);
-                        individualVoicesTwitch = UpdateVoices.LoadAndSaveIndividualVoices(true, individualVoicesTwitch, "twitch");
-                        twitchNicknameSet.Add(e.ChatMessage.Username);
-                        TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
-                        return;
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(TextToSpeech.MessageSkip) || !string.IsNullOrEmpty(TextToSpeech.MessageSkipAll))
-                        {
-                            if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
-                            {
-                                TextToSpeech.CancelMessages(e.ChatMessage.Message);
-                                return;
-                            }
-                            else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
-                                return;
+                            //добавить нового человека, сохранить список и сразу его прочитать чтобы не было ошибок со сменой голоса пользователем
+                            individualVoicesTwitch.Add(newUser);
+                            individualVoicesTwitch = UpdateVoices.LoadAndSaveIndividualVoices(true, individualVoicesTwitch, "twitch");
+                            twitchNicknameSet.Add(e.ChatMessage.Username);
+                            TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
+                            return;
                         }
-                        TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(TextToSpeech.MessageSkip) || !string.IsNullOrEmpty(TextToSpeech.MessageSkipAll))
+                            {
+                                if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
+                                {
+                                    TextToSpeech.CancelMessages(e.ChatMessage.Message);
+                                    return;
+                                }
+                                else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
+                                    return;
+                            }
+                            TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
+                        }
                     }
+                    else TClient.SendMessage(twitchNick, "Нет доступных голосов в индивидуальных голосах");
+                    return;
+
                 }
             }
             catch

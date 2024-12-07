@@ -2,7 +2,6 @@
 using System.Speech.Synthesis;
 using System.Text.RegularExpressions;
 using System.Collections.Concurrent;
-using ToltoonTTS.Scripts.Twitch;
 using ToltoonTTS.Scripts.GoodGame;
 
 public static class TextToSpeech
@@ -136,10 +135,10 @@ public static class TextToSpeech
                         }
                         catch
                         {
-                            //Synth.SelectVoice(availableRandomVoices[0]);
-                            //Synth.Volume = 0;
-                            //Synth.Rate = 0;
-                            //Synth.SpeakAsync(erredactedMessage);
+                            Synth.SelectVoice(availableRandomVoices[0]);
+                            Synth.Volume = 50;
+                            Synth.Rate = 30;
+                            Synth.SpeakAsync("Заглушка. С говорилкой что-то не так");
                         }
 
                     }
