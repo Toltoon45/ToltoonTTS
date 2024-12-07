@@ -31,6 +31,7 @@ namespace ToltoonTTS
             if (newVoiceSlot != null)
             {
                 StackPanelAddedVoices.Children.Add(newVoiceSlot);
+                SaveAllVoices();
             }
             else
             {
@@ -45,6 +46,12 @@ namespace ToltoonTTS
             IndividualVoicesWindow.Hide();
             SaveContainers.SaveJsonFileIndividualVoices(StackPanelAddedVoices);
             //раньше было var availableVoices = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            SaveAllVoices();
+
+        }
+
+        private void SaveAllVoices()
+        {
             var availableVoices = new List<string>();
             var availableVoicesChangedNames = new List<string>();
             //перебор всех СтакПанелей и перебор всех КомбоБокс внутри СтакПанелей

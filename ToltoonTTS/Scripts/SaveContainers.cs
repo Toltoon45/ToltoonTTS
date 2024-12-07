@@ -25,7 +25,8 @@ namespace ToltoonTTS.Scripts
         public static string? JsonTextBoxGoodgamePassword;
         public static bool? JsonCheckBoxConnectToGoodgame;
         private const string DefaultJsonContent = "[]";
-        public static string? JsonTextBoxIndividualVoicesChannelPoints; 
+        public static string? JsonTextBoxIndividualVoicesChannelPoints;
+        public static string? JsonTextBoxGetUserVoices;
 
         private static readonly string ProfilesDirectory = "DataForProgram/Profiles";
 
@@ -48,7 +49,8 @@ namespace ToltoonTTS.Scripts
                 goodgameLogin = JsonTextBoxGoodgameLogin,
                 goodgamePassword = JsonTextBoxGoodgamePassword,
                 checkboxConnectToGoodgame = JsonCheckBoxConnectToGoodgame,
-                twitchChannelPointsIndividualVoiceChange = JsonTextBoxIndividualVoicesChannelPoints
+                twitchChannelPointsIndividualVoiceChange = JsonTextBoxIndividualVoicesChannelPoints,
+                twitchGetUserVoice = JsonTextBoxGetUserVoices
             };
 
             string filePath = Path.Combine(ProfilesDirectory, $"{fileName}.json");

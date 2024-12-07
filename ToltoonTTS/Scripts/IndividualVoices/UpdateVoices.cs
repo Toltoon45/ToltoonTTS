@@ -19,7 +19,7 @@ namespace ToltoonTTS.Scripts.IndividualVoices
             {
                 TextToSpeech.twitchUserVoicesDict = jsonArray.ToDictionary(
 item => item["Nickname"].ToString(),
-item => item["Voice"].ToString());
+item =>  item["Voice"].ToString());
                 return jsonArray;
             }
             if (platform == "goodgame")

@@ -214,5 +214,17 @@ namespace ToltoonTTS.Properties {
                 this["TextBoxIndividualVoicesChannelPoints"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TextBoxGetUserVoice {
+            get {
+                return ((string)(this["TextBoxGetUserVoice"]));
+            }
+            set {
+                this["TextBoxGetUserVoice"] = value;
+            }
+        }
     }
 }
