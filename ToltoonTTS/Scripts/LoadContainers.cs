@@ -1,11 +1,8 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using ToltoonTTS.Scripts.IndividualVoices;
-using TwitchLib.PubSub.Models.Responses.Messages.AutomodCaughtMessage;
 
 namespace ToltoonTTS.Scripts
 {
