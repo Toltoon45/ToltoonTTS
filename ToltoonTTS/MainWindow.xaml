@@ -5,14 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToltoonTTS"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="684" Closing="Window_Closing" Loaded="Window_Loaded">
+        Title="ToltoonTTS" Height="350" Width="616" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="67*"/>
-            <ColumnDefinition Width="161*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Initialized="StackPanel_Initialized" Orientation="Horizontal" Grid.ColumnSpan="2">
+        <StackPanel Initialized="StackPanel_Initialized" Orientation="Horizontal">
             <TabControl x:Name="TabControlMainWindow" MinWidth="450">
                 <TabItem x:Name="TabItemConnection" Header="Подключение">
                     <StackPanel>
@@ -26,15 +25,15 @@
                                 <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="0,5,0,0" Checked="CheckBoxConnectToTwitch_Checked"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <TextBox x:Name="TextboxTwitchClientId" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="TextBox" Width="120" TextChanged="TextboxTwitchClientId_TextChanged"/>
+                                <TextBox x:Name="TextboxTwitchClientId" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" TextChanged="TextboxTwitchClientId_TextChanged"/>
                                 <Label x:Name="labelClientID" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <Hyperlink Click="HyperLinkTwitchGetTokens">Client ID</Hyperlink>
                                 </Label>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="TextBox" Width="120" TextChanged="TextboxTwitchNickName_TextChanged"/>
+                                <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" TextChanged="TextboxTwitchNickName_TextChanged"/>
                                 <Label x:Name="labelTwitchNick" Content="Никнейм" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
-                                
+
                             </StackPanel>
                             <StackPanel x:Name="StackPanelGoodgameConnection" Orientation="Horizontal" Margin="10,0,0,0">
                                 <TextBox x:Name="TextBoxGoodgameLogin" Width="120" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBoxGoodgameLogin_TextChanged"></TextBox>
@@ -91,11 +90,14 @@
                             <Button x:Name="ButtonIndividualVoices" Content="Голоса каждому" Margin="10,10,0,10" Click="ButtonIndividualVoices_Click"/>
                             <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов" Margin="10,10,0,10" Checked="checkBoxVoiceIndividualVoices_Checked"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
                             <Label x:Name="LabelIndividualVoicesChannelPoints" Content="Название команды за баллы канала для смены голоса" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)"></Label>
                             <TextBox x:Name="TextBoxIndividualVoicesChannelPoints" TextWrapping="Wrap" Width="120" Margin="0,5,0,10" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)" TextChanged="TextBoxIndividualVoicesChannelPoints_TextChanged" />
                         </StackPanel>
-                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="TextBoxGetUserVoices" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10" TextChanged="TextBoxGetUserVoices_TextChanged"></TextBox>
+                            <Label x:Name="LabelGetUserVoice" Content="Команда для чата узнать голос пользователя" ToolTip="![команда] [никнейм]"></Label>
+                        </StackPanel>
                     </StackPanel>
                 </TabItem>
                 <TabItem x:Name="TabItemBlackList" Header="Чёрный список">
@@ -108,28 +110,31 @@
                                 <ListBox x:Name="ListBoxBlackList" Width="150" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Margin="10,0,0,0">
                                 </ListBox>
                                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                    <TextBox x:Name="TextBoxBlackList" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" Margin="10,10,10,0"/>
+                                    <TextBox x:Name="TextBoxBlackList" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,10,10,0"/>
                                     <Button x:Name="ButtonBlackListAdd" Content="Добавить" Margin="10" Click="ButtonBlackListAdd_Click"></Button>
                                     <Button x:Name="ButtonBlackListDelete" Content="Удалить" Margin="10" Click="ButtonBlackListDelete_Click"/>
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <ListBox x:Name="ListBoxWhatToReplace" Margin="10,10,10,0" Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplace_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" MaxHeight="250"/>
+
                                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                </StackPanel>
-                                <ListBox x:Name="ListBoxWhatToReplaceWith" Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplaceWith_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
-                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                    <TextBox x:Name="TextBoxWhatToReplace" TextWrapping="Wrap" Width="120" Margin="10,10,10,10"/>
-                                    <TextBox x:Name="TextBoxWhatToReplaceWith" TextWrapping="Wrap" Width="120" Margin="10,10,10,10"/>
+                                    <StackPanel Orientation="Vertical" >
+                                        <TextBox x:Name="TextBoxWhatToReplace" TextWrapping="Wrap" Width="100" Margin="10,10,10,10"/>
+                                        <ListBox x:Name="ListBoxWhatToReplace"  Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplace_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" MaxHeight="250"/>
+                                    </StackPanel>
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                     <Button x:Name="ButtonReplaceWordAdd" Content="Добавить" Margin="10,10,10,10" Click="ButtonReplaceWordAdd_Click"/>
                                     <Button x:Name="ButtonReplaceWordDelete" Content="Удалить" Margin="10,10,10,10" Click="ButtonReplaceWordDelete_Click"/>
                                 </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBox x:Name="TextBoxWhatToReplaceWith" TextWrapping="Wrap" Width="100" Margin="10,10,10,10"/>
+                                    <ListBox x:Name="ListBoxWhatToReplaceWith" Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplaceWith_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                                </StackPanel>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label Margin="10,0,15,0" Content="Что заменять"></Label>
-                                <Label Content="На что заменять"></Label>
+                                <Label Margin="100,0,15,0" Content="На что заменять"></Label>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
@@ -149,7 +154,7 @@
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-
+        <Label Content="0.9.0" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
 
 
 

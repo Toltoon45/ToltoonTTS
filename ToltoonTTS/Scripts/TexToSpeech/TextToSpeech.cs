@@ -147,8 +147,8 @@ public static class TextToSpeech
                 else
                 {
                     Synth.SelectVoice(availableRandomVoices[0]);
-                    Synth.Volume = 0;
-                    Synth.Rate = 0;
+                    Synth.Volume = 50;
+                    Synth.Rate = 3;
                     Synth.SpeakAsync(erredactedMessage);
                 }
 

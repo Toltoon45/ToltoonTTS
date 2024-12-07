@@ -28,9 +28,14 @@ namespace ToltoonTTS.Scripts.Twitch
             e.Cancel = true;
             TwitchConnection.UpdateTwitchNicknameSet();
             this.Visibility = Visibility.Hidden;
-            SaveContainers.JsonIndividualVoicesListClosing(StackPanelUserIndividualVoicesList,"twitch");
-            UpdateVoices.LoadVoicesOnProgramStart(true, "twitch");
             StackPanelUserIndividualVoicesList.Children.Clear();
+            if (StackPanelUserIndividualVoicesList.Children.Count > 0)
+            {
+                SaveContainers.JsonIndividualVoicesListClosing(StackPanelUserIndividualVoicesList, "twitch");
+                UpdateVoices.LoadVoicesOnProgramStart(true, "twitch");
+            }
+
+
             UpdateUserList();
         }
     }

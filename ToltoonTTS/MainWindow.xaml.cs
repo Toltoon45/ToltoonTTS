@@ -58,7 +58,7 @@ namespace ToltoonTTS
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveEverythingOnClosing();
-            Application.Current.Shutdown();
+            Environment.Exit(0);
         }
 
 
@@ -79,6 +79,7 @@ namespace ToltoonTTS
             Properties.Settings.Default.TextBoxGoodgameLogin = TextBoxGoodgameLogin.Text;
             Properties.Settings.Default.CheckBoxConnectToGoodgame = CheckBoxConnectToGoodgame.IsChecked ?? false;
             Properties.Settings.Default.TextBoxIndividualVoicesChannelPoints = TextBoxIndividualVoicesChannelPoints.Text;
+            Properties.Settings.Default.TextBoxGetUserVoice = TextBoxGetUserVoices.Text;
             Properties.Settings.Default.Save();
 
             //сохранение содержимого чёрного списка, замены слов и чёрного списка букв
@@ -103,6 +104,7 @@ namespace ToltoonTTS
             TextBoxGoodgameLogin.Text = Properties.Settings.Default.TextBoxGoodgameLogin;
             CheckBoxConnectToGoodgame.IsChecked = Properties.Settings.Default.CheckBoxConnectToGoodgame;
             TextBoxIndividualVoicesChannelPoints.Text = Properties.Settings.Default.TextBoxIndividualVoicesChannelPoints;
+            TextBoxGetUserVoices.Text = Properties.Settings.Default.TextBoxGetUserVoice;
         }
 
         private async void buttonTwitchConnect_Click(object sender, RoutedEventArgs e)
@@ -204,6 +206,7 @@ namespace ToltoonTTS
                     TextBoxGoodgameLogin.Text = jsonFile["goodgameLogin"].ToString();
                     CheckBoxConnectToGoodgame.IsChecked = (bool)jsonFile["checkboxConnectToGoodgame"];
                     TextBoxIndividualVoicesChannelPoints.Text = jsonFile["twitchChannelPointsIndividualVoiceChange"].ToString();
+                    TextBoxGetUserVoices.Text = jsonFile["twitchGetUserVoice"].ToString();
                 }
                 catch { }
 
@@ -440,6 +443,12 @@ namespace ToltoonTTS
         {
             SaveContainers.JsonTextBoxIndividualVoicesChannelPoints = TextBoxIndividualVoicesChannelPoints.Text;
             TwitchConnection.ChangeVoiceChannelPointsRewardName = TextBoxIndividualVoicesChannelPoints.Text;
+        }
+
+        private void TextBoxGetUserVoices_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SaveContainers.JsonTextBoxGetUserVoices = TextBoxGetUserVoices.Text;
+            TwitchConnection.GetUserVoiceCommand = TextBoxGetUserVoices.Text;
         }
     }
 }

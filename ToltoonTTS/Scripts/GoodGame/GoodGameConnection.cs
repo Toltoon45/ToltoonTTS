@@ -29,7 +29,6 @@ namespace ToltoonTTS.Scripts.GoodGame
 
         public static async Task GoodGameConnect(string login)
         {
-            string ggid;
             UpdateGoodgameStatus("GG: Ща ща подожди", System.Windows.Media.Colors.Black);
 
             JArray individualVoicesGoodgame = UpdateVoices.LoadVoicesOnProgramStart(false, "goodgame");

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Windows.Controls;
@@ -43,6 +41,7 @@ namespace ToltoonTTS.Scripts.Twitch
         string TwitchUserApi;
 
         public static string ChangeVoiceChannelPointsRewardName;
+        public static string GetUserVoiceCommand;
         //ников будет много, чтобы не пробегаться по каждому
         public static HashSet<string> twitchNicknameSet = new HashSet<string>(newJsonForSaveTwitch.Select(item => item["Nickname"]?.ToString()).Where(nick => nick != null));
 
@@ -113,31 +112,31 @@ namespace ToltoonTTS.Scripts.Twitch
                 UpdateLabelConnectionStatus("Не подключен", System.Windows.Media.Colors.Green);
             }
         }
+
         //команды
 
         private void TClientOcChatCommandReceived(object? sender, OnChatCommandReceivedArgs e)
         {
-            if (e.Command.ChatMessage.Message.StartsWith("!голос"))
+            if (e.Command.ChatMessage.Message.StartsWith(GetUserVoiceCommand) || e.Command.ChatMessage.Message.StartsWith($"!{GetUserVoiceCommand}"))
             {
-                //Добавить вывод голоса X пользователя в чат
-                //string[] parts = e.Command.ChatMessage.Message.Split(' ');
-                //if (parts.Length >= 2)
-                //{
-                //    string nickname = parts[^1];
-                //    try
-                //    {
-                //        foreach (var item in TextToSpeech.twitchUserVoicesDict)
-                //        {
-                //            if (item.Key == nickname)
-                //            {
-                //                //string[] voice = item.Key.Split(' ');
-                //                //TClient.SendMessage(nickname, voice[^1]);
-                //            }
+                //вывод голоса X пользователя в чат
+                string[] parts = e.Command.ChatMessage.Message.Split(' ');
+                if (parts.Length >= 2)
+                {
+                    string nickname = parts[^1].ToLowerInvariant();
+                    try
+                    {
+                        foreach (var item in TextToSpeech.twitchUserVoicesDict)
+                        {
+                            if (item.Key == nickname)
+                            {
+                                TClient.SendMessage(nickname, item.Value);
+                            }
 
-                //    }
-                //    }
-                //    catch { }
-                //}
+                        }
+                    }
+                    catch { }
+                }
 
 
 
@@ -161,7 +160,6 @@ namespace ToltoonTTS.Scripts.Twitch
 
         private void TClientOnDisconnected(object? sender, OnDisconnectedEventArgs e)
         {
-
             TClient.OnDisconnected -= TClientOnDisconnected;
         }
 
@@ -175,7 +173,6 @@ namespace ToltoonTTS.Scripts.Twitch
             {
                 UpdateLabelConnectionStatus("Ошибка при отключении ты тут навечно", System.Windows.Media.Colors.Red);
             }
-
         }
 
         private void TClientOnMessageReceived(object? sender, OnMessageReceivedArgs e)
@@ -209,13 +206,13 @@ namespace ToltoonTTS.Scripts.Twitch
                     {
                         if (!string.IsNullOrEmpty(TextToSpeech.MessageSkip) || !string.IsNullOrEmpty(TextToSpeech.MessageSkipAll))
                         {
-                            if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
-                                return;
-                            else if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
+                            if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
                             {
                                 TextToSpeech.CancelMessages(e.ChatMessage.Message);
                                 return;
                             }
+                            else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
+                                return;
                         }
                         TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
                     }
@@ -244,6 +241,7 @@ namespace ToltoonTTS.Scripts.Twitch
             //не из-за ошибок в коде (провайдер, роскомнадзор, сервера твича) МОЖЕТ не подключаться к пабсабу
             TPubSub.ListenToChannelPoints(TwitchUserId);
             TPubSub.SendTopics(TwitchUserApi, false);
+            TClient.SendMessage("toltoon45", "ПабСаб");
         }
 
         public void Disconnect()
