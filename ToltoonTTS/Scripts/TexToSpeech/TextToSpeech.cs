@@ -127,18 +127,19 @@ public static class TextToSpeech
                             if (targetVoice == item["ComboBoxValue"]?.ToString())
                             {
                                 Synth.SelectVoice(item["ComboBoxValue"]?.ToString());
-                                Synth.Volume = Convert.ToInt32(item["TextBoxVoice"]);
-                                Synth.Rate = Convert.ToInt32(item["TextBoxSpeed"]);
+                                Synth.Volume = Convert.ToInt32(item["TextBoxVoice"] ?? "50");
+                                Synth.Rate = Convert.ToInt32(item["TextBoxSpeed"] ?? "3");
                                 Synth.SpeakAsync(erredactedMessage);
-                                break; // После настройки голоса выходим из цикла
+                                break;
                             }
                         }
                         catch
                         {
                             Synth.SelectVoice(availableRandomVoices[0]);
                             Synth.Volume = 50;
-                            Synth.Rate = 30;
+                            Synth.Rate = 3;
                             Synth.SpeakAsync("Заглушка. С говорилкой что-то не так");
+                            break;
                         }
 
                     }

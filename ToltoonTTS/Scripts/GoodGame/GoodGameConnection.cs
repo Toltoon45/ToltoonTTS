@@ -1,17 +1,11 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Net.WebSockets;
 using System.Text;
-using System.Text.Json;
 using HtmlAgilityPack;
 using ToltoonTTS.Scripts.IndividualVoices;
-using System.Security.Policy;
 using Newtonsoft.Json;
 using System.IO;
-using System.Drawing;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -121,9 +115,8 @@ namespace ToltoonTTS.Scripts.GoodGame
                                 TextToSpeech.Play(textValue, textUserName.ToLower(), "goodgame");
 
                         }
-                        // Можно выполнить какие-либо действия с textValue
-                        //Console.WriteLine("Получено сообщение: " + textValue);
                     }
+
 
                     // Закрытие соединения после завершения работы
                     await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Закрытие соединения", CancellationToken.None);

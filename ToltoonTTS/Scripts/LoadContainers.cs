@@ -3,6 +3,8 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using ToltoonTTS.Scripts.IndividualVoices;
+using ToltoonTTS.Scripts.Twitch;
+using TwitchLib.PubSub.Models.Responses.Messages.AutomodCaughtMessage;
 
 namespace ToltoonTTS.Scripts
 {
@@ -163,29 +165,55 @@ namespace ToltoonTTS.Scripts
                         HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
                         Width = 100
                     };
-                    ComboBox voiceCombobox = new ComboBox
+                    ComboBox voiceCombobox = new ComboBox();
                     {
-                        ItemsSource = TextToSpeech.availableRandomVoices,
-                        SelectedItem = voice,
-                        Height = 25,
+                        voiceCombobox.ItemsSource = TextToSpeech.availableRandomVoices;
+                        voiceCombobox.SelectedItem = voice;
+                        voiceCombobox.Height = 25;
+                        voiceCombobox.SelectionChanged += (sender, e) =>
+                        {
+                            if (platform == "twitch")
+                            {
+                                var currentComboBox = sender as ComboBox;
+
+                                // Получаем родительский StackPanel для текущего ComboBox
+                                var parentStackPanel = currentComboBox?.Parent as StackPanel;
+
+                                if (parentStackPanel != null)
+                                {
+                                    // Получаем Label из первого элемента StackPanel
+                                    var nicknameLabel = parentStackPanel.Children[0] as Label;
+                                    string nickname = nicknameLabel?.Content.ToString();
+
+                                    // Получаем новое выбранное значение из ComboBox
+                                    string newVoice = currentComboBox.SelectedItem?.ToString();
+
+                                    // Проверка на null
+                                    if (!string.IsNullOrEmpty(nickname) && !string.IsNullOrEmpty(newVoice))
+                                    {
+                                        // Обновляем значение в словаре TextToSpeech.twitchUserVoicesDict
+                                        if (TextToSpeech.twitchUserVoicesDict.ContainsKey(nickname))
+                                        {
+                                            // Заменяем старое значение голоса новым
+                                            TextToSpeech.twitchUserVoicesDict[nickname] = newVoice;
+                                        }
+                                    }
+                                }
+                                //TwitchIndividualVoicesList.Use
+                            }
+                        };
                     };
+
                     Button buttonDelete = new Button();
                     {
                         buttonDelete.Content = "Удалить";
                         buttonDelete.Height = 25;
                         buttonDelete.Margin = new Thickness(10, 0, 0, 0);
-
-
-                        buttonDelete.Click += (sender, e) =>
-                        {
-                            var currentButton = sender as Button;
-                            var parentStackPanel = currentButton.Parent as StackPanel;
-                            stackPanel.Children.Remove(parentStackPanel);
-                        };
                     };
                     newStackPanel.Children.Add(nicknameLabel);
                     newStackPanel.Children.Add(voiceCombobox);
-                    newStackPanel.Children.Add((Button)buttonDelete);
+                    //работает не совсем правильно
+                    //newStackPanel.Children.Add((Button)buttonDelete);
                     stackPanel.Children.Add(newStackPanel);
                 }
             }
