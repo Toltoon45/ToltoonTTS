@@ -257,7 +257,7 @@ namespace ToltoonTTS.Scripts.Twitch
             {
                 if (!TwitchBlackList.Items.Contains(e.ChatMessage.Username))
                 {
-                    if (TextToSpeech.availableRandomVoices.Count > 0)
+                    if (TextToSpeech.availableRandomVoices.Count > 0 && TextToSpeech.IndividualVoiceForAll == true)
                     {
                         if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
                         { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
@@ -288,10 +288,14 @@ namespace ToltoonTTS.Scripts.Twitch
                                 else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
                                     return;
                             }
-                            TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
                         }
                     }
-                    else TClient.SendMessage(twitchNick, "Нет доступных голосов в индивидуальных голосах");
+                    else if (TextToSpeech.IndividualVoiceForAll == true) 
+                    { 
+                        TClient.SendMessage(twitchNick, "Нет доступных голосов в индивидуальных голосах");
+                    }
+                    
+                    TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
                     return;
 
                 }
@@ -321,7 +325,7 @@ namespace ToltoonTTS.Scripts.Twitch
             {
                 TPubSub.ListenToChannelPoints(TwitchUserId);
                 TPubSub.SendTopics(TwitchUserApi, false);
-                TClient.SendMessage("toltoon45", "ПабСаб");
+                //TClient.SendMessage("toltoon45", "ПабСаб");
             }
             catch { }
         }

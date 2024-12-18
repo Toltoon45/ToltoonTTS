@@ -7,7 +7,6 @@ using ToltoonTTS.Scripts.IndividualVoices;
 using System.Windows.Media;
 using ToltoonTTS.Scripts.Twitch;
 using ToltoonTTS.Scripts.GoodGame;
-using System.Speech.Synthesis.TtsEngine;
 
 namespace ToltoonTTS
 {
@@ -44,6 +43,7 @@ namespace ToltoonTTS
             {
                 TwitchConnection.TwitchBlackList.Items.Add(items);
             }
+
         }
         //из-за отсутствия некоторых значений программа может не запуститься
         private void Zaglushka()
@@ -89,23 +89,27 @@ namespace ToltoonTTS
 
         private void StackPanel_Initialized(object sender, EventArgs e)
         {
-            PasswordboxTwitchApi.Password = Properties.Settings.Default.TwitchApi;
-            TextboxTwitchClientId.Text = Properties.Settings.Default.TwitchID;
-            TextboxTwitchNickName.Text = Properties.Settings.Default.TwitchNickname;
-            checkBoxRemoveEmoji.IsChecked = Properties.Settings.Default.RemoveEmoji;
-            comboBoxInstalledVoices.SelectedValue = Properties.Settings.Default.InstalledVoiceSelect;
-            sliderTtsVolumeValue.Value = Properties.Settings.Default.TtsVolumeValue;
-            sliderTtsSpeedValue.Value = Properties.Settings.Default.TtsSpeedValue;
-            checkBoxVoiceIndividualVoices.IsChecked = Properties.Settings.Default.IndividualVoices;
-            CheckBoxConnectToTwitch.IsChecked = Properties.Settings.Default.CheckboxConnectToTwitch;
-            TextBoxTtsDoNotTtsIfStartWith.Text = Properties.Settings.Default.TextBoxDoNotTtsIfStartWith;
-            TextBoxSkipMessage.Text = Properties.Settings.Default.TextBoxMessageSkip;
-            TextBoxSkipMessage.Text = Properties.Settings.Default.TextBoxMessageSkip;
-            TextBoxSkipMessageAll.Text = Properties.Settings.Default.TextBoxMessageSkipAll;
-            TextBoxGoodgameLogin.Text = Properties.Settings.Default.TextBoxGoodgameLogin;
-            CheckBoxConnectToGoodgame.IsChecked = Properties.Settings.Default.CheckBoxConnectToGoodgame;
-            TextBoxIndividualVoicesChannelPoints.Text = Properties.Settings.Default.TextBoxIndividualVoicesChannelPoints;
-            TextBoxGetUserVoices.Text = Properties.Settings.Default.TextBoxGetUserVoice;
+            try
+            {
+                PasswordboxTwitchApi.Password = Properties.Settings.Default.TwitchApi;
+                TextboxTwitchClientId.Text = Properties.Settings.Default.TwitchID;
+                TextboxTwitchNickName.Text = Properties.Settings.Default.TwitchNickname;
+                checkBoxRemoveEmoji.IsChecked = Properties.Settings.Default.RemoveEmoji;
+                sliderTtsVolumeValue.Value = Properties.Settings.Default.TtsVolumeValue;
+                sliderTtsSpeedValue.Value = Properties.Settings.Default.TtsSpeedValue;
+                checkBoxVoiceIndividualVoices.IsChecked = Properties.Settings.Default.IndividualVoices;
+                CheckBoxConnectToTwitch.IsChecked = Properties.Settings.Default.CheckboxConnectToTwitch;
+                TextBoxTtsDoNotTtsIfStartWith.Text = Properties.Settings.Default.TextBoxDoNotTtsIfStartWith;
+                TextBoxSkipMessage.Text = Properties.Settings.Default.TextBoxMessageSkip;
+                TextBoxSkipMessage.Text = Properties.Settings.Default.TextBoxMessageSkip;
+                TextBoxSkipMessageAll.Text = Properties.Settings.Default.TextBoxMessageSkipAll;
+                TextBoxGoodgameLogin.Text = Properties.Settings.Default.TextBoxGoodgameLogin;
+                CheckBoxConnectToGoodgame.IsChecked = Properties.Settings.Default.CheckBoxConnectToGoodgame;
+                TextBoxIndividualVoicesChannelPoints.Text = Properties.Settings.Default.TextBoxIndividualVoicesChannelPoints;
+                TextBoxGetUserVoices.Text = Properties.Settings.Default.TextBoxGetUserVoice;
+            }
+            catch { }
+
         }
 
         private async void buttonTwitchConnect_Click(object sender, RoutedEventArgs e)
@@ -128,6 +132,8 @@ namespace ToltoonTTS
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (TwitchConnection.Instance == null)
+                return;
             TwitchConnection.Instance.Disconnect();
             TwitchConnection TClient = TwitchConnection.Instance;
         }
@@ -148,6 +154,8 @@ namespace ToltoonTTS
                 AddVoiceToPool.InstalledVoices.Add(voice.VoiceInfo.Name);
 
             }
+            if(Properties.Settings.Default.InstalledVoiceSelect != null)
+                comboBoxInstalledVoices.Text = Properties.Settings.Default.InstalledVoiceSelect;
             individualVoices = new IndividualVoices();
         }
 
