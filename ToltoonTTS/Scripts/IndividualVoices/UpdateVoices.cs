@@ -14,13 +14,40 @@ namespace ToltoonTTS.Scripts.IndividualVoices
                 "goodgame" => $@"DataForProgram/IndividualVoices/GoodgameIndividualVoices.json",
                 _ => throw new ArgumentException("Неподдерживаемая платформа", nameof(platform))
             };
+
+            // Чтение JSON файла
+            string jsonContentFixFile = File.ReadAllText(filePath);
+
+            // Парсинг JSON данных
+            JArray jsonArrayFixFile = JArray.Parse(jsonContentFixFile);
+
+            // Словарь для хранения последних экземпляров по Nickname
+            Dictionary<string, JObject> latestEntries = new Dictionary<string, JObject>();
+
+            // Обработка JSON объектов
+            foreach (JObject item in jsonArrayFixFile)
+            {
+                string nickname = item["Nickname"].ToString();
+
+                // Сохраняем или обновляем последний экземпляр
+                latestEntries[nickname] = item;
+            }
+
+            // Подготовка результата
+            JArray resultArray = new JArray(latestEntries.Values);
+
+            // Запись результата в новый файл
+            File.WriteAllText(filePath, resultArray.ToString());
+
+
+
             JArray jsonArray = JArray.Parse(File.ReadAllText(filePath));
             if (platform == "twitch")
             {
                 TextToSpeech.twitchUserVoicesDict = jsonArray.ToDictionary(
 item => item["Nickname"].ToString(),
 item =>  item["Voice"].ToString());
-                return jsonArray;
+                return jsonArray;   
             }
             if (platform == "goodgame")
             {

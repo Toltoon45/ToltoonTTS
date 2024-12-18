@@ -19,6 +19,7 @@ namespace ToltoonTTS.Scripts.Twitch
         TwitchClient TClient = new TwitchClient();
         TwitchPubSub TPubSub = new TwitchPubSub();
         ConnectionCredentials Creds;
+        ConnectionCredentials creds2;
 
         JArray individualVoicesTwitch = UpdateVoices.LoadVoicesOnProgramStart(false, "twitch");
         string? randomVoices;
@@ -37,6 +38,9 @@ namespace ToltoonTTS.Scripts.Twitch
         private static JArray newJsonForSaveTwitch = UpdateVoices.LoadVoicesOnProgramStart(false, "twitch");
         private static string FinalSave;
 
+        public static string twitchUserMessageUserName;
+        public static string twitchUserMessageInput;
+
         string TwitchUserId;
         string TwitchUserApi;
 
@@ -45,13 +49,14 @@ namespace ToltoonTTS.Scripts.Twitch
         //ников будет много, чтобы не пробегаться по каждому
         public static HashSet<string> twitchNicknameSet = new HashSet<string>(newJsonForSaveTwitch.Select(item => item["Nickname"]?.ToString()).Where(nick => nick != null));
 
+        int ReconnectTryNumber = 1;
         private TwitchConnection()
         {
             UpdateLabelConnectionStatus("Контора грузится...", System.Windows.Media.Colors.Black);
             GetTwitchUserIdAsync();
         }
         public static TwitchConnection Instance
-        {
+        { //синглтон для твича
             get
             {
                 lock (_lock)
@@ -64,6 +69,7 @@ namespace ToltoonTTS.Scripts.Twitch
         private async Task<string> GetTwitchUserIdAsync()
 
         {
+            string ErrorMessageConnection = "";
             using (HttpClient twitchToken = new HttpClient())
             {//получение уникального номера пользователя (ID) для подключения pubSub
                 twitchToken.DefaultRequestHeaders.Add("Client-ID", twitchId);
@@ -72,7 +78,30 @@ namespace ToltoonTTS.Scripts.Twitch
                 HttpResponseMessage response = await twitchToken.GetAsync(url);
                 string responseBody = await response.Content.ReadAsStringAsync();
                 dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(responseBody);
-                string userId = data.data[0].id;
+                if (responseBody == null || string.IsNullOrEmpty(responseBody))
+                {
+                    UpdateLabelConnectionStatus("Проверь API токен", System.Windows.Media.Colors.Red);
+                    _instance = null;
+                    return null;
+                }
+
+                // Проверка на ошибку 401
+                if (data.error != null && data.error.ToString() == "Unauthorized")
+                {
+                    UpdateLabelConnectionStatus("Неверный OAuth токен", System.Windows.Media.Colors.Red);
+                    _instance = null;
+                    return null;
+                }
+
+                string userId = data.data != null && data.data.Count > 0 ? data.data[0].id : null;
+
+                // Если userId не найден, выведите ошибку
+                if (string.IsNullOrEmpty(userId))
+                {
+                    UpdateLabelConnectionStatus("Ошибка получения данных пользователя", System.Windows.Media.Colors.Red);
+                    _instance = null;
+                    return null;
+                }
 
                 //чтобы программа не фризила при подключении
                 await Task.Run(() =>
@@ -96,7 +125,9 @@ namespace ToltoonTTS.Scripts.Twitch
                 TClient.OnMessageReceived += TClientOnMessageReceived;
                 TClient.OnChatCommandReceived += TClientOcChatCommandReceived;
                 TClient.OnDisconnected += TClientOnDisconnected;
+                TClient.OnConnectionError += TClientOnConnectionError;
                 TClient.Connect();
+
                 TPubSub.OnPubSubServiceConnected += TPubSubServiceConnected;
                 TPubSub.OnChannelPointsRewardRedeemed += TPubSubChannelPointsRewardRedeemed;
                 TPubSub.Connect();
@@ -104,13 +135,40 @@ namespace ToltoonTTS.Scripts.Twitch
 
 
                 // Обновление Label в UI-потоке
-                UpdateLabelConnectionStatus("Подключен", System.Windows.Media.Colors.Green);
+                UpdateLabelConnectionStatus("Twitch подключен", System.Windows.Media.Colors.Green);
             }
 
             catch (Exception)
             {
-                UpdateLabelConnectionStatus("Не подключен", System.Windows.Media.Colors.Green);
+                UpdateLabelConnectionStatus("Twitch не смог подключиться", System.Windows.Media.Colors.Green);
             }
+        }
+
+        private void TClientOnReconnected(object? sender, OnReconnectedEventArgs e)
+        {
+            //TClient.Reconnect();
+        }
+
+        private void TClientOnConnectionError(object? sender, OnConnectionErrorArgs e)
+        {
+            try
+            { //переподключение к твичу
+                UpdateLabelConnectionStatus($"{Convert.ToString(ReconnectTryNumber)} Переподключение...", System.Windows.Media.Colors.Purple);
+                ReconnectTryNumber += 1;
+                TClient?.Disconnect();
+                TPubSub?.Disconnect();
+                TClient = null;
+                TPubSub = null;
+                Instance.Disconnect();
+                _instance = null;
+                _instance = new TwitchConnection();
+                Thread.Sleep(3000);
+            }
+            catch { TClientOnConnectionError(null, null); }
+            ReconnectTryNumber = 1;
+
+            if (_instance.TClient.IsConnected == false)
+                TClientOnConnectionError(null, null);
         }
 
         //команды
@@ -128,9 +186,9 @@ namespace ToltoonTTS.Scripts.Twitch
                     {
                         foreach (var item in TextToSpeech.twitchUserVoicesDict)
                         {
-                            if (item.Key == nickname)
+                            if (item.Key.ToLower() == nickname)
                             {
-                                TClient.SendMessage(nickname, item.Value);
+                                TClient.SendMessage(twitchNick, item.Value);
                             }
 
                         }
@@ -161,9 +219,21 @@ namespace ToltoonTTS.Scripts.Twitch
         private void TClientOnDisconnected(object? sender, OnDisconnectedEventArgs e)
         {
             TClient.OnDisconnected -= TClientOnDisconnected;
+            TClient.OnConnected -= TClientOnConnected;
+            TClient.OnMessageReceived -= TClientOnMessageReceived;
+            TClient.OnChatCommandReceived -= TClientOcChatCommandReceived;
+            TClient.OnDisconnected -= TClientOnDisconnected;
+            TPubSub.OnPubSubServiceConnected -= TPubSubServiceConnected;
+            TPubSub.OnChannelPointsRewardRedeemed -= TPubSubChannelPointsRewardRedeemed;
+            TClient.OnConnectionError -= TClientOnConnectionError;
+            TClient.Disconnect();
+            TPubSub.Disconnect();
+            UpdateLabelConnectionStatus("Twitch отключился...", System.Windows.Media.Colors.Red);
+            _instance = null;
+            TClientOnConnectionError(null, null);
         }
 
-        private void TClientOnConnected(object? sender, OnConnectedArgs e)
+        private async void  TClientOnConnected(object? sender, OnConnectedArgs e)
         {
             try
             {
@@ -192,15 +262,17 @@ namespace ToltoonTTS.Scripts.Twitch
                         if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
                         { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
                           //чтобы для каждого сервиса логика могла быть своей при необходимости
+                            string randomVoice = TextToSpeech.availableRandomVoices[random.Next(TextToSpeech.availableRandomVoices.Count)];
                             JObject newUser = new JObject
                     {
                         { "Nickname", e.ChatMessage.Username },
-                        { "Voice", TextToSpeech.availableRandomVoices[random.Next(TextToSpeech.availableRandomVoices.Count)]}
+                        { "Voice", randomVoice}
                     };
                             //добавить нового человека, сохранить список и сразу его прочитать чтобы не было ошибок со сменой голоса пользователем
                             individualVoicesTwitch.Add(newUser);
                             individualVoicesTwitch = UpdateVoices.LoadAndSaveIndividualVoices(true, individualVoicesTwitch, "twitch");
                             twitchNicknameSet.Add(e.ChatMessage.Username);
+                            //TwitchIndividualVoicesList.TwitchAddNewUserToStackPanel(); //см. метод
                             TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
                             return;
                         }
@@ -245,18 +317,26 @@ namespace ToltoonTTS.Scripts.Twitch
         private void TPubSubServiceConnected(object? sender, EventArgs e)
         {
             //не из-за ошибок в коде (провайдер, роскомнадзор, сервера твича) МОЖЕТ не подключаться к пабсабу
-            TPubSub.ListenToChannelPoints(TwitchUserId);
-            TPubSub.SendTopics(TwitchUserApi, false);
-            TClient.SendMessage("toltoon45", "ПабСаб");
+            try
+            {
+                TPubSub.ListenToChannelPoints(TwitchUserId);
+                TPubSub.SendTopics(TwitchUserApi, false);
+                TClient.SendMessage("toltoon45", "ПабСаб");
+            }
+            catch { }
         }
 
         public void Disconnect()
         {
             try
             {
-                TClient.Disconnect();
-                TPubSub.Disconnect();
-                UpdateLabelConnectionStatus("Отключен", System.Windows.Media.Colors.Red);
+                if (TClient.IsConnected == true)
+                {
+                    TClient.Disconnect();
+                    TPubSub.Disconnect();
+                    UpdateLabelConnectionStatus("Twitch отключен вручную", System.Windows.Media.Colors.Red);
+                }
+
             }
             catch (Exception ex)
             {
@@ -277,6 +357,11 @@ namespace ToltoonTTS.Scripts.Twitch
         {
             //при удалении пользователя во время работы программы twitchNicknameSet НЕ обновляется
             twitchNicknameSet = new HashSet<string>(newJsonForSaveTwitch.Select(item => item["Nickname"]?.ToString()).Where(nick => nick != null));
+        }
+
+        public static void Reconnect()
+        {
+            
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToltoonTTS"
         mc:Ignorable="d"
-        Title="ToltoonTTS" Height="350" Width="616" Closing="Window_Closing" Loaded="Window_Loaded">
+        Title="ToltoonTTS" Height="350" Width="626" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -15,45 +15,72 @@
             <TabControl x:Name="TabControlMainWindow" MinWidth="450">
                 <TabItem x:Name="TabItemConnection" Header="Подключение">
                     <StackPanel>
-                        <!-- часть-->
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <PasswordBox x:Name="PasswordboxTwitchApi" Margin="10,0,0,0" VerticalAlignment="Center" Width="120" PasswordChanged="PasswordboxTwitchApi_PasswordChanged"/>
-                                <Label x:Name="LabelTwitchApi"  VerticalAlignment="Center" Margin="0,0,5,0">
-                                    <Hyperlink Click="HyperLinkTwitchGetTokens">Access Token</Hyperlink>
-                                </Label>
-                                <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="0,5,0,0" Checked="CheckBoxConnectToTwitch_Checked"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <TextBox x:Name="TextboxTwitchClientId" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" TextChanged="TextboxTwitchClientId_TextChanged"/>
-                                <Label x:Name="labelClientID" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                    <Hyperlink Click="HyperLinkTwitchGetTokens">Client ID</Hyperlink>
-                                </Label>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="120" TextChanged="TextboxTwitchNickName_TextChanged"/>
-                                <Label x:Name="labelTwitchNick" Content="Никнейм" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                        <!-- Основной контейнер -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
+                            <!-- Подключение к Twitch -->
+                            <StackPanel Grid.Column="0" Margin="5">
+                                <Label Content="Подключение к Twitch" HorizontalAlignment="Center" />
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="215">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <PasswordBox x:Name="PasswordboxTwitchApi" Margin="10,0,0,0" VerticalAlignment="Center" Width="50" PasswordChanged="PasswordboxTwitchApi_PasswordChanged" ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!"/>
+                                            <Label x:Name="LabelTwitchApi" VerticalAlignment="Center" Margin="0,0,5,0" ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!">
+                                                <Hyperlink Click="HyperLinkTwitchGetTokens">Access Token</Hyperlink>
+                                            </Label>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <TextBox x:Name="TextboxTwitchClientId" Margin="10,0,0,0" MaxHeight="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="50" TextChanged="TextboxTwitchClientId_TextChanged"/>
+                                            <Label x:Name="labelClientID" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                <Hyperlink Click="HyperLinkTwitchGetTokens">Client ID</Hyperlink>
+                                            </Label>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                            <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" MaxHeight="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="50" TextChanged="TextboxTwitchNickName_TextChanged" GotFocus="TextboxTwitchNickName_GotFocus" LostFocus="TextboxTwitchNickName_LostFocus"/>
+                                            <Label x:Name="labelTwitchNick" Content="Канал, куда подключаться" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="10,0,0,10" Checked="CheckBoxConnectToTwitch_Checked"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
-                            <StackPanel x:Name="StackPanelGoodgameConnection" Orientation="Horizontal" Margin="10,0,0,0">
-                                <TextBox x:Name="TextBoxGoodgameLogin" Width="120" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBoxGoodgameLogin_TextChanged"></TextBox>
-                                <Label x:Name="LabelGoodgameLogin" Content="GG логин" ></Label>
-                                <CheckBox x:Name="CheckBoxConnectToGoodgame" Content="Подключиться к GoodGame" Margin="0,5,0,0" Checked="CheckBoxConnectToGoodgame_Checked"/>
+
+                            <!-- Подключение к GoodGame -->
+                            <StackPanel Grid.Column="1" Margin="5">
+                                <Label Content="Подключение к GoodGame" HorizontalAlignment="Center" />
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="190">
+                                    <StackPanel x:Name="StackPanelGoodgameConnection" Orientation="Vertical" Margin="10,0,0,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox x:Name="TextBoxGoodgameLogin" Width="50" MaxHeight="20" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBoxGoodgameLogin_TextChanged"></TextBox>
+                                            <Label x:Name="LabelGoodgameLogin" Content="GG логин"></Label>
+                                        </StackPanel>
+                                        <CheckBox x:Name="CheckBoxConnectToGoodgame" Content="Подключиться к GoodGame" Margin="0,5,0,10" Checked="CheckBoxConnectToGoodgame_Checked"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
+
+                        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" ShowsPreview="True"/>
+
                         <StackPanel Orientation="Horizontal" Margin="10,10,10,10">
-                            <Button x:Name="buttonSaveJsonProfile" Content="Сохранить" Margin="10,0,0,0" Click="buttonSaveJsonProfile_Click" MouseEnter="buttonSaveJsonProfile_MouseEnter" MouseLeave="buttonSaveJsonProfile_MouseLeave"></Button>
+                            <Button x:Name="buttonSaveJsonProfile" Content="Сохранить" Width="65" Margin="10,0,0,0" Click="buttonSaveJsonProfile_Click" MouseEnter="buttonSaveJsonProfile_MouseEnter" MouseLeave="buttonSaveJsonProfile_MouseLeave"></Button>
                             <TextBox x:Name="textboxJsonProfileNameToSave" Width="80" Height="20" Margin="10,0,0,0"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                            <Button x:Name="buttonLoadJsonProfile" Content="Загрузить" Margin="10,0,5,0" Click="buttonLoadJsonProfile_Click" MouseEnter="buttonLoadJsonProfile_MouseEnter" MouseLeave="buttonLoadJsonProfile_MouseLeave"/>
+                            <Button x:Name="buttonLoadJsonProfile" Content="Загрузить" Width="65" Margin="10,0,0,0" Click="buttonLoadJsonProfile_Click" MouseEnter="buttonLoadJsonProfile_MouseEnter" MouseLeave="buttonLoadJsonProfile_MouseLeave"/>
                             <ComboBox x:Name="comboBoxProfileSelect" Width="80" Margin="10,0,0,0" SelectionChanged="comboBoxProfileSelect_SelectionChanged"></ComboBox>
                             <Button x:Name="ButtonDeleteProfile" Content="Удалить" Margin="10,0,0,0" MouseEnter="ButtonDeleteProfile_MouseEnter" MouseLeave="ButtonDeleteProfile_MouseLeave" Click="ButtonDeleteProfile_Click"></Button>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
+
                 <TabItem x:Name="TabItemTTS" Header="Text to speech">
-                    <StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Vertical">
                         <CheckBox x:Name="checkBoxRemoveEmoji" Content="Удалять эмодзи" Checked="checkBoxRemoveEmoji_Checked" Unchecked="checkBoxRemoveEmoji_Checked" Margin="10,10,0,10"/>
                         <StackPanel Orientation="Horizontal">
                             <ComboBox x:Name="comboBoxInstalledVoices" Width="120" HorizontalAlignment="Left" Margin="10,0,0,10" SelectionChanged="comboBoxInstalledVoices_SelectionChanged" ToolTipService.InitialShowDelay="0"/>
@@ -70,6 +97,10 @@
                             <Label x:Name="labelVolumeValue" Content="" Margin="10,0,0,0"></Label>
                             <Label x:Name="labelVolume" Content="Громкость" Margin="10,0,0,0"></Label>
                         </StackPanel>
+                        </StackPanel>
+                        </Border>
+                        <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" Height="82" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                             <Label x:Name="LabelTtsDoNotTtsIfStartWith" Content="Не озвучивать, если начинается с" Margin="10,0,0,0"></Label>
                             <TextBox x:Name="TextBoxTtsDoNotTtsIfStartWith" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxTtsDoNotTtsIfStartWith_TextChanged"></TextBox>
@@ -82,6 +113,8 @@
                             <Label x:Name="LabelSkipMessageAll" Margin="10,0,0,0" Content="Пропустить все сообщения"></Label>
                             <TextBox x:Name="TextBoxSkipMessageAll" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxSkipMessageAll_TextChanged"></TextBox>
                         </StackPanel>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </TabItem>
                 <TabItem x:Name="TabItemIndividualVoices" Header="Индив. голоса">
@@ -102,40 +135,64 @@
                 </TabItem>
                 <TabItem x:Name="TabItemBlackList" Header="Чёрный список">
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label x:Name="LabelBlackList" Content="Чёрный список пользователей" Width="180" HorizontalAlignment="Left" Margin="0,10,0,0"></Label>
-                        </StackPanel>
                         <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <ListBox x:Name="ListBoxBlackList" Width="150" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Margin="10,0,0,0">
-                                </ListBox>
+                            <!--Чёрный список-->
+                            <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Height="118">
+                                    <StackPanel Orientation="Vertical">
+                                        <Label x:Name="LabelBlackList" Content="Чёрный список пользователей" Width="180" HorizontalAlignment="Left" Margin="0,0,0,0"></Label>
+                                        <ListBox x:Name="ListBoxBlackList" Width="150" Height="84" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Margin="10,0,0,10">
+                                        </ListBox>
+                                    </StackPanel>
+                                    
                                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                     <TextBox x:Name="TextBoxBlackList" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,10,10,0"/>
                                     <Button x:Name="ButtonBlackListAdd" Content="Добавить" Margin="10" Click="ButtonBlackListAdd_Click"></Button>
                                     <Button x:Name="ButtonBlackListDelete" Content="Удалить" Margin="10" Click="ButtonBlackListDelete_Click"/>
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            </Border>
+                            
+                            <!--Замена слов-->
+                            <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" HorizontalAlignment="Left" Height="166">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
 
-                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                    <StackPanel Orientation="Vertical" >
-                                        <TextBox x:Name="TextBoxWhatToReplace" TextWrapping="Wrap" Width="100" Margin="10,10,10,10"/>
-                                        <ListBox x:Name="ListBoxWhatToReplace"  Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplace_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" MaxHeight="250"/>
+                                    <!-- Первый набор элементов -->
+                                    <StackPanel Grid.Column="0" Margin="5" Orientation="Vertical">
+                                        <Label Margin="15,-10,0,0" Content="Что заменять" />
+                                        <TextBox x:Name="TextBoxWhatToReplace" TextWrapping="Wrap" Width="100" Margin="10,-5,10,5" />
+                                        <ListBox x:Name="ListBoxWhatToReplace" Width="100" Height="100"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     SelectionChanged="ListBoxWhatToReplace_SelectionChanged"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto" />
                                     </StackPanel>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                    <Button x:Name="ButtonReplaceWordAdd" Content="Добавить" Margin="10,10,10,10" Click="ButtonReplaceWordAdd_Click"/>
-                                    <Button x:Name="ButtonReplaceWordDelete" Content="Удалить" Margin="10,10,10,10" Click="ButtonReplaceWordDelete_Click"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBox x:Name="TextBoxWhatToReplaceWith" TextWrapping="Wrap" Width="100" Margin="10,10,10,10"/>
-                                    <ListBox x:Name="ListBoxWhatToReplaceWith" Width="100" Height="100" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="ListBoxWhatToReplaceWith_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
-                                </StackPanel>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Margin="10,0,15,0" Content="Что заменять"></Label>
-                                <Label Margin="100,0,15,0" Content="На что заменять"></Label>
-                            </StackPanel>
+
+                                    <!-- Управляющие кнопки -->
+                                    <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical" VerticalAlignment="Center">
+                                        <Button x:Name="ButtonReplaceWordAdd" Content="Добавить" Margin="10,10,10,0" Click="ButtonReplaceWordAdd_Click" />
+                                        <Button x:Name="ButtonReplaceWordDelete" Content="Удалить" Margin="10,10,10,10" Click="ButtonReplaceWordDelete_Click" />
+                                    </StackPanel>
+
+                                    <!-- Второй набор элементов -->
+                                    <StackPanel Grid.Column="2" Margin="5" Orientation="Vertical">
+                                        <Label Margin="10,-10,0,0" Content="На что заменять" />
+                                        <TextBox x:Name="TextBoxWhatToReplaceWith" TextWrapping="Wrap" Width="100" Margin="10,-5,10,5" />
+                                        <ListBox x:Name="ListBoxWhatToReplaceWith" Width="100" Height="100" MaxHeight="100"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     SelectionChanged="ListBoxWhatToReplaceWith_SelectionChanged"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
@@ -144,18 +201,18 @@
                 <Label x:Name="LabelTwitchStatusMessage"></Label>
                 <Label x:Name="LabelGoodgameStatusMessage"></Label>
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <Button x:Name="buttonConnect" Content="Connect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchConnect_Click"/>
-                        <Button x:Name="buttonTwitchDisconnect" Content="Disconnect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchDisconnect_Click"/>
+                        <Button x:Name="buttonTwitchDisconnect" ToolTip="Работает только с твичом (пока что)" Content="Disconnect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchDisconnect_Click"/>
                     </StackPanel>
                     <StackPanel>
-                        <Button x:Name="ButtonOpenProgramData" Margin="15,10,10,0" Content="Файлы программы" VerticalAlignment="Top" Click="ButtonOpenProgramData_Click"/>
+                        <Button x:Name="ButtonOpenProgramData" Margin="10,10,10,0" Content="Файлы программы" VerticalAlignment="Top" Click="ButtonOpenProgramData_Click"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-        <Label Content="0.9.0" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
-
+        <Button Margin="0,0,45,10" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" Click="Button_Click"></Button>
+        <Label Content="1.0.0" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
 
 
     </Grid>

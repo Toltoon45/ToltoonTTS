@@ -7,6 +7,7 @@ using ToltoonTTS.Scripts.IndividualVoices;
 using System.Windows.Media;
 using ToltoonTTS.Scripts.Twitch;
 using ToltoonTTS.Scripts.GoodGame;
+using System.Speech.Synthesis.TtsEngine;
 
 namespace ToltoonTTS
 {
@@ -14,8 +15,6 @@ namespace ToltoonTTS
     {   //Доп. окна
         IndividualVoices individualVoices;
         SpeechSynthesizer Synth = new SpeechSynthesizer();
-
-        bool isDuplicate;
 
         bool ConnectToTwitch;
 
@@ -29,6 +28,8 @@ namespace ToltoonTTS
             TwitchConnection.TwitchBlackList = new ListBox();
             TwitchConnection.LabelTwitchStatusMessage = LabelTwitchStatusMessage;
             GoodGameConnection.LabelGoodgameStatusMessage = LabelGoodgameStatusMessage;
+
+            ToolTipService.SetInitialShowDelay(PasswordboxTwitchApi, 100);
 
             //загрузка данных в listbox
             ListBoxBlackList = LoadContainers.LoadBlackListUser(ListBoxBlackList, "DataForProgram/BlackList/BlackListUsers.json");
@@ -118,10 +119,17 @@ namespace ToltoonTTS
             {
                 GoodGameConnection.GoodGameConnect(TextBoxGoodgameLogin.Text);
             }
-                
+        }
 
+        private void buttonTwitchDisconnect_Click(object sender, RoutedEventArgs e)
+        {
+            TwitchConnection.Instance.Disconnect();
+        }
 
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TwitchConnection.Instance.Disconnect();
+            TwitchConnection TClient = TwitchConnection.Instance;
         }
 
         private void checkBoxRemoveEmoji_Checked(object sender, RoutedEventArgs e)
@@ -279,11 +287,6 @@ namespace ToltoonTTS
             }
         }
 
-        private void buttonTwitchDisconnect_Click(object sender, RoutedEventArgs e)
-        {
-            TwitchConnection.Instance.Disconnect();
-        }
-
         // Флаги для отключения синхронизации
         private bool isSyncing = false;
 
@@ -368,7 +371,7 @@ namespace ToltoonTTS
 
         private void buttonSaveJsonProfile_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            textboxJsonProfileNameToSave.Background = Brushes.LightPink;
+            textboxJsonProfileNameToSave.Background = Brushes.LightBlue;
         }
 
         private void buttonSaveJsonProfile_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
@@ -378,7 +381,7 @@ namespace ToltoonTTS
 
         private void buttonLoadJsonProfile_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            comboBoxProfileSelect.Foreground = Brushes.Red;
+            comboBoxProfileSelect.Foreground = Brushes.Blue;
         }
 
         private void buttonLoadJsonProfile_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
@@ -449,6 +452,23 @@ namespace ToltoonTTS
         {
             SaveContainers.JsonTextBoxGetUserVoices = TextBoxGetUserVoices.Text;
             TwitchConnection.GetUserVoiceCommand = TextBoxGetUserVoices.Text;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TextboxTwitchNickName_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextboxTwitchNickName.MaxHeight = 50;
+            TextboxTwitchNickName.Width = 100;
+        }
+
+        private void TextboxTwitchNickName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextboxTwitchNickName.MaxHeight = 20;
+            TextboxTwitchNickName.Width = 50;
         }
     }
 }
