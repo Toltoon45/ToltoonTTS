@@ -25,7 +25,7 @@
                             <!-- Подключение к Twitch -->
                             <StackPanel Grid.Column="0" Margin="5">
                                 <Label Content="Подключение к Twitch" HorizontalAlignment="Center" />
-                                <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="215">
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="176">
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                             <PasswordBox x:Name="PasswordboxTwitchApi" Margin="10,0,0,0" VerticalAlignment="Center" Width="50" PasswordChanged="PasswordboxTwitchApi_PasswordChanged" ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!"/>
@@ -41,7 +41,9 @@
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                             <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" MaxHeight="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="50" TextChanged="TextboxTwitchNickName_TextChanged" GotFocus="TextboxTwitchNickName_GotFocus" LostFocus="TextboxTwitchNickName_LostFocus"/>
-                                            <Label x:Name="labelTwitchNick" Content="Канал, куда подключаться" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center"/>
+                                            <Label x:Name="labelTwitchNick" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock><Run Text="Имяанал"/><LineBreak/><Run Text="куда подключаться"/></TextBlock>
+                                            </Label>
                                         </StackPanel>
                                         <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="10,0,0,10" Checked="CheckBoxConnectToTwitch_Checked"/>
                                     </StackPanel>
