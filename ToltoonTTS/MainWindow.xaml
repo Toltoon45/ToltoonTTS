@@ -42,10 +42,10 @@
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                             <TextBox x:Name="TextboxTwitchNickName" Margin="10,0,0,0" MaxHeight="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="50" TextChanged="TextboxTwitchNickName_TextChanged" GotFocus="TextboxTwitchNickName_GotFocus" LostFocus="TextboxTwitchNickName_LostFocus"/>
                                             <Label x:Name="labelTwitchNick" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center">
-                                                <TextBlock><Run Text="Имяанал"/><LineBreak/><Run Text="куда подключаться"/></TextBlock>
+                                                <TextBlock><Run Text="Название канала"/><LineBreak/><Run Text="куда подключаться"/></TextBlock>
                                             </Label>
                                         </StackPanel>
-                                        <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="10,0,0,10" Checked="CheckBoxConnectToTwitch_Checked"/>
+                                        <CheckBox x:Name="CheckBoxConnectToTwitch" Content="Подключиться к Twitch" Margin="10,0,0,10" Click="CheckBoxConnectToTwitch_Click"/>
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
@@ -59,7 +59,7 @@
                                             <TextBox x:Name="TextBoxGoodgameLogin" Width="50" MaxHeight="20" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TextBoxGoodgameLogin_TextChanged"></TextBox>
                                             <Label x:Name="LabelGoodgameLogin" Content="GG логин"></Label>
                                         </StackPanel>
-                                        <CheckBox x:Name="CheckBoxConnectToGoodgame" Content="Подключиться к GoodGame" Margin="0,5,0,10" Checked="CheckBoxConnectToGoodgame_Checked"/>
+                                        <CheckBox x:Name="CheckBoxConnectToGoodgame" Content="Подключиться к GoodGame" Margin="0,5,0,10" Click="CheckBoxConnectToGoodgame_Click"/>
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
@@ -83,38 +83,38 @@
                     <StackPanel Orientation="Vertical">
                         <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" HorizontalAlignment="Left">
                             <StackPanel Orientation="Vertical">
-                        <CheckBox x:Name="checkBoxRemoveEmoji" Content="Удалять эмодзи" Checked="checkBoxRemoveEmoji_Checked" Unchecked="checkBoxRemoveEmoji_Checked" Margin="10,10,0,10"/>
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox x:Name="comboBoxInstalledVoices" Width="120" HorizontalAlignment="Left" Margin="10,0,0,10" SelectionChanged="comboBoxInstalledVoices_SelectionChanged" ToolTipService.InitialShowDelay="0"/>
+                                <CheckBox x:Name="checkBoxRemoveEmoji" Content="Удалять эмодзи" Margin="10,10,0,10" Click="checkBoxRemoveEmoji_Click" Checked="checkBoxRemoveEmoji_Checked"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <ComboBox x:Name="comboBoxInstalledVoices" Width="120" HorizontalAlignment="Left" Margin="10,0,0,10" SelectionChanged="comboBoxInstalledVoices_SelectionChanged" ToolTipService.InitialShowDelay="0"/>
 
-                            <Label x:Name="labelInstalledVoices" Content="Установленные голоса"></Label>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Slider x:Name="sliderTtsSpeedValue" IsSnapToTickEnabled="true" Minimum="-10" Margin="10,0,0,0" Width="200" ValueChanged="sliderTtsSpeedValue_ValueChanged"/>
-                            <Label x:Name="labelTtsSpeedValue" Content="" Margin="10,0,0,0"></Label>
-                            <Label x:Name="labelTtsSpeed" Content="Скорость озвучки текста"></Label>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Slider x:Name="sliderTtsVolumeValue" IsSnapToTickEnabled="true" Minimum="0" Margin="10,0,0,0" Maximum="100" Width="200" ValueChanged="sliderTtsVolumeValue_ValueChanged"></Slider>
-                            <Label x:Name="labelVolumeValue" Content="" Margin="10,0,0,0"></Label>
-                            <Label x:Name="labelVolume" Content="Громкость" Margin="10,0,0,0"></Label>
-                        </StackPanel>
-                        </StackPanel>
+                                    <Label x:Name="labelInstalledVoices" Content="Установленные голоса"></Label>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Slider x:Name="sliderTtsSpeedValue" IsSnapToTickEnabled="true" Minimum="-10" Margin="10,0,0,0" Width="200" ValueChanged="sliderTtsSpeedValue_ValueChanged"/>
+                                    <Label x:Name="labelTtsSpeedValue" Content="" Margin="10,0,0,0"></Label>
+                                    <Label x:Name="labelTtsSpeed" Content="Скорость озвучки текста"></Label>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Slider x:Name="sliderTtsVolumeValue" IsSnapToTickEnabled="true" Minimum="0" Margin="10,0,0,0" Maximum="100" Width="200" ValueChanged="sliderTtsVolumeValue_ValueChanged"></Slider>
+                                    <Label x:Name="labelVolumeValue" Content="" Margin="10,0,0,0"></Label>
+                                    <Label x:Name="labelVolume" Content="Громкость" Margin="10,0,0,0"></Label>
+                                </StackPanel>
+                            </StackPanel>
                         </Border>
                         <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" Height="82" HorizontalAlignment="Left">
                             <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                            <Label x:Name="LabelTtsDoNotTtsIfStartWith" Content="Не озвучивать, если начинается с" Margin="10,0,0,0"></Label>
-                            <TextBox x:Name="TextBoxTtsDoNotTtsIfStartWith" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxTtsDoNotTtsIfStartWith_TextChanged"></TextBox>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                            <Label x:Name="LabelSkipMessage" Margin="10,0,0,0" Content="Пропустить одно сообщение"></Label>
-                            <TextBox x:Name="TextBoxSkipMessage" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxSkipMessage_TextChanged"></TextBox>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                            <Label x:Name="LabelSkipMessageAll" Margin="10,0,0,0" Content="Пропустить все сообщения"></Label>
-                            <TextBox x:Name="TextBoxSkipMessageAll" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxSkipMessageAll_TextChanged"></TextBox>
-                        </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                    <Label x:Name="LabelTtsDoNotTtsIfStartWith" Content="Не озвучивать, если начинается с" Margin="10,0,0,0"></Label>
+                                    <TextBox x:Name="TextBoxTtsDoNotTtsIfStartWith" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxTtsDoNotTtsIfStartWith_TextChanged"></TextBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                    <Label x:Name="LabelSkipMessage" Margin="10,0,0,0" Content="Пропустить одно сообщение"></Label>
+                                    <TextBox x:Name="TextBoxSkipMessage" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxSkipMessage_TextChanged"></TextBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                    <Label x:Name="LabelSkipMessageAll" Margin="10,0,0,0" Content="Пропустить все сообщения"></Label>
+                                    <TextBox x:Name="TextBoxSkipMessageAll" Width="80" Height="20" Margin="10,0,0,0" TextChanged="TextBoxSkipMessageAll_TextChanged"></TextBox>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -123,7 +123,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="ButtonIndividualVoices" Content="Голоса каждому" Margin="10,10,0,10" Click="ButtonIndividualVoices_Click"/>
-                            <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов" Margin="10,10,0,10" Checked="checkBoxVoiceIndividualVoices_Checked"/>
+                            <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов" Margin="10,10,0,10" Click="checkBoxVoiceIndividualVoices_Click" Checked="checkBoxVoiceIndividualVoices_Checked"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
                             <Label x:Name="LabelIndividualVoicesChannelPoints" Content="Название команды за баллы канала для смены голоса" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)"></Label>
@@ -140,21 +140,21 @@
                         <StackPanel Orientation="Vertical">
                             <!--Чёрный список-->
                             <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" HorizontalAlignment="Left">
-                            <StackPanel Orientation="Horizontal" Height="118">
+                                <StackPanel Orientation="Horizontal" Height="118">
                                     <StackPanel Orientation="Vertical">
                                         <Label x:Name="LabelBlackList" Content="Чёрный список пользователей" Width="180" HorizontalAlignment="Left" Margin="0,0,0,0"></Label>
                                         <ListBox x:Name="ListBoxBlackList" Width="150" Height="84" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Margin="10,0,0,10">
                                         </ListBox>
                                     </StackPanel>
-                                    
-                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                    <TextBox x:Name="TextBoxBlackList" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,10,10,0"/>
-                                    <Button x:Name="ButtonBlackListAdd" Content="Добавить" Margin="10" Click="ButtonBlackListAdd_Click"></Button>
-                                    <Button x:Name="ButtonBlackListDelete" Content="Удалить" Margin="10" Click="ButtonBlackListDelete_Click"/>
+
+                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                        <TextBox x:Name="TextBoxBlackList" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="10,10,10,0"/>
+                                        <Button x:Name="ButtonBlackListAdd" Content="Добавить" Margin="10" Click="ButtonBlackListAdd_Click"></Button>
+                                        <Button x:Name="ButtonBlackListDelete" Content="Удалить" Margin="10" Click="ButtonBlackListDelete_Click"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
                             </Border>
-                            
+
                             <!--Замена слов-->
                             <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" HorizontalAlignment="Left" Height="166">
                                 <Grid>
@@ -208,13 +208,16 @@
                         <Button x:Name="buttonTwitchDisconnect" ToolTip="Работает только с твичом (пока что)" Content="Disconnect" HorizontalAlignment="Left" Margin="10,10,0,0" Click="buttonTwitchDisconnect_Click"/>
                     </StackPanel>
                     <StackPanel>
-                        <Button x:Name="ButtonOpenProgramData" Margin="10,10,10,0" Content="Файлы программы" VerticalAlignment="Top" Click="ButtonOpenProgramData_Click"/>
+                        <Button x:Name="ButtonOpenProgramData" Margin="10,10,10,0" Content="Файлы программы" Click="ButtonOpenProgramData_Click" Width="120" HorizontalAlignment="Left"/>
                     </StackPanel>
                 </StackPanel>
+                <Label x:Name="LabelErrorMessages" HorizontalAlignment="Left">
+                    <Label Content="" Width="150"/>
+                </Label>
             </StackPanel>
         </StackPanel>
-        <Button Margin="0,0,45,10" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" Click="Button_Click"></Button>
-        <Label Content="1.0.0" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
+        <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" Click="Button_Click"></Button>
+        <Label Content="64bit 1.1.0" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
 
 
     </Grid>

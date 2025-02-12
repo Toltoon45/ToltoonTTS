@@ -26,6 +26,7 @@ namespace ToltoonTTS
             AddVoiceToPool.InstalledVoices = new List<string>();
             TwitchConnection.TwitchBlackList = new ListBox();
             TwitchConnection.LabelTwitchStatusMessage = LabelTwitchStatusMessage;
+            TwitchConnection.LabelErrorMessages = LabelErrorMessages;
             GoodGameConnection.LabelGoodgameStatusMessage = LabelGoodgameStatusMessage;
 
             ToolTipService.SetInitialShowDelay(PasswordboxTwitchApi, 100);
@@ -138,11 +139,6 @@ namespace ToltoonTTS
             TwitchConnection TClient = TwitchConnection.Instance;
         }
 
-        private void checkBoxRemoveEmoji_Checked(object sender, RoutedEventArgs e)
-        {
-            TextToSpeech.CanRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
-            SaveContainers.JsonSaveRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
-        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -259,6 +255,7 @@ namespace ToltoonTTS
                 // Добавляем элемент, если ListBox пустой
                 ListBoxBlackList.Items.Add(TextBoxBlackList.Text);
                 TwitchConnection.TwitchBlackList.Items.Add(TextBoxBlackList.Text.ToLower());
+                //GoodGameConnection.GoodGameBlackList.Items.Add(TextBoxBlackList.Text.ToLower());
             }
             else
             {
@@ -292,6 +289,7 @@ namespace ToltoonTTS
                 int a = ListBoxBlackList.SelectedIndex;
                 ListBoxBlackList.Items.Remove(ListBoxBlackList.SelectedItem);
                 TwitchConnection.TwitchBlackList.Items.RemoveAt(a);
+                //GoodGameConnection.GoodGameBlackList.Items.RemoveAt(a);
             }
         }
 
@@ -372,11 +370,6 @@ namespace ToltoonTTS
             }
         }
 
-        private void CheckBoxConnectToTwitch_Checked(object sender, RoutedEventArgs e)
-        {
-            ConnectToTwitch = CheckBoxConnectToTwitch.IsChecked ?? false;
-        }
-
         private void buttonSaveJsonProfile_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             textboxJsonProfileNameToSave.Background = Brushes.LightBlue;
@@ -412,12 +405,6 @@ namespace ToltoonTTS
             SaveContainers.DeleteProfile(comboBoxProfileSelect);
         }
 
-        private void checkBoxVoiceIndividualVoices_Checked(object sender, RoutedEventArgs e)
-        {
-            TextToSpeech.IndividualVoiceForAll = checkBoxVoiceIndividualVoices.IsChecked ?? false;
-            SaveContainers.JsonIndividualVoices = checkBoxVoiceIndividualVoices.IsChecked ?? false;
-        }
-
         private void TextBoxTtsDoNotTtsIfStartWith_TextChanged(object sender, TextChangedEventArgs e)
         {
             SaveContainers.JsonDoNotTtsIfStartWith = TextBoxTtsDoNotTtsIfStartWith.Text;
@@ -439,11 +426,6 @@ namespace ToltoonTTS
         private void TextBoxGoodgameLogin_TextChanged(object sender, TextChangedEventArgs e)
         {
             SaveContainers.JsonTextBoxGoodgameLogin = TextBoxGoodgameLogin.Text;
-        }
-
-        private void CheckBoxConnectToGoodgame_Checked(object sender, RoutedEventArgs e)
-        {
-            SaveContainers.JsonCheckBoxConnectToGoodgame = CheckBoxConnectToTwitch.IsChecked ?? false;
         }
         private void HyperLinkTwitchGetTokens(object sender, RoutedEventArgs e)
         {
@@ -477,6 +459,42 @@ namespace ToltoonTTS
         {
             TextboxTwitchNickName.MaxHeight = 20;
             TextboxTwitchNickName.Width = 50;
+        }
+
+        private void CheckBoxConnectToTwitch_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectToTwitch = CheckBoxConnectToTwitch.IsChecked ?? false;
+        }
+
+        private void CheckBoxConnectToGoodgame_Click(object sender, RoutedEventArgs e)
+        {
+            SaveContainers.JsonCheckBoxConnectToGoodgame = CheckBoxConnectToTwitch.IsChecked ?? false;
+        }
+
+        private void checkBoxRemoveEmoji_Click(object sender, RoutedEventArgs e)
+        {
+            TextToSpeech.CanRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+            SaveContainers.JsonSaveRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+        }
+
+        private void checkBoxRemoveEmoji_Checked(object sender, RoutedEventArgs e)
+        {
+            TextToSpeech.CanRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+            SaveContainers.JsonSaveRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+        }
+
+        private void checkBoxVoiceIndividualVoices_Click(object sender, RoutedEventArgs e)
+        {
+            TwitchConnection.IndividualVoicesEnable = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            GoodGameConnection.IndividualVoicesEnable = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            TextToSpeech.IndividualVoiceForAll = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            SaveContainers.JsonIndividualVoices = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+        }
+
+        private void checkBoxVoiceIndividualVoices_Checked(object sender, RoutedEventArgs e)
+        {
+            TextToSpeech.IndividualVoiceForAll = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            SaveContainers.JsonIndividualVoices = checkBoxVoiceIndividualVoices.IsChecked ?? false;
         }
     }
 }
