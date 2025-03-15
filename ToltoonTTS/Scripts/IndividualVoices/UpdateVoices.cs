@@ -14,16 +14,12 @@ namespace ToltoonTTS.Scripts.IndividualVoices
                 "goodgame" => $@"DataForProgram/IndividualVoices/GoodgameIndividualVoices.json",
                 _ => throw new ArgumentException("Неподдерживаемая платформа", nameof(platform))
             };
-
             // Чтение JSON файла
             string jsonContentFixFile = File.ReadAllText(filePath);
-
             // Парсинг JSON данных
             JArray jsonArrayFixFile = JArray.Parse(jsonContentFixFile);
-
             // Словарь для хранения последних экземпляров по Nickname
             Dictionary<string, JObject> latestEntries = new Dictionary<string, JObject>();
-
             // Обработка JSON объектов
             foreach (JObject item in jsonArrayFixFile)
             {
@@ -32,22 +28,17 @@ namespace ToltoonTTS.Scripts.IndividualVoices
                 // Сохраняем или обновляем последний экземпляр
                 latestEntries[nickname] = item;
             }
-
             // Подготовка результата
             JArray resultArray = new JArray(latestEntries.Values);
-
             // Запись результата в новый файл
             File.WriteAllText(filePath, resultArray.ToString());
-
-
-
             JArray jsonArray = JArray.Parse(File.ReadAllText(filePath));
             if (platform == "twitch")
             {
                 TextToSpeech.twitchUserVoicesDict = jsonArray.ToDictionary(
 item => item["Nickname"].ToString(),
-item =>  item["Voice"].ToString());
-                return jsonArray;   
+item => item["Voice"].ToString());
+                return jsonArray;
             }
             if (platform == "goodgame")
             {
@@ -56,7 +47,6 @@ item => item["Nickname"].ToString(),
 item => item["Voice"].ToString());
                 return jsonArray;
             }
-
             else
             {
                 try
@@ -71,7 +61,6 @@ item => item["Voice"].ToString());
             }
             return new JArray();
         }
-
         internal static JArray LoadAndSaveIndividualVoices(bool saveBeforeLoad, JArray JArrayToSave, string platform)
         {
             string filePath = platform switch
@@ -80,7 +69,6 @@ item => item["Voice"].ToString());
                 "goodgame" => $@"DataForProgram/IndividualVoices/GoodgameIndividualVoices.json",
                 _ => throw new ArgumentException("Неподдерживаемая платформа", nameof(platform))
             };
-
             JArray jsonArray;
             if (saveBeforeLoad && JArrayToSave != null)
             {
@@ -94,23 +82,35 @@ item => item["Voice"].ToString());
                 string fileContent = File.ReadAllText(filePath);
                 jsonArray = JArray.Parse(fileContent);
             }
-
             if (platform == "twitch")
             {
-                TextToSpeech.twitchUserVoicesDict = jsonArray.ToDictionary(
-                    item => item["Nickname"].ToString(),
-                    item => item["Voice"].ToString());
+                foreach (var item in jsonArray)
+                {
+                    var nickname = item["Nickname"].ToString();
+                    var voice = item["Voice"].ToString();
+
+                    if (TextToSpeech.twitchUserVoicesDict.ContainsKey(nickname))
+                    {
+                        TextToSpeech.twitchUserVoicesDict.Remove(nickname);
+                    }
+                    TextToSpeech.twitchUserVoicesDict[nickname] = voice;
+                }
             }
             if (platform == "goodgame")
             {
-                GoodGameConnection.goodgameUserVoicesDict = jsonArray.ToDictionary(
-item => item["Nickname"].ToString(),
-item => item["Voice"].ToString());
-                return jsonArray;
-            }
+                foreach (var item in jsonArray)
+                {
+                    var nickname = item["Nickname"].ToString();
+                    var voice = item["Voice"].ToString();
 
+                    if (GoodGameConnection.goodgameUserVoicesDict.ContainsKey(nickname))
+                    {
+                        GoodGameConnection.goodgameUserVoicesDict.Remove(nickname);
+                    }
+                    GoodGameConnection.goodgameUserVoicesDict[nickname] = voice;
+                }
+            }
             return jsonArray;
         }
-
     }
 }

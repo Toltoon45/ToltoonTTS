@@ -18,13 +18,16 @@ namespace ToltoonTTS.Scripts.Twitch
     {
         TwitchClient TClient = new TwitchClient();
         TwitchPubSub TPubSub = new TwitchPubSub();
+        TwitchClient test222 = new TwitchClient();
         ConnectionCredentials Creds;
         ConnectionCredentials creds2;
+        bool isConnected;
 
         JArray individualVoicesTwitch = UpdateVoices.LoadVoicesOnProgramStart(false, "twitch");
         string? randomVoices;
         Random random = new Random();
         public static Label LabelTwitchStatusMessage = new Label();
+        public static Label LabelErrorMessages = new Label();
         private static readonly object _lock = new object();
         private static TwitchConnection _instance;
 
@@ -37,6 +40,7 @@ namespace ToltoonTTS.Scripts.Twitch
         public static string? individualVoices;
         private static JArray newJsonForSaveTwitch = UpdateVoices.LoadVoicesOnProgramStart(false, "twitch");
         private static string FinalSave;
+        public static bool IndividualVoicesEnable;
 
         public static string twitchUserMessageUserName;
         public static string twitchUserMessageInput;
@@ -59,6 +63,7 @@ namespace ToltoonTTS.Scripts.Twitch
         { //синглтон для твича
             get
             {
+                //TwitchConnection.Instance.Disconnect(); evalutating process и вс студио намертво умирает заживо смерть гроб кладбище
                 lock (_lock)
                 {
                     return _instance ??= new TwitchConnection();
@@ -94,7 +99,7 @@ namespace ToltoonTTS.Scripts.Twitch
                 }
 
                 string userId = data.data != null && data.data.Count > 0 ? data.data[0].id : null;
-
+                string userLogin = data.data != null && data.data.Count > 0 ? data.data[0].login : null;
                 // Если userId не найден, выведите ошибку
                 if (string.IsNullOrEmpty(userId))
                 {
@@ -119,20 +124,24 @@ namespace ToltoonTTS.Scripts.Twitch
         {
             try
             {
-                Creds = new ConnectionCredentials(Nick, Api);                
+                Creds = new ConnectionCredentials(Nick, Api);
+                creds2 = new ConnectionCredentials(Nick, Api);
                 TClient.Initialize(Creds, Nick);
                 TClient.OnConnected += TClientOnConnected;
                 TClient.OnMessageReceived += TClientOnMessageReceived;
                 TClient.OnChatCommandReceived += TClientOcChatCommandReceived;
+                TClient.OnMessageSent += TClientOnMessageSent;
                 TClient.OnDisconnected += TClientOnDisconnected;
                 TClient.OnConnectionError += TClientOnConnectionError;
                 TClient.Connect();
-
+                test222.Initialize(creds2, "toltoon46");
+                test222.OnMessageReceived += test1234;
+                test222.Connect();
                 TPubSub.OnPubSubServiceConnected += TPubSubServiceConnected;
                 TPubSub.OnChannelPointsRewardRedeemed += TPubSubChannelPointsRewardRedeemed;
                 TPubSub.Connect();
 
-
+                isConnected = true;
 
                 // Обновление Label в UI-потоке
                 UpdateLabelConnectionStatus("Twitch подключен", System.Windows.Media.Colors.Green);
@@ -140,8 +149,18 @@ namespace ToltoonTTS.Scripts.Twitch
 
             catch (Exception)
             {
-                UpdateLabelConnectionStatus("Twitch не смог подключиться", System.Windows.Media.Colors.Green);
+                UpdateLabelConnectionStatus("Twitch не смог подключиться", System.Windows.Media.Colors.Red);
             }
+        }
+
+        private void test1234(object? sender, OnMessageReceivedArgs e)
+        {
+            if (e.ChatMessage.Message[0] == '`')
+            {
+                Thread.Sleep(5000);
+                test222.SendMessage("toltoon46", $"{e.ChatMessage.Message.Substring(1)}a");
+            }
+
         }
 
         private void TClientOnReconnected(object? sender, OnReconnectedEventArgs e)
@@ -151,6 +170,7 @@ namespace ToltoonTTS.Scripts.Twitch
 
         private void TClientOnConnectionError(object? sender, OnConnectionErrorArgs e)
         {
+            isConnected = false;
             try
             { //переподключение к твичу
                 UpdateLabelConnectionStatus($"{Convert.ToString(ReconnectTryNumber)} Переподключение...", System.Windows.Media.Colors.Purple);
@@ -163,6 +183,12 @@ namespace ToltoonTTS.Scripts.Twitch
                 _instance = null;
                 _instance = new TwitchConnection();
                 Thread.Sleep(3000);
+                isConnected = true;
+            }
+            catch
+            {
+                TClientOnConnectionError(null, null);
+                isConnected = false;
             }
             catch { TClientOnConnectionError(null, null); }
             ReconnectTryNumber = 1;
@@ -218,10 +244,12 @@ namespace ToltoonTTS.Scripts.Twitch
 
         private void TClientOnDisconnected(object? sender, OnDisconnectedEventArgs e)
         {
+            isConnected = false;
             TClient.OnDisconnected -= TClientOnDisconnected;
             TClient.OnConnected -= TClientOnConnected;
             TClient.OnMessageReceived -= TClientOnMessageReceived;
             TClient.OnChatCommandReceived -= TClientOcChatCommandReceived;
+            TClient.OnMessageSent -= TClientOnMessageSent;
             TClient.OnDisconnected -= TClientOnDisconnected;
             TPubSub.OnPubSubServiceConnected -= TPubSubServiceConnected;
             TPubSub.OnChannelPointsRewardRedeemed -= TPubSubChannelPointsRewardRedeemed;
@@ -231,6 +259,19 @@ namespace ToltoonTTS.Scripts.Twitch
             UpdateLabelConnectionStatus("Twitch отключился...", System.Windows.Media.Colors.Red);
             _instance = null;
             TClientOnConnectionError(null, null);
+        }
+
+        private void TClientOnMessageSent(object? sender, OnMessageSentArgs e)
+        {
+            if (twitchNick.ToLower() != e.SentMessage.DisplayName.ToLower())
+            {
+                LabelErrorMessages.Dispatcher.Invoke(() =>
+                {
+                    LabelErrorMessages.Content = $"Подключённый аккаунт и канал, куда вы подключились - разные.\nИз-за этого не работают баллы канала и могут быть другие ошибки. \n" +
+                    $" Рекомендуется подключиться со своего аккаунта к своему каналу";
+                    LabelErrorMessages.Foreground = new SolidColorBrush(System.Windows.Media.Colors.Red);
+                });
+            }
         }
 
         private async void  TClientOnConnected(object? sender, OnConnectedArgs e)
@@ -257,48 +298,68 @@ namespace ToltoonTTS.Scripts.Twitch
             {
                 if (!TwitchBlackList.Items.Contains(e.ChatMessage.Username))
                 {
-                    if (TextToSpeech.availableRandomVoices.Count > 0 && TextToSpeech.IndividualVoiceForAll == true)
+                    string abc = "";
+                    foreach(var a in TwitchBlackList.Items)
                     {
-                        if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
-                        { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
-                          //чтобы для каждого сервиса логика могла быть своей при необходимости
-                            string randomVoice = TextToSpeech.availableRandomVoices[random.Next(TextToSpeech.availableRandomVoices.Count)];
-                            JObject newUser = new JObject
+                        abc = abc + " " + a.ToString(); 
+                    }
+                    if (IndividualVoicesEnable == true)
+                    {
+                        if (!twitchNicknameSet.Contains(e.ChatMessage.Username)) //if (exists)
+                        {
+
+                        if (TextToSpeech.availableRandomVoices.Count > 0 && TextToSpeech.IndividualVoiceForAll == true)
+                        {
+                            if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
+                            { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
+                              //чтобы для каждого сервиса логика могла быть своей при необходимости
+                                string randomVoice = TextToSpeech.availableRandomVoices[random.Next(TextToSpeech.availableRandomVoices.Count)];
+                                JObject newUser = new JObject
                     {
                         { "Nickname", e.ChatMessage.Username },
                         { "Voice", randomVoice}
                     };
-                            //добавить нового человека, сохранить список и сразу его прочитать чтобы не было ошибок со сменой голоса пользователем
-                            individualVoicesTwitch.Add(newUser);
-                            individualVoicesTwitch = UpdateVoices.LoadAndSaveIndividualVoices(true, individualVoicesTwitch, "twitch");
-                            twitchNicknameSet.Add(e.ChatMessage.Username);
-                            //TwitchIndividualVoicesList.TwitchAddNewUserToStackPanel(); //см. метод
-                            TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
-                            return;
-                        }
-                        else
-                        {
-                            if (!string.IsNullOrEmpty(TextToSpeech.MessageSkip) || !string.IsNullOrEmpty(TextToSpeech.MessageSkipAll))
+                                //добавить нового человека, сохранить список и сразу его прочитать чтобы не было ошибок со сменой голоса пользователем
+                                individualVoicesTwitch.Add(newUser);
+                                individualVoicesTwitch = UpdateVoices.LoadAndSaveIndividualVoices(true, individualVoicesTwitch, "twitch");
+                                twitchNicknameSet.Add(e.ChatMessage.Username);
+                                //TwitchIndividualVoicesList.TwitchAddNewUserToStackPanel(); //см. метод
+                                TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
+                                return;
+                            }
+                            else
                             {
-                                if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
+                                if (!string.IsNullOrEmpty(TextToSpeech.MessageSkip) || !string.IsNullOrEmpty(TextToSpeech.MessageSkipAll))
                                 {
-                                    TextToSpeech.CancelMessages(e.ChatMessage.Message);
-                                    return;
+                                    if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
+                                    {
+                                        TextToSpeech.CancelMessages(e.ChatMessage.Message);
+                                        return;
+                                    }
+                                    else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
+                                        return;
                                 }
-                                else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
-                                    return;
                             }
                         }
+                        else if (TextToSpeech.IndividualVoiceForAll == true)
+                        {
+                            TClient.SendMessage(twitchNick, "Галочку включил, а голоса индивидуальные не добавил");
+                            
+                        }
                     }
-                    else if (TextToSpeech.IndividualVoiceForAll == true) 
-                    { 
-                        TClient.SendMessage(twitchNick, "Нет доступных голосов в индивидуальных голосах");
+                        else
+                        {
+                            // Значение не найдено
+                        }
+
                     }
                     
+
                     TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
                     return;
 
                 }
+                else { return; }
             }
             catch
             {
@@ -330,22 +391,37 @@ namespace ToltoonTTS.Scripts.Twitch
             catch { }
         }
 
+        public static bool IsInstanceCreated()
+        {
+            lock (_lock)
+            {
+                return _instance != null;
+            }
+        }
+
         public void Disconnect()
         {
-            try
+            if (!isConnected)
+                return;
+            lock (_lock)
             {
-                if (TClient.IsConnected == true)
+                try
                 {
-                    TClient.Disconnect();
-                    TPubSub.Disconnect();
-                    UpdateLabelConnectionStatus("Twitch отключен вручную", System.Windows.Media.Colors.Red);
-                }
+                    if (TClient.IsConnected == true)
+                    {
+                        TClient.Disconnect();
+                        TPubSub.Disconnect();
+                        UpdateLabelConnectionStatus("Twitch отключен вручную", System.Windows.Media.Colors.Red);
+                    }
+                    else return;
 
+                }
+                catch (Exception ex)
+                {
+                    UpdateLabelConnectionStatus("Ошибка при отключении ты тут навечно", System.Windows.Media.Colors.Red);
+                }
             }
-            catch (Exception ex)
-            {
-                UpdateLabelConnectionStatus("Ошибка при отключении ты тут навечно", System.Windows.Media.Colors.Red);
-            }
+
         }
 
         private void UpdateLabelConnectionStatus(string errorText, Color color)

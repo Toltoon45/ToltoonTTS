@@ -7,6 +7,8 @@ using ToltoonTTS.Scripts.IndividualVoices;
 using System.Windows.Media;
 using ToltoonTTS.Scripts.Twitch;
 using ToltoonTTS.Scripts.GoodGame;
+using SharpHook;
+using SharpHook.Native;
 
 namespace ToltoonTTS
 {
@@ -17,6 +19,8 @@ namespace ToltoonTTS
 
         bool ConnectToTwitch;
 
+        private static HashSet<KeyCode> pressedKeys = new HashSet<KeyCode>();
+
         public MainWindow()
         {
             TextToSpeech.CanRemoveEmoji = false;
@@ -26,9 +30,16 @@ namespace ToltoonTTS
             AddVoiceToPool.InstalledVoices = new List<string>();
             TwitchConnection.TwitchBlackList = new ListBox();
             TwitchConnection.LabelTwitchStatusMessage = LabelTwitchStatusMessage;
+            TwitchConnection.LabelErrorMessages = LabelErrorMessages;
             GoodGameConnection.LabelGoodgameStatusMessage = LabelGoodgameStatusMessage;
 
             ToolTipService.SetInitialShowDelay(PasswordboxTwitchApi, 100);
+
+            var hook = new TaskPoolGlobalHook();
+            hook.KeyPressed += OnKeyPressed;
+            hook.KeyReleased += OnKeyReleased;
+            /*Task.Run(() => hook.Run()); */;
+            hook.RunAsync();
 
             //загрузка данных в listbox
             ListBoxBlackList = LoadContainers.LoadBlackListUser(ListBoxBlackList, "DataForProgram/BlackList/BlackListUsers.json");
@@ -39,12 +50,38 @@ namespace ToltoonTTS
             TextToSpeech.WhatToReplaceWith = ListBoxWhatToReplaceWith.Items.Cast<string>().ToList();
 
             Zaglushka();
-            foreach (var items in ListBoxBlackList.Items)
+            foreach (string items in ListBoxBlackList.Items)
             {
-                TwitchConnection.TwitchBlackList.Items.Add(items);
+                TwitchConnection.TwitchBlackList.Items.Add(items.ToLower());
             }
 
         }
+
+        private void OnKeyReleased(object? sender, KeyboardHookEventArgs e)
+        {
+            pressedKeys.Remove(e.Data.KeyCode);
+        }
+        //пропуск сообщений. Хочу сделать добавить изменение пользователями
+        private void OnKeyPressed(object? sender, KeyboardHookEventArgs e)
+        {
+            pressedKeys.Add(e.Data.KeyCode);
+            if(pressedKeys.Count >= 3)
+            {
+                if (pressedKeys.Contains(KeyCode.VcLeftControl) && pressedKeys.Contains(KeyCode.VcLeftAlt) && pressedKeys.Contains(KeyCode.VcB)
+    && pressedKeys.Contains(KeyCode.VcLeftShift))
+            {
+                    TextToSpeech.CancelMessages(TextToSpeech.MessageSkipAll);
+                    return;
+            }
+
+                else if (pressedKeys.Contains(KeyCode.VcLeftControl) && pressedKeys.Contains(KeyCode.VcLeftAlt) && pressedKeys.Contains(KeyCode.VcB))
+                {
+                    TextToSpeech.CancelMessages(TextToSpeech.MessageSkip);
+                    return;
+                }
+            }
+        }
+
         //из-за отсутствия некоторых значений программа может не запуститься
         private void Zaglushka()
         {
@@ -127,7 +164,10 @@ namespace ToltoonTTS
 
         private void buttonTwitchDisconnect_Click(object sender, RoutedEventArgs e)
         {
+            if (TwitchConnection.IsInstanceCreated())
+            {
             TwitchConnection.Instance.Disconnect();
+        }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -138,11 +178,6 @@ namespace ToltoonTTS
             TwitchConnection TClient = TwitchConnection.Instance;
         }
 
-        private void checkBoxRemoveEmoji_Checked(object sender, RoutedEventArgs e)
-        {
-            TextToSpeech.CanRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
-            SaveContainers.JsonSaveRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
-        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -259,6 +294,7 @@ namespace ToltoonTTS
                 // Добавляем элемент, если ListBox пустой
                 ListBoxBlackList.Items.Add(TextBoxBlackList.Text);
                 TwitchConnection.TwitchBlackList.Items.Add(TextBoxBlackList.Text.ToLower());
+                //GoodGameConnection.GoodGameBlackList.Items.Add(TextBoxBlackList.Text.ToLower());
             }
             else
             {
@@ -292,6 +328,7 @@ namespace ToltoonTTS
                 int a = ListBoxBlackList.SelectedIndex;
                 ListBoxBlackList.Items.Remove(ListBoxBlackList.SelectedItem);
                 TwitchConnection.TwitchBlackList.Items.RemoveAt(a);
+                //GoodGameConnection.GoodGameBlackList.Items.RemoveAt(a);
             }
         }
 
@@ -372,11 +409,6 @@ namespace ToltoonTTS
             }
         }
 
-        private void CheckBoxConnectToTwitch_Checked(object sender, RoutedEventArgs e)
-        {
-            ConnectToTwitch = CheckBoxConnectToTwitch.IsChecked ?? false;
-        }
-
         private void buttonSaveJsonProfile_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             textboxJsonProfileNameToSave.Background = Brushes.LightBlue;
@@ -412,12 +444,6 @@ namespace ToltoonTTS
             SaveContainers.DeleteProfile(comboBoxProfileSelect);
         }
 
-        private void checkBoxVoiceIndividualVoices_Checked(object sender, RoutedEventArgs e)
-        {
-            TextToSpeech.IndividualVoiceForAll = checkBoxVoiceIndividualVoices.IsChecked ?? false;
-            SaveContainers.JsonIndividualVoices = checkBoxVoiceIndividualVoices.IsChecked ?? false;
-        }
-
         private void TextBoxTtsDoNotTtsIfStartWith_TextChanged(object sender, TextChangedEventArgs e)
         {
             SaveContainers.JsonDoNotTtsIfStartWith = TextBoxTtsDoNotTtsIfStartWith.Text;
@@ -439,11 +465,6 @@ namespace ToltoonTTS
         private void TextBoxGoodgameLogin_TextChanged(object sender, TextChangedEventArgs e)
         {
             SaveContainers.JsonTextBoxGoodgameLogin = TextBoxGoodgameLogin.Text;
-        }
-
-        private void CheckBoxConnectToGoodgame_Checked(object sender, RoutedEventArgs e)
-        {
-            SaveContainers.JsonCheckBoxConnectToGoodgame = CheckBoxConnectToTwitch.IsChecked ?? false;
         }
         private void HyperLinkTwitchGetTokens(object sender, RoutedEventArgs e)
         {
@@ -477,6 +498,42 @@ namespace ToltoonTTS
         {
             TextboxTwitchNickName.MaxHeight = 20;
             TextboxTwitchNickName.Width = 50;
+        }
+
+        private void CheckBoxConnectToTwitch_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectToTwitch = CheckBoxConnectToTwitch.IsChecked ?? false;
+        }
+
+        private void CheckBoxConnectToGoodgame_Click(object sender, RoutedEventArgs e)
+        {
+            SaveContainers.JsonCheckBoxConnectToGoodgame = CheckBoxConnectToTwitch.IsChecked ?? false;
+        }
+
+        private void checkBoxRemoveEmoji_Click(object sender, RoutedEventArgs e)
+        {
+            TextToSpeech.CanRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+            SaveContainers.JsonSaveRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+        }
+
+        private void checkBoxRemoveEmoji_Checked(object sender, RoutedEventArgs e)
+        {
+            TextToSpeech.CanRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+            SaveContainers.JsonSaveRemoveEmoji = (bool)checkBoxRemoveEmoji.IsChecked;
+        }
+
+        private void checkBoxVoiceIndividualVoices_Click(object sender, RoutedEventArgs e)
+        {
+            TwitchConnection.IndividualVoicesEnable = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            GoodGameConnection.IndividualVoicesEnable = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            TextToSpeech.IndividualVoiceForAll = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            SaveContainers.JsonIndividualVoices = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+        }
+
+        private void checkBoxVoiceIndividualVoices_Checked(object sender, RoutedEventArgs e)
+        {
+            TextToSpeech.IndividualVoiceForAll = checkBoxVoiceIndividualVoices.IsChecked ?? false;
+            SaveContainers.JsonIndividualVoices = checkBoxVoiceIndividualVoices.IsChecked ?? false;
         }
     }
 }

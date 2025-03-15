@@ -3,7 +3,6 @@ using System.Speech.Synthesis;
 using System.Text.RegularExpressions;
 using System.Collections.Concurrent;
 using ToltoonTTS.Scripts.GoodGame;
-
 public static class TextToSpeech
 {
     public static readonly SpeechSynthesizer Synth = new SpeechSynthesizer(); // Статический экземпляр
@@ -39,14 +38,22 @@ public static class TextToSpeech
 
     public static void Play(string message, string username, string whatService)
     {
+        if (isSpeaking)
+        {
+            if (message == MessageSkip || message == MessageSkipAll)
+                CancelMessages(message);
+        }
         whatPlatformMessageFrom = whatService;
-        // Добавляем сообщение в очередь
-        messageQueue.Enqueue((message, username));
+
         if (!string.IsNullOrEmpty(DoNotTtsIfStartWith))
             if (message.StartsWith(DoNotTtsIfStartWith))
             {
                 return;
             }
+
+        // Добавляем сообщение в очередь
+        messageQueue.Enqueue((message, username));
+
         // Если сейчас не происходит озвучивание, начинаем процесс
         if (!isSpeaking)
         {
@@ -56,123 +63,153 @@ public static class TextToSpeech
     static TextToSpeech()
     {
         Synth.SpeakCompleted += Synth_SpeakCompleted; // Подписываемся один раз
+
     }
 
     private static void ProcessQueue()
     {
-        
-        if (messageQueue.TryDequeue(out var msgInfo))
+        try
         {
-            isSpeaking = true;
-
-            string message = msgInfo.message;
-            string username = msgInfo.username;
-
-            // Изменение текста и подготовка сообщения к озвучиванию
-            var erredactedMessage = message;
-            string emojiPattern = @"(?:[\u203C-\u3299\u00A9\u00AE\u2000-\u3300\uF000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF])";
-
-            // Заменяем несколько точек на одну точку
-            erredactedMessage = Regex.Replace(erredactedMessage, @"\.{2,}", " . ");
-
-            // Заменяем ссылки словом "link"
-            erredactedMessage = Regex.Replace(erredactedMessage, @"(?:http(s)?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+", "link");
-
-            // Удаление эмодзи, если включено
-            if (CanRemoveEmoji)
+            if (messageQueue.TryDequeue(out var msgInfo))
             {
-                erredactedMessage = Regex.Replace(erredactedMessage, emojiPattern, string.Empty);
-            }
+                //Первичная обработка
+                isSpeaking = true;
 
-            if (WhatToReplace.Count > 0) // Надо ли вообще менять
-            {
-                string processedMessage = "";
-                string wordReplacedMessage = "";
+                string message = msgInfo.message;
+                string username = msgInfo.username;
 
-                // Разделяем сообщение на слова
-                string[] words = Regex.Split(erredactedMessage, @"\s+");
+                // Изменение текста и подготовка сообщения к озвучиванию
+                var erredactedMessage = message;
+                string emojiPattern = @"(?:[\u203C-\u3299\u00A9\u00AE\u2000-\u3300\uF000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF])";
 
-                foreach (string word in words)
+                // Заменяем несколько точек на одну точку
+                erredactedMessage = Regex.Replace(erredactedMessage, @"\.{2,}", " . ");
+
+                // Заменяем ссылки словом "link"
+                erredactedMessage = Regex.Replace(erredactedMessage, @"(?:http(s)?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+", "link");
+
+                // Удаление эмодзи, если включено
+                if (CanRemoveEmoji)
                 {
-                    wordReplacedMessage = word;
-                    // Проверяем, есть ли слово в списке WhatToReplace
-                    int index = WhatToReplace.FindIndex(w => w.ToLower() == wordReplacedMessage.ToLower());
-                    if (index >= 0)
+                    erredactedMessage = Regex.Replace(erredactedMessage, emojiPattern, string.Empty);
+                }
+                //Вторичная обработка
+                if (WhatToReplace.Count > 0) // Надо ли вообще менять
+                {
+                    string processedMessage = "";
+                    string wordReplacedMessage = "";
+
+                    // Разделяем сообщение на слова
+                    string[] words = Regex.Split(erredactedMessage, @"\s+");
+
+                    foreach (string word in words)
                     {
-                        // Если слово найдено, заменяем его
-                        wordReplacedMessage = WhatToReplaceWith[index];
-                    }
-                    processedMessage = $"{processedMessage} {wordReplacedMessage}";
-                }
-
-                erredactedMessage = processedMessage;
-            }
-
-            if (IndividualVoiceForAll)
-            {
-                if (whatPlatformMessageFrom == "twitch")
-                {
-                    targetVoice = twitchUserVoicesDict.TryGetValue(username, out var voice) ? voice : null;
-                }
-                else if (whatPlatformMessageFrom == "goodgame")
-                {
-                    targetVoice = GoodGameConnection.goodgameUserVoicesDict.TryGetValue(username, out var voice) ? voice : null;
-                }
-                if (targetVoice != null)
-                {
-                    foreach (var item in voiceFullInfo)
-                    {
-                        try
+                        wordReplacedMessage = word;
+                        // Проверяем, есть ли слово в списке WhatToReplace
+                        int index = WhatToReplace.FindIndex(w => w.ToLower() == wordReplacedMessage.ToLower());
+                        if (index >= 0)
                         {
-                            if (targetVoice == item["ComboBoxValue"]?.ToString())
+                            // Если слово найдено, заменяем его
+                            wordReplacedMessage = WhatToReplaceWith[index];
+                        }
+                        processedMessage = $"{processedMessage} {wordReplacedMessage}";
+                    }
+
+                    erredactedMessage = processedMessage;
+                }
+
+                if (IndividualVoiceForAll)
+                {
+                    if (whatPlatformMessageFrom == "twitch")
+                    {
+                        targetVoice = twitchUserVoicesDict.TryGetValue(username, out var voice) ? voice : null;
+                    }
+                    else if (whatPlatformMessageFrom == "goodgame")
+                    {
+                        targetVoice = GoodGameConnection.goodgameUserVoicesDict.TryGetValue(username, out var voice) ? voice : null;
+                    }
+                    if (targetVoice != null)
+                    {
+                        foreach (var item in voiceFullInfo)
+                        {
+                            try
                             {
-                                Synth.SelectVoice(item["ComboBoxValue"]?.ToString());
-                                Synth.Volume = Convert.ToInt32(item["TextBoxVoice"] ?? "50");
-                                Synth.Rate = Convert.ToInt32(item["TextBoxSpeed"] ?? "3");
-                                Synth.SpeakAsync(erredactedMessage);
+                                if (targetVoice == item["ComboBoxValue"]?.ToString())
+                                {
+                                    Synth.SelectVoice(item["ComboBoxValue"]?.ToString());
+                                    Synth.Volume = Convert.ToInt32(item["TextBoxVoice"] ?? "50");
+                                    Synth.Rate = Convert.ToInt32(item["TextBoxSpeed"] ?? "3");
+                                    Synth.SpeakAsync(erredactedMessage);
+                                    break;
+                                }
+                            }
+                            catch
+                            {
+                                Synth.SelectVoice(availableRandomVoices[0]);
+                                Synth.Volume = 50;
+                                Synth.Rate = 3;
+                                Synth.SpeakAsync("Заглушка. С говорилкой что-то не так");
                                 break;
                             }
-                        }
-                        catch
-                        {
-                            Synth.SelectVoice(availableRandomVoices[0]);
-                            Synth.Volume = 50;
-                            Synth.Rate = 3;
-                            Synth.SpeakAsync("Заглушка. С говорилкой что-то не так");
-                            break;
-                        }
 
+                        }
                     }
+                    else
+                    {
+                        Synth.SelectVoice(availableRandomVoices[0]);
+                        Synth.Volume = 50;
+                        Synth.Rate = 3;
+                        Synth.SpeakAsync(erredactedMessage);
+                    }
+
                 }
                 else
                 {
-                    Synth.SelectVoice(availableRandomVoices[0]);
-                    Synth.Volume = 50;
-                    Synth.Rate = 3;
-                    Synth.SpeakAsync(erredactedMessage);
-                }
+                    try
+                    {
+                        var installedVoices = Synth.GetInstalledVoices();
+                        Synth.Rate = TtsSpeed;
+                        Synth.Volume = TtsVolume;
+                        Synth.SelectVoice(TtsVoiceName);
 
+                        Synth.SpeakAsync(erredactedMessage);
+                    }
+                    catch
+                    {
+                        ClearQueue();
+                        Synth.SpeakAsyncCancelAll();
+                        foreach (var voices in Synth.GetInstalledVoices())
+                        {
+                            try
+                            {
+                                Synth.SelectVoice(voices.VoiceInfo.Name);
+
+                                isSpeaking = false;
+                                TtsVoiceName = voices.VoiceInfo.Name;
+                                return;
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+
+                        }
+                        return;
+                    }
+                }
             }
             else
             {
-                try
-                {
-                    var installedVoices = Synth.GetInstalledVoices();
-                    Synth.Rate = TtsSpeed;
-                    Synth.Volume = TtsVolume;
-                    Synth.SelectVoice(TtsVoiceName);
-
-                    Synth.SpeakAsync(erredactedMessage);
-                }
-                catch
-                {
-                   
-                }
+                isSpeaking = false; // Очередь пуста
             }
         }
-        else
+        catch (Exception ex)
         {
-            isSpeaking = false; // Очередь пуста
+            // Логирование ошибки, если необходимо
+            Console.WriteLine($"Произошла ошибка: {ex.Message}");
+
+            // Вызов метода DeleteAllQueuePanic в случае ошибки
+            DeleteAllQueuePanic();
         }
     }
 
@@ -200,11 +237,16 @@ public static class TextToSpeech
                 return;
             }
             return;
-
+    }
+    private static void DeleteAllQueuePanic()
+    {
+        ClearQueue();
+        Synth.SpeakAsyncCancelAll();
     }
 
     private static void ClearQueue()
     {
+        isSpeaking = false;
         while (messageQueue.TryDequeue(out _))
         {
             // Просто извлекаем сообщения из очереди, не обрабатываем их
