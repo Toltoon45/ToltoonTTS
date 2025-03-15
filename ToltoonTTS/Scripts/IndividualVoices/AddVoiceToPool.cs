@@ -22,21 +22,23 @@ namespace ToltoonTTS.Scripts.IndividualVoices
             var comboBox = new ComboBox
             {
                 Name = $"comboBoxInstalledVoice",
-                Width = 100,
-                Margin = new Thickness(10, 10, 10, 0),
+                Width = 300,
+                Margin = new Thickness(10, 0, 0, 0),
                 ToolTip = "Выбор голоса",
                 ItemsSource = InstalledVoices,
                 SelectedValue = GetRandomFreeVoice(stackPanelAddedVoices),
             };
             var textBoxVolume = CreateTextBox($"textBoxVoice", "Громкость этого голоса", 50);
+                textBoxVolume.Margin = new Thickness(50, 0, 10, 0);
             var textBoxSpeed = CreateTextBox($"textBoxSpeed", "Скорость голоса", 3);
+                textBoxSpeed.Margin = new Thickness(100, 0, 10, 0);
 
             Button buttonDelete = new Button();
             {
                 buttonDelete.Name = $"buttonDelete";
                 buttonDelete.Content = "Удалить";
                 buttonDelete.Width = 75;
-                buttonDelete.Margin = new Thickness(10, 10, 10, 0);
+                buttonDelete.Margin = new Thickness(70, 0, 10, 0);
                 buttonDelete.ToolTip = "Удалить";
 
                 // Добавляем обработчик клика на кнопку удаления
@@ -47,14 +49,16 @@ namespace ToltoonTTS.Scripts.IndividualVoices
                     stackPanelAddedVoices.Children.Remove(parentStackPanel);
                 };
             }
-            TextBox textBoxYourVoiceName = new TextBox();
-            {
-                textBoxYourVoiceName.Name = $"textBoxYourVoiceName";
-                textBoxYourVoiceName.ToolTip = "Для баллов канала";
-                textBoxYourVoiceName.Margin = new Thickness(10, 10, 10, 0);
-                textBoxYourVoiceName.Width = 150;
-                textBoxYourVoiceName.ToolTip = "В разработке";
-            }
+            //для будущей переделки длинных названий голосов в кастомные
+            //TextBox textBoxYourVoiceName = new TextBox();
+            //{
+            //    textBoxYourVoiceName.Name = $"textBoxYourVoiceName";
+            //    textBoxYourVoiceName.ToolTip = "Для баллов канала";
+            //    textBoxYourVoiceName.Margin = new Thickness(100, 0, 10, 0);
+            //    textBoxYourVoiceName.Width = 150;
+            //    textBoxYourVoiceName.ToolTip = "В разработке";
+            //}
+            newPanel.Margin = new Thickness(0, 15, 0, 0);
             newPanel.Children.Add(comboBox);
             newPanel.Children.Add(textBoxVolume);
             newPanel.Children.Add(textBoxSpeed);
@@ -75,6 +79,8 @@ namespace ToltoonTTS.Scripts.IndividualVoices
                 Text = Convert.ToString(voiceOrVolume)
             };
         }
+
+
 
         private static string GetRandomFreeVoice(StackPanel stackPanelAddedVoices)
         {

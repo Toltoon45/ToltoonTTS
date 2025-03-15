@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using ToltoonTTS.Scripts.IndividualVoices;
 using ToltoonTTS.Scripts.Twitch;
 using TwitchLib.PubSub.Models.Responses.Messages.AutomodCaughtMessage;
@@ -44,14 +45,26 @@ namespace ToltoonTTS.Scripts
                 foreach (var item in jsonArray)
                 {
                     StackPanel newPanel = new StackPanel();
+                    newPanel.Orientation = Orientation.Horizontal;
+                    newPanel.Margin = new Thickness(0, 15, 0, 0);
+
+                    // Добавляем обработчики событий для самого StackPanel
+                    newPanel.MouseEnter += (sender, e) =>
                     {
-                        newPanel.Orientation = Orientation.Horizontal;
-                    }
+                        var stackPanel = sender as StackPanel;
+                        stackPanel.Background = Brushes.Red;
+                    };
+
+                    newPanel.MouseLeave += (sender, e) =>
+                    {
+                        var stackPanel = sender as StackPanel;
+                        stackPanel.Background = Brushes.White;
+                    };
                     ComboBox comboBox = new ComboBox();
                     {
                         comboBox.Name = $"comboBoxInstalledVoice";
-                        comboBox.Width = 100;
-                        comboBox.Margin = new Thickness(10, 10, 10, 0);
+                        comboBox.Width = 300;
+                        comboBox.Margin = new Thickness(10, 0, 0, 0);
                         comboBox.ToolTip = "Выбор голоса";
                         comboBox.ItemsSource = AddVoiceToPool.InstalledVoices;
                         comboBox.Text = Convert.ToString(item["ComboBoxValue"]);
@@ -62,7 +75,7 @@ namespace ToltoonTTS.Scripts
                     {
                         textBoxVolume.Name = $"textBoxVoice";
                         textBoxVolume.Width = 25;
-                        textBoxVolume.Margin = new Thickness(10, 10, 10, 0);
+                        textBoxVolume.Margin = new Thickness(50, 0, 10, 0);
                         textBoxVolume.ToolTip = "Громкость этого голоса";
                         textBoxVolume.Text = Convert.ToString(item["TextBoxVoice"]);
                     }
@@ -71,16 +84,17 @@ namespace ToltoonTTS.Scripts
                     {
                         textBoxSpeed.Name = $"textBoxSpeed";
                         textBoxSpeed.Width = 25;
-                        textBoxSpeed.Margin = new Thickness(10, 10, 10, 0);
+                        textBoxSpeed.Margin = new Thickness(100, 0, 10, 0);
                         textBoxSpeed.ToolTip = "Скорость голоса";
                         textBoxSpeed.Text = Convert.ToString(item["TextBoxSpeed"]);
                     }
+
                     Button buttonDelete = new Button();
                     {
                         buttonDelete.Name = $"buttonDelete";
                         buttonDelete.Content = "Удалить";
                         buttonDelete.Width = 75;
-                        buttonDelete.Margin = new Thickness(10, 10, 10, 0);
+                        buttonDelete.Margin = new Thickness(70, 0, 10, 0);
                         buttonDelete.ToolTip = "Удалить";
 
                         // Добавляем обработчик клика на кнопку удаления
@@ -95,7 +109,7 @@ namespace ToltoonTTS.Scripts
                     {
                         textBoxYourVoiceName.Name = $"textBoxYourVoiceName";
                         textBoxYourVoiceName.ToolTip = "Для баллов канала";
-                        textBoxYourVoiceName.Margin = new Thickness(10, 10, 10, 0);
+                        textBoxYourVoiceName.Margin = new Thickness(10, 0, 10, 0);
                         textBoxYourVoiceName.Width = 150;
                     }
 

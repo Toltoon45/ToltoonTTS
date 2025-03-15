@@ -18,9 +18,9 @@ namespace ToltoonTTS.Scripts.GoodGame
         public static Dictionary<string, string> goodgameUserVoicesDict;
         private static JArray newJsonForSaveGoodgame = UpdateVoices.LoadVoicesOnProgramStart(false, "goodgame");
         public static HashSet<string> goodgameNicknameSet = new HashSet<string>(newJsonForSaveGoodgame.Select(item => item["Nickname"]?.ToString()).Where(nick => nick != null));
+        public static bool IndividualVoicesEnable;
 
         public static Label LabelGoodgameStatusMessage = new Label();
-
         public static async Task GoodGameConnect(string login)
         {
             UpdateGoodgameStatus("GG: Ща ща подожди", System.Windows.Media.Colors.Black);
@@ -86,7 +86,10 @@ namespace ToltoonTTS.Scripts.GoodGame
                         string receivedMessage = Encoding.UTF8.GetString(bufferToReceive, 0, result.Count);
                         JObject jsonObj = JObject.Parse(receivedMessage);
                         string textUserName2 = jsonObj["data"]?["user_name"]?.ToString();
-                        string textValue = jsonObj["data"]?["text"]?.ToString();
+                                //public static ListBox GoodGameBlackList;
+        //if (GoodGameBlackList!= null && GoodGameBlackList.Items.Contains(textUserName2.ToLower()))
+        //    return;
+        string textValue = jsonObj["data"]?["text"]?.ToString();
                         if (textValue != null)
                         {
                             string textUserName = jsonObj["data"]?["user_name"]?.ToString();
