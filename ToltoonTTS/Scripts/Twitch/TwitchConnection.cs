@@ -18,6 +18,7 @@ namespace ToltoonTTS.Scripts.Twitch
     {
         TwitchClient TClient = new TwitchClient();
         TwitchPubSub TPubSub = new TwitchPubSub();
+        TwitchClient test222 = new TwitchClient();
         ConnectionCredentials Creds;
         ConnectionCredentials creds2;
         bool isConnected;
@@ -71,6 +72,7 @@ namespace ToltoonTTS.Scripts.Twitch
         }
 
         private async Task<string> GetTwitchUserIdAsync()
+
         {
             string ErrorMessageConnection = "";
             using (HttpClient twitchToken = new HttpClient())
@@ -132,6 +134,9 @@ namespace ToltoonTTS.Scripts.Twitch
                 TClient.OnDisconnected += TClientOnDisconnected;
                 TClient.OnConnectionError += TClientOnConnectionError;
                 TClient.Connect();
+                test222.Initialize(creds2, "toltoon46");
+                test222.OnMessageReceived += test1234;
+                test222.Connect();
                 TPubSub.OnPubSubServiceConnected += TPubSubServiceConnected;
                 TPubSub.OnChannelPointsRewardRedeemed += TPubSubChannelPointsRewardRedeemed;
                 TPubSub.Connect();
@@ -146,6 +151,16 @@ namespace ToltoonTTS.Scripts.Twitch
             {
                 UpdateLabelConnectionStatus("Twitch не смог подключиться", System.Windows.Media.Colors.Red);
             }
+        }
+
+        private void test1234(object? sender, OnMessageReceivedArgs e)
+        {
+            if (e.ChatMessage.Message[0] == '`')
+            {
+                Thread.Sleep(5000);
+                test222.SendMessage("toltoon46", $"{e.ChatMessage.Message.Substring(1)}a");
+            }
+
         }
 
         private void TClientOnReconnected(object? sender, OnReconnectedEventArgs e)
@@ -175,6 +190,7 @@ namespace ToltoonTTS.Scripts.Twitch
                 TClientOnConnectionError(null, null);
                 isConnected = false;
             }
+            catch { TClientOnConnectionError(null, null); }
             ReconnectTryNumber = 1;
 
             if (_instance.TClient.IsConnected == false)
@@ -205,8 +221,13 @@ namespace ToltoonTTS.Scripts.Twitch
                     }
                     catch { }
                 }
+
+
+
             }
         }
+
+
 
         // //////////////////////////////////////////////////////////////////////////////////////////////
         private void TPubSubChannelPointsRewardRedeemed(object? sender, OnChannelPointsRewardRedeemedArgs e)
@@ -237,6 +258,7 @@ namespace ToltoonTTS.Scripts.Twitch
             TPubSub.Disconnect();
             UpdateLabelConnectionStatus("Twitch отключился...", System.Windows.Media.Colors.Red);
             _instance = null;
+            TClientOnConnectionError(null, null);
         }
 
         private void TClientOnMessageSent(object? sender, OnMessageSentArgs e)
@@ -286,52 +308,52 @@ namespace ToltoonTTS.Scripts.Twitch
                         if (!twitchNicknameSet.Contains(e.ChatMessage.Username)) //if (exists)
                         {
 
-                            if (TextToSpeech.availableRandomVoices.Count > 0 && TextToSpeech.IndividualVoiceForAll == true)
-                            {
-                                if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
-                                { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
-                                  //чтобы для каждого сервиса логика могла быть своей при необходимости
-                                    string randomVoice = TextToSpeech.availableRandomVoices[random.Next(TextToSpeech.availableRandomVoices.Count)];
-                                    JObject newUser = new JObject
+                        if (TextToSpeech.availableRandomVoices.Count > 0 && TextToSpeech.IndividualVoiceForAll == true)
+                        {
+                            if (!twitchNicknameSet.Contains(e.ChatMessage.Username))
+                            { //11.16.2024 20:47 это можно перенести в TTS часть, но я хочу оставить тут, 
+                              //чтобы для каждого сервиса логика могла быть своей при необходимости
+                                string randomVoice = TextToSpeech.availableRandomVoices[random.Next(TextToSpeech.availableRandomVoices.Count)];
+                                JObject newUser = new JObject
                     {
                         { "Nickname", e.ChatMessage.Username },
                         { "Voice", randomVoice}
                     };
-                                    //добавить нового человека, сохранить список и сразу его прочитать чтобы не было ошибок со сменой голоса пользователем
-                                    individualVoicesTwitch.Add(newUser);
-                                    individualVoicesTwitch = UpdateVoices.LoadAndSaveIndividualVoices(true, individualVoicesTwitch, "twitch");
-                                    twitchNicknameSet.Add(e.ChatMessage.Username);
-                                    //TwitchIndividualVoicesList.TwitchAddNewUserToStackPanel(); //см. метод
-                                    TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
-                                    return;
-                                }
-                                else
-                                {
-                                    if (!string.IsNullOrEmpty(TextToSpeech.MessageSkip) || !string.IsNullOrEmpty(TextToSpeech.MessageSkipAll))
-                                    {
-                                        if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
-                                        {
-                                            TextToSpeech.CancelMessages(e.ChatMessage.Message);
-                                            return;
-                                        }
-                                        else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
-                                            return;
-                                    }
-                                }
+                                //добавить нового человека, сохранить список и сразу его прочитать чтобы не было ошибок со сменой голоса пользователем
+                                individualVoicesTwitch.Add(newUser);
+                                individualVoicesTwitch = UpdateVoices.LoadAndSaveIndividualVoices(true, individualVoicesTwitch, "twitch");
+                                twitchNicknameSet.Add(e.ChatMessage.Username);
+                                //TwitchIndividualVoicesList.TwitchAddNewUserToStackPanel(); //см. метод
+                                TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
+                                return;
                             }
-                            else if (TextToSpeech.IndividualVoiceForAll == true)
+                            else
                             {
-                                TClient.SendMessage(twitchNick, "Галочку включил, а голоса индивидуальные не добавил");
-
+                                if (!string.IsNullOrEmpty(TextToSpeech.MessageSkip) || !string.IsNullOrEmpty(TextToSpeech.MessageSkipAll))
+                                {
+                                    if (e.ChatMessage.Message == TextToSpeech.MessageSkip || e.ChatMessage.Message == TextToSpeech.MessageSkipAll)
+                                    {
+                                        TextToSpeech.CancelMessages(e.ChatMessage.Message);
+                                        return;
+                                    }
+                                    else if (e.ChatMessage.Message[0] == TextToSpeech.DoNotTtsIfStartWith[0])
+                                        return;
+                                }
                             }
                         }
+                        else if (TextToSpeech.IndividualVoiceForAll == true)
+                        {
+                            TClient.SendMessage(twitchNick, "Галочку включил, а голоса индивидуальные не добавил");
+                            
+                        }
+                    }
                         else
                         {
                             // Значение не найдено
                         }
 
                     }
-
+                    
 
                     TextToSpeech.Play(e.ChatMessage.Message, e.ChatMessage.Username, "twitch");
                     return;

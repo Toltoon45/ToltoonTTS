@@ -69,10 +69,10 @@ namespace ToltoonTTS
             {
                 if (pressedKeys.Contains(KeyCode.VcLeftControl) && pressedKeys.Contains(KeyCode.VcLeftAlt) && pressedKeys.Contains(KeyCode.VcB)
     && pressedKeys.Contains(KeyCode.VcLeftShift))
-                {
+            {
                     TextToSpeech.CancelMessages(TextToSpeech.MessageSkipAll);
                     return;
-                }
+            }
 
                 else if (pressedKeys.Contains(KeyCode.VcLeftControl) && pressedKeys.Contains(KeyCode.VcLeftAlt) && pressedKeys.Contains(KeyCode.VcB))
                 {
@@ -166,8 +166,8 @@ namespace ToltoonTTS
         {
             if (TwitchConnection.IsInstanceCreated())
             {
-                TwitchConnection.Instance.Disconnect();
-            }
+            TwitchConnection.Instance.Disconnect();
+        }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
