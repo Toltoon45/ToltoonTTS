@@ -45,3 +45,4 @@ C:\Users\Totoonchik\source\repos\ToltoonTTS2\ToltoonTTS2\obj\Debug\net9.0-window
 C:\Users\Totoonchik\source\repos\ToltoonTTS2\ToltoonTTS2\obj\Debug\net9.0-windows\ToltoonTTS2.pdb
 C:\Users\Totoonchik\source\repos\ToltoonTTS2\ToltoonTTS2\obj\Debug\net9.0-windows\ToltoonTTS2.genruntimeconfig.cache
 C:\Users\Totoonchik\source\repos\ToltoonTTS2\ToltoonTTS2\obj\Debug\net9.0-windows\ref\ToltoonTTS2.dll
+C:\Users\Totoonchik\source\repos\ToltoonTTS2\ToltoonTTS2\obj\Debug\net9.0-windows\ToltoonTTS2.sourcelink.json

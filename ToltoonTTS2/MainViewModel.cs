@@ -119,10 +119,12 @@ namespace ToltoonTTS2
         {
             string message = e.ChatMessage.Message;
             string username = e.ChatMessage.Username;
+            string processedMessage = "";
 
             if (BlackListMembers.Any(badWord => username.Contains(badWord, StringComparison.OrdinalIgnoreCase)))
                 return;
-                _ttsService.Speak($"{message}");
+            _messageProcessing.ProcessIncomingMessage(username, message);
+            _ttsService.Speak($"{message}");
         }
 
 
@@ -206,7 +208,9 @@ namespace ToltoonTTS2
         public bool RemoveEmoji
         {
             get => _removeEmoji;
-            set { _removeEmoji = value; OnPropertyChanged(); }
+            set { _removeEmoji = value; OnPropertyChanged();
+                _messageProcessing.SetRemoveEmoji(value);
+            }
         }
 
         public string SelectedVoice
@@ -267,7 +271,9 @@ namespace ToltoonTTS2
         public ObservableCollection<string> BlackListMembers
         {
             get => _blackList;
-            set { _blackList = value; OnPropertyChanged(); }
+            set { _blackList = value; OnPropertyChanged();
+                _messageProcessing.SetBlackList(_blackList);
+            }
         }
 
         public string BlackListInput
