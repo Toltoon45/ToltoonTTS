@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToltoonTTS2", "ToltoonTTS2\ToltoonTTS2.csproj", "{A73BB806-36EC-480D-9DF1-EA057975AF9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A73BB806-36EC-480D-9DF1-EA057975AF9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A73BB806-36EC-480D-9DF1-EA057975AF9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A73BB806-36EC-480D-9DF1-EA057975AF9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A73BB806-36EC-480D-9DF1-EA057975AF9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C41E6136-0D2A-4CEB-A38A-34193200C8CD}
+	EndGlobalSection
+EndGlobal
