@@ -18,20 +18,20 @@ namespace ToltoonTTS2.TTS
         //переделывание ссылок в слово link
         private const string LinkReplace = @"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+";
 
-        public TtsMessageProcessing()
-        {
-            //_blackList = blackList;
-            //_removeEmoji = removeEmoji;
-            //_doNotTtsIfStartWith = doNotTtsIfStartWith;
-            //_skipMessage = skipMessage;
-            //_skipMessageAll = skipMessageAll;
-        }
+        //public TtsMessageProcessing()
+        //{
+        //    _blackList = blackList;
+        //    _removeEmoji = removeEmoji;
+        //    _doNotTtsIfStartWith = doNotTtsIfStartWith;
+        //    _skipMessage = skipMessage;
+        //    _skipMessageAll = skipMessageAll;
+        //}
 
         public void ProcessIncomingMessage(string username, string message)
         {
             if (_blackList.Any(blackListMember => username.Contains(blackListMember, StringComparison.OrdinalIgnoreCase)))
                 return;
-            if (message.StartsWith(_doNotTtsIfStartWith))
+            if (_doNotTtsIfStartWith != null && message.StartsWith(_doNotTtsIfStartWith))
                 return;
             // Изменение текста и подготовка сообщения к озвучиванию
             var erredactedMessage = message;
@@ -42,18 +42,18 @@ namespace ToltoonTTS2.TTS
             erredactedMessage = Regex.Replace(erredactedMessage, LinkReplace, "link");//@"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+",
 
             // Удаление эмодзи, если включено
-            //if (CanRemoveEmoji)
-            //{
-            //    erredactedMessage = Regex.Replace(erredactedMessage, emojiPattern, string.Empty);
-            //}
+            if (_removeEmoji)
+            {
+                erredactedMessage = Regex.Replace(erredactedMessage, EmojiPattern, string.Empty);
+            }
             //Вторичная обработка
             //if (WhatToReplace.Count > 0) // Надо ли вообще менять
             //{
             //    string processedMessage = "";
             //    string wordReplacedMessage = "";
 
-                // Разделяем сообщение на слова
-                string[] words = Regex.Split(erredactedMessage, @"\s+");
+            // Разделяем сообщение на слова
+            string[] words = Regex.Split(erredactedMessage, @"\s+");
 
                 //foreach (string word in words)
                 //{
@@ -90,6 +90,21 @@ namespace ToltoonTTS2.TTS
         public void WordToReplaceWith(ObservableCollection<string> WordToReplaceWith)
         {
             _wordToReplaceWith = WordToReplaceWith;
+        }
+
+        public void SetBlackList(ObservableCollection<string> blackList)
+        {
+            _blackList = blackList;
+        }
+
+        public void SetRemoveEmoji(bool removeEmoji)
+        {
+            _removeEmoji = removeEmoji;
+        }
+
+        public void SetDoNotTtsIfStartWith(string start)
+        {
+            _doNotTtsIfStartWith = start;
         }
     }
 }

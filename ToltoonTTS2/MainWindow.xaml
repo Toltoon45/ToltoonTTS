@@ -29,8 +29,12 @@
                                 <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="176">
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                            <PasswordBox x:Name="PasswordboxTwitchApi" helpers:PasswordBoxHelper.Password="{Binding TwitchApi, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                         Margin="10,0,0,0" VerticalAlignment="Center" Width="50" ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!"/>
+                                            <PasswordBox x:Name="PasswordboxTwitchApi" 
+             helpers:PasswordBoxHelper.Password="{Binding TwitchApi, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             Margin="10,0,0,0" 
+             VerticalAlignment="Center" 
+             Width="50" 
+             ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!"/>
                                             <Label x:Name="LabelTwitchApi" VerticalAlignment="Center" Margin="0,0,5,0" ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!">
                                                 <Hyperlink>Access Token</Hyperlink>
                                             </Label>
@@ -189,7 +193,7 @@
                                                  Text="{Binding WordToReplaceInput, UpdateSourceTrigger=PropertyChanged}"
                                                  TextWrapping="Wrap" Width="100" Margin="10,-5,10,5" />
                                         <ListBox x:Name="ListBoxWhatToReplace" 
-                                                 ItemsSource="{Binding WordToReplace}" 
+                                                 ItemsSource="{Binding WordToReplace, UpdateSourceTrigger=PropertyChanged}" 
                                                  SelectedIndex="{Binding WordReplaceSelectedIndex, UpdateSourceTrigger=PropertyChanged}"
                                                  Width="100" Height="100"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -209,7 +213,7 @@
                                                  Text="{Binding WordReplaceToWithInput, UpdateSourceTrigger=PropertyChanged}"
                                                  TextWrapping="Wrap" Width="100" Margin="10,-5,10,5" />
                                         <ListBox x:Name="ListBoxWhatToReplaceWith" Width="100" Height="100" MaxHeight="100"
-                                                 ItemsSource="{Binding WordWhatToReplaceWith}" 
+                                                 ItemsSource="{Binding WordWhatToReplaceWith, UpdateSourceTrigger=PropertyChanged}" 
                                                  SelectedIndex="{Binding WordReplaceSelectedIndex, UpdateSourceTrigger=PropertyChanged}"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
