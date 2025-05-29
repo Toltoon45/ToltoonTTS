@@ -5024,11 +5024,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Totoonchik\\source\\repos\\ToltoonTTS2\\ToltoonTTS2\\ToltoonTTS2.csproj",
+      "projectUniqueName": "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\ToltoonTTS2.csproj",
       "projectName": "ToltoonTTS2",
-      "projectPath": "C:\\Users\\Totoonchik\\source\\repos\\ToltoonTTS2\\ToltoonTTS2\\ToltoonTTS2.csproj",
+      "projectPath": "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\ToltoonTTS2.csproj",
       "packagesPath": "C:\\Users\\Totoonchik\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Totoonchik\\source\\repos\\ToltoonTTS2\\ToltoonTTS2\\obj\\",
+      "outputPath": "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

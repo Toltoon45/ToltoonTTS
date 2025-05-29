@@ -4,32 +4,69 @@ using TwitchLib.Client.Models;
 using TwitchLib.Client;
 //using TwitchLib.PubSub;
 
-class TwitchConnectToChat : ITwitchConnectToChat
+public enum TwitchConnectionState
+{
+    Disconnected,
+    Connecting,
+    Connected,
+    Failed
+}
+public class TwitchConnectToChat : ITwitchConnectToChat
 {
     private readonly TwitchClient _client;
-    //private readonly TwitchPubSub _pubsub;
-    private string _twitchNickname;
+    public TwitchConnectionState CurrentState { get; private set; } = TwitchConnectionState.Disconnected;
 
-    public event EventHandler<OnMessageReceivedArgs> MessageReceived;
+    public event EventHandler<TwitchLib.Client.Events.OnMessageReceivedArgs> MessageReceived;
+    public event EventHandler<TwitchConnectionState> ConnectionStateChanged;
 
     public TwitchConnectToChat()
     {
         _client = new TwitchClient();
+        _client.OnConnected += (s, e) =>
+        {
+            UpdateState(TwitchConnectionState.Connected);
+        };
+
+        _client.OnConnectionError += (s, e) =>
+        {
+            UpdateState(TwitchConnectionState.Failed);
+        };
+
+        _client.OnDisconnected += (s, e) =>
+        {
+            UpdateState(TwitchConnectionState.Disconnected);
+        };
+
+        _client.OnMessageReceived += (s, e) =>
+        {
+            MessageReceived?.Invoke(this, e);
+        };
     }
 
-    //public async Task ConnectToChat(string twitchApi, string twitchClientId, string twitchNickname)
     public async Task ConnectToChat(string twitchApi, string twitchNickname)
     {
-        _twitchNickname = twitchNickname;
-        ConnectionCredentials Tcreds = new ConnectionCredentials(twitchNickname, twitchApi);
-        _client.OnConnected += onConnected;
-        _client.OnMessageReceived += (s, e) => MessageReceived?.Invoke(s, e);
-        _client.Initialize(Tcreds, twitchNickname);
-        await Task.Run(() => _client.Connect());
+        try
+        {
+            UpdateState(TwitchConnectionState.Connecting);
+
+            var credentials = new TwitchLib.Client.Models.ConnectionCredentials(twitchNickname, twitchApi);
+            _client.Initialize(credentials, twitchNickname);
+
+            _client.Connect();
+            //await Task.Delay(2000);
+        }
+        catch (Exception)
+        {
+            UpdateState(TwitchConnectionState.Failed);
+        }
     }
 
-    private void onConnected(object? sender, OnConnectedArgs e)
+    private void UpdateState(TwitchConnectionState newState)
     {
-        _client.SendMessage(_twitchNickname, "Connect");
+        if (CurrentState != newState)
+        {
+            CurrentState = newState;
+            ConnectionStateChanged?.Invoke(this, newState);
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace ToltoonTTS2
         private string _nameToSaveProfile;
         private string _nameToLoadProfile;
         private ObservableCollection<string> _allProfiles;
-
+        private TwitchConnectionState _twitchConnectionState;
 
         private readonly ITwitchGetID _twitchGetId;
         private readonly ITwitchConnectToChat _twitchConnectToChat;
@@ -128,18 +128,41 @@ namespace ToltoonTTS2
         }
 
 
+        //private async Task ConnectToStreamingChats()
+        //{
+        //    if (ConnectToTwitch)
+        //    {
+        //        //твич выключил pubsub. поулчать id - пока что не для чего
+        //        //string userId = await _twitchGetId.GetTwitchUserId(TwitchApi, TwitchClientId, TwitchNickname);
+        //        //await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchClientId, TwitchNickname);
+        //        await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
+        //        TwitchConnectionStatus = "Twitch подключился";
+        //    }
+        //    //GoodGame
+        //}
+
+        public TwitchConnectionState TwitchConnectionState
+        {
+            get => _twitchConnectionState;
+            set
+            {
+                _twitchConnectionState = value;
+                OnPropertyChanged();
+                TwitchConnectionStatus = $"Twitch: {value}";
+            }
+        }
+
         private async Task ConnectToStreamingChats()
         {
             if (ConnectToTwitch)
             {
-                //твич выключил pubsub. поулчать id - пока что не для чего
-                //string userId = await _twitchGetId.GetTwitchUserId(TwitchApi, TwitchClientId, TwitchNickname);
-                    //await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchClientId, TwitchNickname);
-                    await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
-                TwitchConnectionStatus = "Twitch подключился";
-            }
+                _twitchConnectToChat.ConnectionStateChanged += (s, state) =>
+                {
+                    TwitchConnectionState = state;
+                };
 
-            // Аналогично для GoodGame (если нужно)
+                await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
+            }
         }
 
         // Команды
@@ -251,7 +274,9 @@ namespace ToltoonTTS2
         public string DoNotTtsIfStartWith
         {
             get => _doNotTtsIfStartWith;
-            set { _doNotTtsIfStartWith = value; OnPropertyChanged(); }
+            set { _doNotTtsIfStartWith = value; OnPropertyChanged();
+                _messageProcessing.SetDoNotTtsIfStartWith(value);
+            }
         }
 
         public string SkipMessage
@@ -265,7 +290,9 @@ namespace ToltoonTTS2
         public string SkipMessageAll
         {
             get => _skipMessageAll;
-            set { _skipMessageAll = value; OnPropertyChanged(); }
+            set { _skipMessageAll = value; OnPropertyChanged();
+                _messageProcessing.SetSkipAllMessages(value);
+            }
         }
 
         public ObservableCollection<string> BlackListMembers
@@ -340,7 +367,7 @@ namespace ToltoonTTS2
         private void LoadSettings()
         {
             var settings = _serviceSettings.LoadSettings();
-            
+            TwitchApi = "123"; //без этой строки TwitchApi всегда будет ""
             TwitchApi = settings.TwitchApi;
             TwitchClientId = settings.TwitchClientId;
             TwitchNickname = settings.TwitchNickname;

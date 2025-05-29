@@ -31,7 +31,7 @@ namespace ToltoonTTS2.TTS
         {
             if (_blackList.Any(blackListMember => username.Contains(blackListMember, StringComparison.OrdinalIgnoreCase)))
                 return;
-            if (_doNotTtsIfStartWith != null && message.StartsWith(_doNotTtsIfStartWith))
+            if (_doNotTtsIfStartWith != null && message.StartsWith(_doNotTtsIfStartWith) && _doNotTtsIfStartWith != "")
                 return;
             // Изменение текста и подготовка сообщения к озвучиванию
             var erredactedMessage = message;
