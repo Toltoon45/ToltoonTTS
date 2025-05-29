@@ -140,8 +140,7 @@
               "RelativeToolTip": "ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
               "ViewState": "AgIAABoAAAAAAAAAAAAUwCkAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T17:59:07.196Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T17:59:07.196Z"
             },
             {
               "$type": "Document",
@@ -236,8 +235,7 @@
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\SaveLoadProfiles.cs",
               "ViewState": "AgIAACYAAAAAAAAAAAAlwDYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T17:10:50.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-01T17:10:50.74Z"
             },
             {
               "$type": "Document",
@@ -262,8 +260,7 @@
               "RelativeToolTip": "ToltoonTTS2\\MainWindow.xaml.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAB4AAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T15:02:33.42Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-28T15:02:33.42Z"
             },
             {
               "$type": "Document",
@@ -311,8 +308,7 @@
               "RelativeToolTip": "ToltoonTTS2\\Twitch\\Connection\\ITwitchConnection.cs",
               "ViewState": "AgIAAAoAAAAAAAAAAAAQwBwAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T14:21:24.05Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-28T14:21:24.05Z"
             },
             {
               "$type": "Document",
@@ -322,7 +318,7 @@
               "RelativeDocumentMoniker": "ToltoonTTS2\\MainViewModel.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\ToltoonTTS-new-version-test\\ToltoonTTS2\\MainViewModel.cs",
               "RelativeToolTip": "ToltoonTTS2\\MainViewModel.cs",
-              "ViewState": "AgIAAJEAAAAAAAAAAAAUwJ8AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAUwJsAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-22T19:46:35.424Z",
               "EditorCaption": ""
@@ -336,8 +332,7 @@
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\ToltoonTTS-new-version-test\\ToltoonTTS2\\MainWindow.xaml",
               "RelativeToolTip": "ToltoonTTS2\\MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-04-21T19:05:08.482Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-21T19:05:08.482Z"
             },
             {
               "$type": "Document",
@@ -361,8 +356,7 @@
               "RelativeToolTip": "ToltoonTTS2\\TTS\\TtsSAPI.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAUwBAAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-16T20:57:05.871Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-16T20:57:05.871Z"
             },
             {
               "$type": "Document",
@@ -386,8 +380,7 @@
               "RelativeToolTip": "ToltoonTTS2\\Twitch\\Connection\\TwitchConnectToChat.cs",
               "ViewState": "AgIAADIAAAAAAAAAAAAUwD0AAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-12T13:21:43.687Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-12T13:21:43.687Z"
             }
           ]
         }
