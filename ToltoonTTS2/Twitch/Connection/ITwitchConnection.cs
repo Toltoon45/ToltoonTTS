@@ -25,6 +25,8 @@ namespace ToltoonTTS2.Twitch.Connection
         Task ConnectToChat(string twitchApi, string twitchNickname);
         //event Action<string> onMessageReceived;
         event EventHandler<TwitchLib.Client.Events.OnMessageReceivedArgs> MessageReceived;
+        event EventHandler<TwitchConnectionState> ConnectionStateChanged;
+        TwitchConnectionState CurrentState { get; }
     }
 
 }

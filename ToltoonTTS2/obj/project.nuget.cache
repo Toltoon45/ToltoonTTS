@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "brEMW/+EwPM=",
+  "dgSpecHash": "ux7fDpce5Bw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Totoonchik\\source\\repos\\ToltoonTTS2\\ToltoonTTS2\\ToltoonTTS2.csproj",
+  "projectFilePath": "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\ToltoonTTS2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Totoonchik\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\6.0.0\\microsoft.extensions.dependencyinjection.6.0.0.nupkg.sha512",
     "C:\\Users\\Totoonchik\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",

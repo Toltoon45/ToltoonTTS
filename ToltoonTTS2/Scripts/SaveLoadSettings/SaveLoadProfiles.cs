@@ -47,12 +47,11 @@ namespace ToltoonTTS2.Scripts.SaveLoadSettings
                 viewModel.TwitchApi = loadedData.TwitchApi;
                 viewModel.TwitchClientId = loadedData.TwitchClientId;
                 viewModel.TwitchNickname = loadedData.TwitchNickname;
-                viewModel.GoodgameNickname = loadedData.GoodgameNickname;//тут оно null
+                viewModel.GoodgameNickname = loadedData.GoodgameNickname;
                 viewModel.ConnectToTwitch = loadedData.ConnectToTwitch;
                 viewModel.SelectedVoice = loadedData.SelectedVoice;
                 viewModel.TtsSpeedValue = loadedData.TtsSpeedValue;
                 viewModel.TtsVolumeValue = loadedData.TtsVolumeValue;
-
             }
         }
 

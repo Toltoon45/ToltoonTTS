@@ -46,5 +46,10 @@ namespace ToltoonTTS2
         {
 
         }
+
+        private void PasswordboxTwitchApi_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
