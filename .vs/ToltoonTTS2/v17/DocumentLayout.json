@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\ToltoonTTS-new-version-test\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoontts-new-version-test\\toltoontts2\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoontts-new-version-test\\toltoontts2\\tts\\ttsmessageprocessing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\tts\\ttsmessageprocessing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoontts-new-version-test\\toltoontts2\\tts\\ttssapi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\tts\\ttssapi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoontts-new-version-test\\toltoontts2\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoontts-new-version-test\\toltoontts2\\twitch\\connection\\twitchconnecttochat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -105,7 +105,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 17,
           "Children": [
             {
               "$type": "Document",
@@ -132,7 +132,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "TtsMessageProcessing.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\ToltoonTTS-new-version-test\\ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
@@ -316,13 +316,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "MainViewModel.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\ToltoonTTS-new-version-test\\ToltoonTTS2\\MainViewModel.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\MainViewModel.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\ToltoonTTS-new-version-test\\ToltoonTTS2\\MainViewModel.cs",
               "RelativeToolTip": "ToltoonTTS2\\MainViewModel.cs",
-              "ViewState": "AgIAAHIAAAAAAAAAAAAUwH4AAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAJEAAAAAAAAAAAAUwJ8AAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-22T19:46:35.424Z",
               "EditorCaption": ""
@@ -353,7 +353,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "TtsSAPI.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\ToltoonTTS-new-version-test\\ToltoonTTS2\\TTS\\TtsSAPI.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\TTS\\TtsSAPI.cs",
