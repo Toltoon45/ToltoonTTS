@@ -13,7 +13,7 @@ namespace ToltoonTTS2.TTS
     
     public interface ITtsMessageProcessing
     {
-        void ProcessIncomingMessage(string username, string message);
+        string ProcessIncomingMessage(string username, string message);
 
         void SetSkipMessage(string SkipMessage);
         void SetSkipAllMessages(string SkipAllMessages);

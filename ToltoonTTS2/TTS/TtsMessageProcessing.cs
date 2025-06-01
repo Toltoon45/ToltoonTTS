@@ -18,58 +18,69 @@ namespace ToltoonTTS2.TTS
         //переделывание ссылок в слово link
         private const string LinkReplace = @"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+";
 
-        //public TtsMessageProcessing()
-        //{
-        //    _blackList = blackList;
-        //    _removeEmoji = removeEmoji;
-        //    _doNotTtsIfStartWith = doNotTtsIfStartWith;
-        //    _skipMessage = skipMessage;
-        //    _skipMessageAll = skipMessageAll;
-        //}
-
-        public void ProcessIncomingMessage(string username, string message)
+        public string ProcessIncomingMessage(string username, string message)
         {
             if (_blackList.Any(blackListMember => username.Contains(blackListMember, StringComparison.OrdinalIgnoreCase)))
-                return;
+                return null;
+
+            if (message == _skipMessage)
+                return "пропуск1";
+            if (message == _skipMessageAll)
+                return "пропуск1все";
+
             if (_doNotTtsIfStartWith != null && message.StartsWith(_doNotTtsIfStartWith) && _doNotTtsIfStartWith != "")
-                return;
-            // Изменение текста и подготовка сообщения к озвучиванию
+                return null;
+
+
+
             var erredactedMessage = message;
-            // Заменяем несколько точек на одну точку/
+            // Замена точек для избежания незапланированной замены слова на link
             erredactedMessage = Regex.Replace(erredactedMessage, @"\.{2,}", " . ");
 
             // Заменяем ссылки словом "link"
             erredactedMessage = Regex.Replace(erredactedMessage, LinkReplace, "link");//@"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+",
 
-            // Удаление эмодзи, если включено
+            // Удаление эмодзи
             if (_removeEmoji)
             {
                 erredactedMessage = Regex.Replace(erredactedMessage, EmojiPattern, string.Empty);
             }
             //Вторичная обработка
-            //if (WhatToReplace.Count > 0) // Надо ли вообще менять
-            //{
-            //    string processedMessage = "";
-            //    string wordReplacedMessage = "";
+            if (_wordToReplace.Count > 0) // Надо ли вообще менять
+            {
+                string processedMessage = "";
+                string wordReplacedMessage = "";
 
-            // Разделяем сообщение на слова
-            string[] words = Regex.Split(erredactedMessage, @"\s+");
+                // Разделяем сообщение на слова
+                string[] words = Regex.Split(erredactedMessage, @"\s+");
 
-                //foreach (string word in words)
-                //{
-                //    wordReplacedMessage = word;
-                //    // Проверяем, есть ли слово в списке WhatToReplace
-                //    int index = WhatToReplace.FindIndex(w => w.ToLower() == wordReplacedMessage.ToLower());
-                //    if (index >= 0)
-                //    {
-                //        // Если слово найдено, заменяем его
-                //        wordReplacedMessage = WhatToReplaceWith[index];
-                //    }
-                //    processedMessage = $"{processedMessage} {wordReplacedMessage}";
-                //}
+                foreach (string word in words)
+                {
+                    wordReplacedMessage = word;
 
+                    // Находим индекс слова в коллекции
+                    int index = -1;
+                    for (int i = 0; i < _wordToReplace.Count; i++)
+                    {
+                        if (_wordToReplace[i].ToLower() == wordReplacedMessage.ToLower())
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index != -1)
+                    {
+                        wordReplacedMessage = _wordToReplaceWith[index];
+                    }
+
+                    processedMessage = $"{processedMessage} {wordReplacedMessage}";
+                }
+                erredactedMessage = processedMessage;
                 //erredactedMessage = processedMessage;
-            //}
+
+            }
+            return erredactedMessage;
         }
 
         public void SetSkipMessage(string SkipMessage)
