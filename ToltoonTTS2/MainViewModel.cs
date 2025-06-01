@@ -24,6 +24,8 @@ namespace ToltoonTTS2
         private string _selectedVoice;
         private int _ttsSpeedValue;
         private int _ttsVolumeValue;
+        private string _labelTtsSpeedValue;
+        private string _labelTtsVolumeValue;
         private string _doNotTtsIfStartWith;
         private string _skipMessage;
         private string _skipMessageAll;
@@ -119,12 +121,12 @@ namespace ToltoonTTS2
         {
             string message = e.ChatMessage.Message;
             string username = e.ChatMessage.Username;
-            string processedMessage = "";
 
             if (BlackListMembers.Any(badWord => username.Contains(badWord, StringComparison.OrdinalIgnoreCase)))
                 return;
-            _messageProcessing.ProcessIncomingMessage(username, message);
-            _ttsService.Speak($"{message}");
+            string ProcessedMessage = _messageProcessing.ProcessIncomingMessage(username, message);
+            if (!string.IsNullOrEmpty(ProcessedMessage))
+                _ttsService.Speak(ProcessedMessage);
         }
 
 
@@ -249,6 +251,16 @@ namespace ToltoonTTS2
             get => _ttsSpeedValue;
             set { _ttsSpeedValue = value; OnPropertyChanged();
                 _ttsService?.SetRate(value);
+                LabelTtsSpeed = Convert.ToString(value);
+            }
+        }
+        
+        public string LabelTtsSpeed
+        {
+            get => _labelTtsSpeedValue;
+            set 
+            { 
+                _labelTtsSpeedValue = value; OnPropertyChanged(); 
             }
         }
 
@@ -259,7 +271,18 @@ namespace ToltoonTTS2
             {
                 _ttsVolumeValue = value; OnPropertyChanged();
                 _ttsService?.SetVolume(value);
+                LabelTtsVolume = Convert.ToString(value);
             }
+        }
+
+        public string LabelTtsVolume
+        {
+            get => _labelTtsVolumeValue;
+            set
+            {
+                _labelTtsVolumeValue = value; OnPropertyChanged();
+            }
+
         }
 
         public string NameToSaveProfile
@@ -338,7 +361,9 @@ namespace ToltoonTTS2
         public ObservableCollection<string> WordWhatToReplaceWith
         {
             get => _wordToReplaceWith;
-            set { _wordToReplaceWith = value; OnPropertyChanged(); }
+            set { _wordToReplaceWith = value; OnPropertyChanged();
+                _messageProcessing.WordToReplaceWith(value);
+            }
         }
 
         public string WordToReplaceInput
@@ -367,8 +392,13 @@ namespace ToltoonTTS2
         private void LoadSettings()
         {
             var settings = _serviceSettings.LoadSettings();
-            TwitchApi = "123"; //без этой строки TwitchApi всегда будет ""
+
             TwitchApi = settings.TwitchApi;
+            if (TwitchApi == "")
+            {
+                TwitchApi = "1"; //без этой строки TwitchApi всегда будет ""
+            }
+
             TwitchClientId = settings.TwitchClientId;
             TwitchNickname = settings.TwitchNickname;
             ConnectToTwitch = settings.ConnectToTwitch;
@@ -393,7 +423,7 @@ namespace ToltoonTTS2
             {
                 _wordToReplaceWith.Add(item);
             }
-        }
+        }   
 
         public void SaveSettings()
         {

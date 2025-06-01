@@ -92,7 +92,7 @@
                     <StackPanel Orientation="Vertical">
                         <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" HorizontalAlignment="Left">
                             <StackPanel Orientation="Vertical">
-                                <CheckBox IsChecked="{Binding RemoveEvoji}" x:Name="RemoveEmoji" Content="Удалять эмодзи" Margin="10,10,0,10"/>
+                                <CheckBox IsChecked="{Binding RemoveEmoji}" Command="{Binding RemoveEvoji}" x:Name="RemoveEmoji" Content="Удалять эмодзи" Margin="10,10,0,10"/>
                                 <StackPanel Orientation="Horizontal">
                                     <ComboBox x:Name="comboBoxInstalledVoices" SelectedItem="{Binding SelectedVoice, UpdateSourceTrigger=PropertyChanged}"
                                               ItemsSource="{Binding AvailableVoices}"
@@ -103,13 +103,13 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Slider x:Name="sliderTtsSpeedValue" Value="{Binding TtsSpeedValue, UpdateSourceTrigger=PropertyChanged}"
                                             IsSnapToTickEnabled="true" Minimum="-10" Margin="10,0,0,0" Width="200"/>
-                                    <Label x:Name="labelTtsSpeedValue" Content="" Margin="10,0,0,0"></Label>
+                                    <Label x:Name="labelTtsSpeedValue" Content="{Binding LabelTtsSpeed, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0"></Label>
                                     <Label x:Name="labelTtsSpeed" Content="Скорость озвучки текста"></Label>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Slider x:Name="sliderTtsVolumeValue" Value="{Binding TtsVolumeValue, UpdateSourceTrigger=PropertyChanged}"
                                             IsSnapToTickEnabled="true" Minimum="0" Margin="10,0,0,0" Maximum="100" Width="200"/>
-                                    <Label x:Name="labelVolumeValue" Content="" Margin="10,0,0,0"></Label>
+                                    <Label x:Name="labelVolumeValue" Content="{Binding LabelTtsVolume, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0"></Label>
                                     <Label x:Name="labelVolume" Content="Громкость" Margin="10,0,0,0"></Label>
                                 </StackPanel>
                             </StackPanel>
