@@ -1,9 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.Data.Sqlite;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Speech.Synthesis;
+using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Input;
 using ToltoonTTS2.Scripts.BlackList;
+using ToltoonTTS2.Scripts.Database;
 using ToltoonTTS2.Scripts.EnsureFolderAndFileExist;
 using ToltoonTTS2.Scripts.SaveLoadSettings;
 using ToltoonTTS2.TTS;
@@ -13,6 +18,7 @@ namespace ToltoonTTS2
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        public ObservableCollection<VoiceItem> ItemSourceAllVoices { get; set; } = new ObservableCollection<VoiceItem>();
         // Приватные поля
         private string _twitchApi;
         private string _twitchClientId;
@@ -101,6 +107,7 @@ namespace ToltoonTTS2
             _directoryService.EnsureAppStructureExists();
 
             LoadSettings();
+            LoadInstalledVoices();
             _loadProfiles.GetListOfAvailableProfiles(AvailableProfiles);
             _loadAvailableVoices.GetListOfAvailableVoices(AvailableVoices);
 
@@ -350,6 +357,12 @@ namespace ToltoonTTS2
             set { _wordReplaceSelectedIndex = value; OnPropertyChanged(); }
         }
 
+        //public ObservableCollection< ItemSourceAllVoices
+        //{
+        //    get = _itemSourceAllVoices;
+        //    set { _itemSourceAllVoices = value; OnPropertyChanged(); }
+        //}
+
         public ObservableCollection<string> WordToReplace
         {
             get => _wordToReplace;
@@ -423,7 +436,24 @@ namespace ToltoonTTS2
             {
                 _wordToReplaceWith.Add(item);
             }
-        }   
+        }
+        private void LoadInstalledVoices()
+        {
+            using (var synth = new SpeechSynthesizer())
+            {
+                foreach (InstalledVoice voice in synth.GetInstalledVoices())
+                {
+                    var info = voice.VoiceInfo;
+                    ItemSourceAllVoices.Add(new VoiceItem
+                    {
+                        Name = info.Name,
+                        Culture = info.Culture.ToString(),
+                        TextBox1Value = "",
+                        TextBox2Value = ""
+                    });
+                }
+            }
+        }
 
         public void SaveSettings()
         {
