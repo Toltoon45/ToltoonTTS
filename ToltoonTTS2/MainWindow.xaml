@@ -136,19 +136,33 @@
                         <Label Content="Пропуск одного сообщения - ctrl+alt+b | всю очередь ctrl + alt + shift + b"></Label>
                     </StackPanel>
                 </TabItem>
-                <TabItem x:Name="TabItemIndividualVoices" Header="Индив. голоса" IsEnabled="False" ToolTip="На ремонте">
+                <TabItem x:Name="TabItemIndividualVoices" Header="Индив. голоса" ToolTip="На ремонте">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="ButtonIndividualVoices" Content="Голоса каждому"  Margin="10,10,0,10"/>
                             <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов" Margin="10,10,0,10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
-                            <Label x:Name="LabelIndividualVoicesChannelPoints" Content="Название команды за баллы канала для смены голоса" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)"></Label>
-                            <TextBox x:Name="TextBoxIndividualVoicesChannelPoints" TextWrapping="Wrap" Width="120" Margin="0,5,0,10" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)" />
+                            <!--<Label x:Name="LabelIndividualVoicesChannelPoints" Content="Название команды за баллы канала для смены голоса" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)"></Label>
+                            <TextBox x:Name="TextBoxIndividualVoicesChannelPoints" TextWrapping="Wrap" Width="120" Margin="0,5,0,10" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)" />-->
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBox x:Name="TextBoxGetUserVoices" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
                             <Label x:Name="LabelGetUserVoice" Content="Команда для чата узнать голос пользователя" ToolTip="![команда] [никнейм]"></Label>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanelAllVoicesParent" Orientation="Vertical">
+                            <ItemsControl x:Name="ItemControlAllVoicesChildren"
+              ItemsSource="{Binding ItemSourceAllVoices}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="{Binding Name}" Width="150" VerticalAlignment="Center" />
+                                            <TextBox Text="{Binding TextBoxVolume, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="10,0,0,0"/>
+                                            <TextBox Text="{Binding TextBoxSpeed, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>

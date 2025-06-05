@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\ToltoonTTS2.csproj": {}
+    "C:\\ываавы\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj": {}
   },
   "projects": {
-    "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\ToltoonTTS2.csproj": {
+    "C:\\ываавы\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\ToltoonTTS2.csproj",
+        "projectUniqueName": "C:\\ываавы\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
         "projectName": "ToltoonTTS2",
-        "projectPath": "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\ToltoonTTS2.csproj",
+        "projectPath": "C:\\ываавы\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
         "packagesPath": "C:\\Users\\Totoonchik\\.nuget\\packages\\",
-        "outputPath": "C:\\ываавы\\ToltoonTTS-new-version-test\\ToltoonTTS2\\obj\\",
+        "outputPath": "C:\\ываавы\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,9 +50,17 @@
         "net9.0-windows7.0": {
           "targetAlias": "net9.0-windows",
           "dependencies": {
+            "Microsoft.Data.Sqlite.Core": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "SQLitePCLRaw.bundle_e_sqlite3": {
+              "target": "Package",
+              "version": "[2.1.11, )"
             },
             "System.Speech": {
               "target": "Package",
