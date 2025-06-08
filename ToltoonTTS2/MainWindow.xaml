@@ -150,6 +150,7 @@
                             <TextBox x:Name="TextBoxGetUserVoices" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
                             <Label x:Name="LabelGetUserVoice" Content="Команда для чата узнать голос пользователя" ToolTip="![команда] [никнейм]"></Label>
                         </StackPanel>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <StackPanel x:Name="StackPanelAllVoicesParent" Orientation="Vertical">
                             <ItemsControl x:Name="ItemControlAllVoicesChildren"
               ItemsSource="{Binding ItemSourceAllVoices}">
@@ -157,13 +158,15 @@
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Margin="5">
                                             <TextBlock Text="{Binding Name}" Width="150" VerticalAlignment="Center" />
-                                            <TextBox Text="{Binding TextBoxVolume, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="10,0,0,0"/>
-                                            <TextBox Text="{Binding TextBoxSpeed, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="10,0,0,0"/>
-                                        </StackPanel>
+                                            <TextBox Text="{Binding TextBoxVolume, UpdateSourceTrigger=PropertyChanged}" Width="30" Margin="10,0,0,0"/>
+                                            <TextBox Text="{Binding TextBoxSpeed, UpdateSourceTrigger=PropertyChanged}" Width="30" Margin="10,0,0,0"/>
+                                                <CheckBox IsChecked="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0"/>
+                                            </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </StackPanel>
+                        </ScrollViewer>
                     </StackPanel>
                 </TabItem>
                 <TabItem x:Name="TabItemBlackList" Header="Чёрный список">

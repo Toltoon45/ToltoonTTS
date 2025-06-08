@@ -13,13 +13,20 @@ using ToltoonTTS2.Scripts.EnsureFolderAndFileExist;
 using ToltoonTTS2.Scripts.SaveLoadSettings;
 using ToltoonTTS2.TTS;
 using ToltoonTTS2.Twitch.Connection;
+using SQLite;
+using System.IO;
 
 namespace ToltoonTTS2
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<VoiceItem> ItemSourceAllVoices { get; set; } = new ObservableCollection<VoiceItem>();
-        // Приватные поля
+        private readonly SQLiteConnection _db;
+        ObservableCollection<VoiceItem> _voiceItems;          // для работы с БД
+        ObservableCollection<PlaceVoicesInfoInWPF> _uiItems;  // для биндинга к UI
+        private readonly string _dbPath = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db");
+        public ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices { get; set; } = new ObservableCollection<PlaceVoicesInfoInWPF>();
+
         private string _twitchApi;
         private string _twitchClientId;
         private string _twitchNickname;
@@ -107,13 +114,31 @@ namespace ToltoonTTS2
             _directoryService.EnsureAppStructureExists();
 
             LoadSettings();
+
+            _db = new SQLiteConnection(_dbPath);
+            _db.CreateTable<VoiceItem>();
             LoadInstalledVoices();
+
             _loadProfiles.GetListOfAvailableProfiles(AvailableProfiles);
             _loadAvailableVoices.GetListOfAvailableVoices(AvailableVoices);
 
             _twitchConnectToChat.MessageReceived += OnTwitchMessageReceived;
         }
+        // Метод преобразования VoiceItem -> PlaceVoicesInfoInWPF
+        private PlaceVoicesInfoInWPF ToPlaceVoicesInfo(VoiceItem item) => new PlaceVoicesInfoInWPF
+        {
+            Name = item.VoiceName,
+            TextBoxVolume = item.Volume,
+            TextBoxSpeed = item.Speed
+        };
 
+        // Метод преобразования PlaceVoicesInfoInWPF -> VoiceItem
+        private VoiceItem ToVoiceItem(PlaceVoicesInfoInWPF place, VoiceItem original)
+        {
+            original.Volume = place.TextBoxVolume;
+            original.Speed = place.TextBoxSpeed;
+            return original;
+        }
         private void DeleteWordFromReplace()
         {
             _wordReplaceService.DeleteWordFromReplace(_wordReplaceSelectedIndex);
@@ -404,6 +429,8 @@ namespace ToltoonTTS2
 
         private void LoadSettings()
         {
+
+
             var settings = _serviceSettings.LoadSettings();
 
             TwitchApi = settings.TwitchApi;
@@ -439,22 +466,55 @@ namespace ToltoonTTS2
         }
         private void LoadInstalledVoices()
         {
+            // Загружаем из базы
+            var voicesInDb = _db.Table<VoiceItem>().ToList();
+
             using (var synth = new SpeechSynthesizer())
             {
-                foreach (InstalledVoice voice in synth.GetInstalledVoices())
+                foreach (InstalledVoice installedVoice in synth.GetInstalledVoices())
                 {
-                    var info = voice.VoiceInfo;
-                    ItemSourceAllVoices.Add(new VoiceItem
+                    var info = installedVoice.VoiceInfo;
+                    var existing = voicesInDb.FirstOrDefault(v => v.VoiceName == info.Name);
+
+                    if (existing != null)
                     {
-                        Name = info.Name,
-                        Culture = info.Culture.ToString(),
-                        TextBox1Value = "",
-                        TextBox2Value = ""
-                    });
+                        // Если голос уже есть в базе — добавляем из базы
+                        ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
+                        {
+                            Id = existing.Id,
+                            Name = existing.VoiceName,
+                            TextBoxVolume = existing.Volume,
+                            TextBoxSpeed = existing.Speed,
+                            IsEnabled = existing.IsEnabled
+                        });
+                    }
+                    else
+                    {
+                        // Если нет — создаём новый, добавляем в БД и UI
+                        var newVoice = new VoiceItem
+                        {
+                            VoiceName = info.Name,
+                            Volume = "50",
+                            Speed = "0",
+                            IsEnabled = false
+                        };
+                        _db.Insert(newVoice);
+
+                        ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
+                        {
+                            Id = newVoice.Id,
+                            Name = newVoice.VoiceName,
+                            TextBoxVolume = newVoice.Volume,
+                            TextBoxSpeed = newVoice.Speed,
+                            IsEnabled = newVoice.IsEnabled
+                        });
+                    }
                 }
             }
         }
 
+
+        //сохранение при закрытии программы
         public void SaveSettings()
         {
             var settings = new AppSettings
@@ -476,6 +536,19 @@ namespace ToltoonTTS2
                 WhatToReplace = WordToReplace.ToList(),
                 WhatToReplaceWith = WordWhatToReplaceWith.ToList()
             };
+            foreach (var uiItem in ItemSourceAllVoices)
+            {
+                var dbItem = new VoiceItem
+                {
+                    Id = uiItem.Id,
+                    VoiceName = uiItem.Name,
+                    Volume = uiItem.TextBoxVolume,
+                    Speed = uiItem.TextBoxSpeed,
+                    IsEnabled = uiItem.IsEnabled
+                };
+
+                _db.Update(dbItem);
+            }
             _serviceSettings.SaveSettings(settings);
         }
 
