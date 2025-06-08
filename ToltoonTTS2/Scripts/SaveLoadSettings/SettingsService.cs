@@ -28,6 +28,7 @@
 
         public void SaveSettings(AppSettings settings)
         {
+
             Properties.Settings.Default.TwitchApi = settings.TwitchApi;
             Properties.Settings.Default.TwitchID = settings.TwitchClientId;
             Properties.Settings.Default.TwitchNickname = settings.TwitchNickname;

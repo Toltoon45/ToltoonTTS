@@ -7,12 +7,48 @@
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\voices\\voiceitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\voices\\voiceitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\database\\placevoicesinfoinwpf.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\database\\placevoicesinfoinwpf.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\appsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\appsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\voices\\voiceitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\voices\\voiceitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\settingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\settingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\saveloadprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\saveloadprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\ensurefolderandfileexist\\directoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\ensurefolderandfileexist\\directoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\properties\\settings.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\properties\\settings.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\passwordboxhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\passwordboxhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\getavailableprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\getavailableprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\getinstalledvoice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,24 +59,16 @@
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\isettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\passwordboxhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\passwordboxhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\toltoontts2.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\toltoontts2.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\database\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\database\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\twitch\\connection\\twitchconnecttochat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\twitch\\connection\\twitchconnecttochat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\twitch\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\twitch\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\database\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\database\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\toltoontts2.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\toltoontts2.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
@@ -73,24 +101,8 @@
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\blacklist\\wordreplace.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\settingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\settingsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\appsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\appsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\saveloadprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\saveloadprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\twitch\\connection\\itwitchconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\twitch\\connection\\itwitchconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\toltoontts2\\properties\\settings.settings||{6D2695F9-5365-4A78-89ED-F205C045BFE6}",
@@ -99,14 +111,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\toltoontts2.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
       "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\toltoontts2.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\saveloadsettings\\getavailableprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\saveloadsettings\\getavailableprofiles.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\ensurefolderandfileexist\\directoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|solutionrelative:toltoontts2\\scripts\\ensurefolderandfileexist\\directoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A73BB806-36EC-480D-9DF1-EA057975AF9B}|ToltoonTTS2\\ToltoonTTS2.csproj|c:\\\u044B\u0432\u0430\u0430\u0432\u044B\\toltoon-tts-new-version-test3\\toltoontts\\toltoontts2\\scripts\\blacklist\\iblacklistservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -128,49 +132,73 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 24,
+          "SelectedChildIndex": 25,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "VoiceItem.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Voices\\VoiceItem.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Voices\\VoiceItem.cs",
-              "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Voices\\VoiceItem.cs*",
-              "RelativeToolTip": "ToltoonTTS2\\Voices\\VoiceItem.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Voices\\VoiceItem.cs",
+              "RelativeToolTip": "ToltoonTTS2\\Voices\\VoiceItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-05T14:00:44.576Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ToltoonTTS2",
-              "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
-              "RelativeDocumentMoniker": "ToltoonTTS2\\ToltoonTTS2.csproj",
-              "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj*",
-              "RelativeToolTip": "ToltoonTTS2\\ToltoonTTS2.csproj*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-06-05T13:04:20.818Z",
+              "WhenOpened": "2025-06-07T16:59:29.99Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
+              "Title": "Settings.Designer.cs",
+              "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Properties\\Settings.Designer.cs",
+              "RelativeDocumentMoniker": "ToltoonTTS2\\Properties\\Settings.Designer.cs",
+              "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Properties\\Settings.Designer.cs",
+              "RelativeToolTip": "ToltoonTTS2\\Properties\\Settings.Designer.cs",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAlwJQAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T16:59:01.94Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "DataAccess.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\Database\\DataAccess.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\Database\\DataAccess.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\Database\\DataAccess.cs",
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\Database\\DataAccess.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAQwBwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAQwBMAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-05T08:31:43.162Z"
+              "WhenOpened": "2025-06-07T16:32:01.526Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 1,
+              "Title": "PlaceVoicesInfoInWPF.cs",
+              "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\Database\\PlaceVoicesInfoInWPF.cs",
+              "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\Database\\PlaceVoicesInfoInWPF.cs",
+              "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\Database\\PlaceVoicesInfoInWPF.cs",
+              "RelativeToolTip": "ToltoonTTS2\\Scripts\\Database\\PlaceVoicesInfoInWPF.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAQwA4AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-07T16:23:32.067Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ToltoonTTS2.csproj",
+              "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
+              "RelativeDocumentMoniker": "ToltoonTTS2\\ToltoonTTS2.csproj",
+              "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
+              "RelativeToolTip": "ToltoonTTS2\\ToltoonTTS2.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-06-05T13:04:20.818Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
               "Title": "ApplicationContext.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ApplicationContext.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\ApplicationContext.cs",
@@ -182,19 +210,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Twitch\\User.cs",
-              "RelativeDocumentMoniker": "ToltoonTTS2\\Twitch\\User.cs",
-              "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Twitch\\User.cs",
-              "RelativeToolTip": "ToltoonTTS2\\Twitch\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T13:32:47.929Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 17,
               "Title": "App.config",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\App.config",
               "RelativeDocumentMoniker": "ToltoonTTS2\\App.config",
@@ -206,7 +222,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 21,
               "Title": "TtsSAPI.cs",
               "DocumentMoniker": "C:\\Users\\Totoonchik\\AppData\\Local\\SourceServer\\abf964e0feaee1cb127f20654d3450e210216dfd82516ba28151ed682a261ad1\\ToltoonTTS2\\TTS\\TtsSAPI.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\Users\\Totoonchik\\AppData\\Local\\SourceServer\\abf964e0feaee1cb127f20654d3450e210216dfd82516ba28151ed682a261ad1\\ToltoonTTS2\\TTS\\TtsSAPI.cs",
@@ -219,7 +235,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 26,
               "Title": "Settings.settings",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Properties\\Settings.settings",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Properties\\Settings.settings",
@@ -230,20 +246,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "PasswordBoxHelper.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\PasswordBoxHelper.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\PasswordBoxHelper.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\PasswordBoxHelper.cs",
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\PasswordBoxHelper.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAAkwDkAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-28T10:45:16.373Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-28T10:45:16.373Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 20,
               "Title": "TtsMessageProcessing.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
@@ -255,7 +270,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 24,
               "Title": "WordReplace.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\BlackList\\WordReplace.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\BlackList\\WordReplace.cs",
@@ -267,7 +282,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 27,
               "Title": "ToltoonTTS2",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
               "RelativeDocumentMoniker": "ToltoonTTS2\\ToltoonTTS2.csproj",
@@ -278,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "IBlackListServices.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\BlackList\\IBlackListServices.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\BlackList\\IBlackListServices.cs",
@@ -290,7 +305,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 11,
               "Title": "GetAvailableProfiles.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\GetAvailableProfiles.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\GetAvailableProfiles.cs",
@@ -302,32 +317,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 12,
               "Title": "GetInstalledVoice.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\GetInstalledVoice.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\GetInstalledVoice.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\GetInstalledVoice.cs",
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\GetInstalledVoice.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T20:23:14.923Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T20:23:14.923Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 8,
               "Title": "DirectoryService.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\EnsureFolderAndFileExist\\DirectoryService.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\EnsureFolderAndFileExist\\DirectoryService.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\EnsureFolderAndFileExist\\DirectoryService.cs",
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\EnsureFolderAndFileExist\\DirectoryService.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAUwBMAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAIAAAAAAAAAAAD4vxQAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-01T19:29:02.924Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "IDirectoryService.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\EnsureFolderAndFileExist\\IDirectoryService.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\EnsureFolderAndFileExist\\IDirectoryService.cs",
@@ -339,19 +353,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 6,
               "Title": "SaveLoadProfiles.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\SaveLoadProfiles.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\SaveLoadProfiles.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\SaveLoadProfiles.cs",
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\SaveLoadProfiles.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-01T17:10:50.74Z"
+              "WhenOpened": "2025-05-01T17:10:50.74Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 22,
               "Title": "RuntimeType.CoreCLR.cs",
               "DocumentMoniker": "C:\\Users\\Totoonchik\\AppData\\Local\\SourceServer\\91da35567e3830ac66b87f3ab41988930fc35a5b31b66a1bd09e2f02ea72b543\\src\\coreclr\\System.Private.CoreLib\\src\\System\\RuntimeType.CoreCLR.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\Users\\Totoonchik\\AppData\\Local\\SourceServer\\91da35567e3830ac66b87f3ab41988930fc35a5b31b66a1bd09e2f02ea72b543\\src\\coreclr\\System.Private.CoreLib\\src\\System\\RuntimeType.CoreCLR.cs",
@@ -364,43 +379,45 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 7,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\MainWindow.xaml.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\MainWindow.xaml.cs",
               "RelativeToolTip": "ToltoonTTS2\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAIBZwB4AAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAUwCgAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-28T15:02:33.42Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 5,
               "Title": "SettingsService.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\SettingsService.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\SettingsService.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\SettingsService.cs",
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\SettingsService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T14:59:56.711Z"
+              "WhenOpened": "2025-04-28T14:59:56.711Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 3,
               "Title": "AppSettings.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\AppSettings.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\AppSettings.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\AppSettings.cs",
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\AppSettings.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAUwBMAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T14:58:05.401Z"
+              "WhenOpened": "2025-04-28T14:58:05.401Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 13,
               "Title": "ISettings.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\ISettings.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\ISettings.cs",
@@ -408,12 +425,11 @@
               "RelativeToolTip": "ToltoonTTS2\\Scripts\\SaveLoadSettings\\ISettings.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAAAwA8AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T14:48:45.296Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-28T14:48:45.296Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 25,
               "Title": "ITwitchConnection.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Twitch\\Connection\\ITwitchConnection.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Twitch\\Connection\\ITwitchConnection.cs",
@@ -431,7 +447,7 @@
               "RelativeDocumentMoniker": "ToltoonTTS2\\MainViewModel.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\MainViewModel.cs*",
               "RelativeToolTip": "ToltoonTTS2\\MainViewModel.cs*",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAlwBQAAABOAAAAAAAAAA==",
+              "ViewState": "AgIAANkBAAAAAAAAAAAkwOcBAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-22T19:46:35.424Z",
               "EditorCaption": ""
@@ -450,7 +466,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 23,
               "Title": "ITts.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\TTS\\ITts.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\TTS\\ITts.cs",
@@ -462,7 +478,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 19,
               "Title": "TtsSAPI.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\TTS\\TtsSAPI.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\TTS\\TtsSAPI.cs",
@@ -474,7 +490,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "TwitchGetId.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Twitch\\Connection\\TwitchGetId.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Twitch\\Connection\\TwitchGetId.cs",
@@ -486,13 +502,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 15,
               "Title": "TwitchConnectToChat.cs",
               "DocumentMoniker": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Twitch\\Connection\\TwitchConnectToChat.cs",
               "RelativeDocumentMoniker": "ToltoonTTS2\\Twitch\\Connection\\TwitchConnectToChat.cs",
               "ToolTip": "C:\\\u044B\u0432\u0430\u0430\u0432\u044B\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Twitch\\Connection\\TwitchConnectToChat.cs",
               "RelativeToolTip": "ToltoonTTS2\\Twitch\\Connection\\TwitchConnectToChat.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAQwD8AAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAwBYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-12T13:21:43.687Z"
             }

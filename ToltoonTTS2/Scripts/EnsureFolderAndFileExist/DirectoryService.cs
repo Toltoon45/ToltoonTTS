@@ -12,6 +12,7 @@ namespace ToltoonTTS2.Scripts.EnsureFolderAndFileExist
             CreateFolder("BlackList", "DataForProgram/BlackList");
             CreateFolder("Profiles", "DataForProgram/Profiles");
             CreateFolder("WordReplace", "DataForProgram/WordReplace");
+            CreateFolder("Voices", "DataForProgram/Voices");
 
             // Проверка и создание файлов с дефолтным содержимым
             CreateFile("BlackListUsers.json", "DataForProgram/BlackList");

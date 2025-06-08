@@ -69,6 +69,10 @@
             "TwitchLib": {
               "target": "Package",
               "version": "[3.5.3, )"
+            },
+            "sqlite-net-pcl": {
+              "target": "Package",
+              "version": "[1.9.172, )"
             }
           },
           "imports": [
