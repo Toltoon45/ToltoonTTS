@@ -40,6 +40,7 @@ namespace ToltoonTTS2
             {
                 viewModel.SaveSettings();
             }
+            Application.Current.Shutdown();
         }
 
         private void ListBoxWhatToReplace_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)

@@ -1,30 +1,32 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using SQLite;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Speech.Synthesis;
-using System.Windows.Controls;
-using System.Windows;
 using System.Windows.Input;
 using ToltoonTTS2.Scripts.BlackList;
-using ToltoonTTS2.Scripts.Database;
 using ToltoonTTS2.Scripts.EnsureFolderAndFileExist;
 using ToltoonTTS2.Scripts.SaveLoadSettings;
 using ToltoonTTS2.TTS;
 using ToltoonTTS2.Twitch.Connection;
-using SQLite;
-using System.IO;
+using ToltoonTTS2.Voices;
 
 namespace ToltoonTTS2
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private readonly SQLiteConnection _db;
+        private readonly SQLiteConnection _LoadIndividualVoicesSettingsDb; //индивидуальные голоса 
+        private readonly SQLiteConnection _individualVoicesTwitchDb; //голоса для людей с твича
+
         ObservableCollection<VoiceItem> _voiceItems;          // для работы с БД
         ObservableCollection<PlaceVoicesInfoInWPF> _uiItems;  // для биндинга к UI
-        private readonly string _dbPath = Path.Combine(
+
+        private readonly string _LoadIndividualVoicesSettingsDbPath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db");
+        private readonly string _individualVoicesDbPath = Path.Combine(
+        AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "TwitchIndividualVoices.db");
         public ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices { get; set; } = new ObservableCollection<PlaceVoicesInfoInWPF>();
 
         private string _twitchApi;
@@ -59,6 +61,7 @@ namespace ToltoonTTS2
         private string _nameToLoadProfile;
         private ObservableCollection<string> _allProfiles;
         private TwitchConnectionState _twitchConnectionState;
+        private IndividualVoicesWindow IndividualVoicesWin;
 
         private readonly ITwitchGetID _twitchGetId;
         private readonly ITwitchConnectToChat _twitchConnectToChat;
@@ -98,6 +101,7 @@ namespace ToltoonTTS2
             WordWhatToReplaceWith = _wordReplaceService.WordWhatToReplaceWith;
             AvailableVoices = new ObservableCollection<string>();
             AvailableProfiles = new ObservableCollection<string>();
+            IndividualVoicesWin = new IndividualVoicesWindow();
 
             DisconnectTwitchCommand = new RelayCommand(DisconnectTwitch);
             SaveSettingsCommand = new RelayCommand(SaveSettings);
@@ -110,35 +114,59 @@ namespace ToltoonTTS2
             OpenDataDirectory = new RelayCommand(OpenProgramData);
             AddWordReplace = new RelayCommand(AddWordToReplace);
             DeleteWordReplace = new RelayCommand(DeleteWordFromReplace);
+            OpenIndividualVoicesWindow = new RelayCommand(OpenIndividualVoices);
             _directoryService = directoryService;
             _directoryService.EnsureAppStructureExists();
 
             LoadSettings();
 
-            _db = new SQLiteConnection(_dbPath);
-            _db.CreateTable<VoiceItem>();
-            LoadInstalledVoices();
+            _LoadIndividualVoicesSettingsDb = new SQLiteConnection(_LoadIndividualVoicesSettingsDbPath);
+            _LoadIndividualVoicesSettingsDb.CreateTable<VoiceItem>();
 
+            _individualVoicesTwitchDb = new SQLiteConnection(_individualVoicesDbPath);  // ← создаём подключение к нужной БД
+            _individualVoicesTwitchDb.CreateTable<TwitchIndividualVoices>();
+
+            LoadInstalledVoices();
+            _messageProcessing.SetDatabase(_individualVoicesTwitchDb, _LoadIndividualVoicesSettingsDb);
             _loadProfiles.GetListOfAvailableProfiles(AvailableProfiles);
             _loadAvailableVoices.GetListOfAvailableVoices(AvailableVoices);
 
             _twitchConnectToChat.MessageReceived += OnTwitchMessageReceived;
         }
-        // Метод преобразования VoiceItem -> PlaceVoicesInfoInWPF
-        private PlaceVoicesInfoInWPF ToPlaceVoicesInfo(VoiceItem item) => new PlaceVoicesInfoInWPF
-        {
-            Name = item.VoiceName,
-            TextBoxVolume = item.Volume,
-            TextBoxSpeed = item.Speed
-        };
 
-        // Метод преобразования PlaceVoicesInfoInWPF -> VoiceItem
-        private VoiceItem ToVoiceItem(PlaceVoicesInfoInWPF place, VoiceItem original)
+        private void OpenIndividualVoices()
         {
-            original.Volume = place.TextBoxVolume;
-            original.Speed = place.TextBoxSpeed;
-            return original;
+
+            var twitchDb = new SQLiteConnection(Path.Combine(
+        AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "TwitchIndividualVoices.db"));
+            var voicesDb = new SQLiteConnection(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db"));
+
+            var viewModel = new TwitchVoiceBindingsViewModel(twitchDb, voicesDb);
+
+
+            var window = new IndividualVoicesWindow
+            {
+                DataContext = viewModel
+            };
+
+            window.ShowDialog();
         }
+
+        //// Метод преобразования VoiceItem -> PlaceVoicesInfoInWPF
+        //private PlaceVoicesInfoInWPF ToPlaceVoicesInfo(VoiceItem item) => new PlaceVoicesInfoInWPF
+        //{
+        //    Name = item.VoiceName,
+        //    TextBoxVolume = item.Volume,
+        //    TextBoxSpeed = item.Speed
+        //};
+        // если всё будет работать то удали это два блока
+        //// Метод преобразования PlaceVoicesInfoInWPF -> VoiceItem
+        //private VoiceItem ToVoiceItem(PlaceVoicesInfoInWPF place, VoiceItem original)
+        //{
+        //    original.Volume = place.TextBoxVolume;
+        //    original.Speed = place.TextBoxSpeed;
+        //    return original;
+        //}
         private void DeleteWordFromReplace()
         {
             _wordReplaceService.DeleteWordFromReplace(_wordReplaceSelectedIndex);
@@ -156,10 +184,16 @@ namespace ToltoonTTS2
 
             if (BlackListMembers.Any(badWord => username.Contains(badWord, StringComparison.OrdinalIgnoreCase)))
                 return;
-            string ProcessedMessage = _messageProcessing.ProcessIncomingMessage(username, message);
-            if (!string.IsNullOrEmpty(ProcessedMessage))
-                _ttsService.Speak(ProcessedMessage);
+
+            var result = _messageProcessing.ProcessIncomingMessage(username, message);
+
+            if (result != null && !string.IsNullOrEmpty(result.Text))
+            {
+                _ttsService.Speak(result);
+            }
         }
+
+
 
 
         //private async Task ConnectToStreamingChats()
@@ -212,6 +246,7 @@ namespace ToltoonTTS2
         public ICommand AddWordReplace { get; }
         public ICommand DeleteWordReplace { get; }
         public ICommand DeleteProfile { get; set; }
+        public ICommand OpenIndividualVoicesWindow { get; }
 
         // Свойства
         public string TwitchApi
@@ -467,7 +502,7 @@ namespace ToltoonTTS2
         private void LoadInstalledVoices()
         {
             // Загружаем из базы
-            var voicesInDb = _db.Table<VoiceItem>().ToList();
+            var voicesInDb = _LoadIndividualVoicesSettingsDb.Table<VoiceItem>().ToList();
 
             using (var synth = new SpeechSynthesizer())
             {
@@ -485,7 +520,8 @@ namespace ToltoonTTS2
                             Name = existing.VoiceName,
                             TextBoxVolume = existing.Volume,
                             TextBoxSpeed = existing.Speed,
-                            IsEnabled = existing.IsEnabled
+                            IsEnabled = existing.IsEnabled,
+                            Db = _LoadIndividualVoicesSettingsDb
                         });
                     }
                     else
@@ -498,7 +534,7 @@ namespace ToltoonTTS2
                             Speed = "0",
                             IsEnabled = false
                         };
-                        _db.Insert(newVoice);
+                        _LoadIndividualVoicesSettingsDb.Insert(newVoice);
 
                         ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
                         {
@@ -506,7 +542,8 @@ namespace ToltoonTTS2
                             Name = newVoice.VoiceName,
                             TextBoxVolume = newVoice.Volume,
                             TextBoxSpeed = newVoice.Speed,
-                            IsEnabled = newVoice.IsEnabled
+                            IsEnabled = newVoice.IsEnabled,
+                            Db = _LoadIndividualVoicesSettingsDb
                         });
                     }
                 }
@@ -547,7 +584,7 @@ namespace ToltoonTTS2
                     IsEnabled = uiItem.IsEnabled
                 };
 
-                _db.Update(dbItem);
+                _LoadIndividualVoicesSettingsDb.Update(dbItem);
             }
             _serviceSettings.SaveSettings(settings);
         }

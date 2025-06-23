@@ -137,37 +137,50 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem x:Name="TabItemIndividualVoices" Header="Индив. голоса" ToolTip="На ремонте">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="ButtonIndividualVoices" Content="Голоса каждому"  Margin="10,10,0,10"/>
-                            <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов" Margin="10,10,0,10"/>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <!-- Кнопки и чекбокс -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Текстбокс команды -->
+                            <RowDefinition Height="*"/>
+                            <!-- Прокручиваемый контент -->
+                        </Grid.RowDefinitions>
+
+                        <!-- Верхний блок -->
+                        <StackPanel Grid.Row="0">
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="ButtonIndividualVoices" Command="{Binding OpenIndividualVoicesWindow}"
+                                        Content="Голоса каждому" Margin="10,10,0,10"/>
+                                <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов"
+                          IsChecked="{Binding IndividualVoicesEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,0,10"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                                <!-- Закомментированная часть -->
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="TextBoxGetUserVoices" Text="{Binding CommandToGetOtherUserVoiceName, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
+                                <Label x:Name="LabelGetUserVoice" Content="Команда для чата узнать голос пользователя" ToolTip="![команда] [никнейм]"/>
+                            </StackPanel>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
-                            <!--<Label x:Name="LabelIndividualVoicesChannelPoints" Content="Название команды за баллы канала для смены голоса" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)"></Label>
-                            <TextBox x:Name="TextBoxIndividualVoicesChannelPoints" TextWrapping="Wrap" Width="120" Margin="0,5,0,10" ToolTip="Название голоса нужно написать полное, как указано в индивидаульных голосах (и числа и hz и всё всё всё)" />-->
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox x:Name="TextBoxGetUserVoices" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
-                            <Label x:Name="LabelGetUserVoice" Content="Команда для чата узнать голос пользователя" ToolTip="![команда] [никнейм]"></Label>
-                        </StackPanel>
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel x:Name="StackPanelAllVoicesParent" Orientation="Vertical">
+
+                        <!-- Прокручиваемый список голосов -->
+                        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                             <ItemsControl x:Name="ItemControlAllVoicesChildren"
-              ItemsSource="{Binding ItemSourceAllVoices}">
+                          ItemsSource="{Binding ItemSourceAllVoices}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Margin="5">
-                                            <TextBlock Text="{Binding Name}" Width="150" VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding Name}" Width="150" VerticalAlignment="Center"/>
                                             <TextBox Text="{Binding TextBoxVolume, UpdateSourceTrigger=PropertyChanged}" Width="30" Margin="10,0,0,0"/>
                                             <TextBox Text="{Binding TextBoxSpeed, UpdateSourceTrigger=PropertyChanged}" Width="30" Margin="10,0,0,0"/>
-                                                <CheckBox IsChecked="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0"/>
-                                            </StackPanel>
+                                            <CheckBox IsChecked="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0"/>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </StackPanel>
                         </ScrollViewer>
-                    </StackPanel>
+                    </Grid>
                 </TabItem>
                 <TabItem x:Name="TabItemBlackList" Header="Чёрный список">
                     <StackPanel>

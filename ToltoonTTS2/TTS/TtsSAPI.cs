@@ -25,19 +25,19 @@ namespace ToltoonTTS2.TTS
             _synth.SpeakCompleted += Synth_SpeakCompleted;
         }
 
-        public void Speak(string text)
+        public void Speak(ProcessedTtsMessage result)
         {
-            if (string.IsNullOrWhiteSpace(text)) return;
+            if (string.IsNullOrWhiteSpace(result.Text)) return;
 
             // Обработка команд — выполняется мгновенно, не попадает в очередь
-            if (text.Contains(SkipCommandAll, StringComparison.OrdinalIgnoreCase))
+            if (result.Text.Contains(SkipCommandAll, StringComparison.OrdinalIgnoreCase))
             {
                 ClearQueue();
                 _synth.SpeakAsyncCancelAll();
                 return;
             }
 
-            if (text.Contains(SkipCommandOne, StringComparison.OrdinalIgnoreCase))
+            if (result.Text.Contains(SkipCommandOne, StringComparison.OrdinalIgnoreCase))
             {
                 var current = _synth.GetCurrentlySpokenPrompt();
                 if (current != null)
@@ -45,8 +45,22 @@ namespace ToltoonTTS2.TTS
                 return;
             }
 
+            // Устанавливаем голос
+            if (!string.IsNullOrEmpty(result.VoiceName))
+            {
+                SetVoice(result.VoiceName);
+            }
+
+            // Устанавливаем громкость (приводим float [0.0–1.0] к int [0–100])
+            int volume = (int)(Math.Clamp(result.VoiceVolume, 0f, 1f) * 100);
+            SetVolume(volume);
+
+            // Устанавливаем скорость (приводим float к int [-10 – 10])
+            int rate = (int)Math.Clamp(result.VoiceSpeed, -10f, 10f);
+            SetRate(rate);
+
             // Очередь обычных сообщений
-            _messageQueue.Enqueue(text);
+            _messageQueue.Enqueue(result.Text);
             lock (_lock)
             {
                 if (!_isSpeaking)
@@ -55,6 +69,7 @@ namespace ToltoonTTS2.TTS
                 }
             }
         }
+
 
         private void ProcessQueue()
         {

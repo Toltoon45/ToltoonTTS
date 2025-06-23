@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using SQLite;
+using System.Collections.ObjectModel;
 
 namespace ToltoonTTS2.TTS
 {
     public interface ITts
     {
-        void Speak(string text);
+        void Speak(ProcessedTtsMessage _result);
 
         void SetVoice(string voiceName);
         void SetRate(int rate);
@@ -13,7 +14,7 @@ namespace ToltoonTTS2.TTS
     
     public interface ITtsMessageProcessing
     {
-        string ProcessIncomingMessage(string username, string message);
+        ProcessedTtsMessage ProcessIncomingMessage(string username, string message);
 
         void SetSkipMessage(string SkipMessage);
         void SetSkipAllMessages(string SkipAllMessages);
@@ -22,5 +23,8 @@ namespace ToltoonTTS2.TTS
         void SetBlackList(ObservableCollection<string> blackList);
         void SetRemoveEmoji(bool removeEmoji);
         void SetDoNotTtsIfStartWith(string start);
+
+        string GetVoiceForUser(string username);
+        void SetDatabase(SQLiteConnection db, SQLiteConnection db2);
     }
 }
