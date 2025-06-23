@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using SQLite;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace ToltoonTTS2.TTS
@@ -13,52 +14,88 @@ namespace ToltoonTTS2.TTS
         private string _doNotTtsIfStartWith;
         private string _skipMessage;
         private string _skipMessageAll;
+
+        private SQLiteConnection _LoadIndividualVoicesTwitchDb;
+        private SQLiteConnection _LoadIndividualVoicesSettings;
+        private ObservableCollection<PlaceVoicesInfoInWPF> _enabledVoices;
+        public void SetDatabase(SQLiteConnection db, SQLiteConnection db2)
+        {
+            _LoadIndividualVoicesTwitchDb = db;
+            _LoadIndividualVoicesSettings = db2;
+        }
+
+        public void SetEnabledVoices(ObservableCollection<PlaceVoicesInfoInWPF> voices)
+        {
+            _enabledVoices = voices;
+        }
+
+        public string GetVoiceForUser(string username)
+        {
+            var binding = _LoadIndividualVoicesTwitchDb.Table<TwitchIndividualVoices>().FirstOrDefault(x => x.UserName == username);
+            return binding?.VoiceName;
+        }
+
+
+
         //удаление эмодзи
         private const string EmojiPattern = @"(?:[\u203C-\u3299\u00A9\u00AE\u2000-\u3300\uF000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF])";
         //переделывание ссылок в слово link
         private const string LinkReplace = @"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+";
 
-        public string ProcessIncomingMessage(string username, string message)
+        public ProcessedTtsMessage ProcessIncomingMessage(string username, string message)
         {
             if (_blackList.Any(blackListMember => username.Contains(blackListMember, StringComparison.OrdinalIgnoreCase)))
                 return null;
 
             if (message == _skipMessage)
-                return "пропуск1";
-            if (message == _skipMessageAll)
-                return "пропуск1все";
+                return new ProcessedTtsMessage { Text = "пропуск1", VoiceName = null };
 
-            if (_doNotTtsIfStartWith != null && message.StartsWith(_doNotTtsIfStartWith) && _doNotTtsIfStartWith != "")
+            if (message == _skipMessageAll)
+                return new ProcessedTtsMessage { Text = "пропуск1все", VoiceName = null };
+
+            if (!string.IsNullOrEmpty(_doNotTtsIfStartWith) && message.StartsWith(_doNotTtsIfStartWith))
                 return null;
 
-
-
-            var erredactedMessage = message;
-            // Замена точек для избежания незапланированной замены слова на link
-            erredactedMessage = Regex.Replace(erredactedMessage, @"\.{2,}", " . ");
-
-            // Заменяем ссылки словом "link"
-            erredactedMessage = Regex.Replace(erredactedMessage, LinkReplace, "link");//@"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+",
-
-            // Удаление эмодзи
-            if (_removeEmoji)
+            var binding = _LoadIndividualVoicesTwitchDb.Table<TwitchIndividualVoices>().FirstOrDefault(x => x.UserName == username);
+            if (binding == null)
             {
-                erredactedMessage = Regex.Replace(erredactedMessage, EmojiPattern, string.Empty);
+                var enabledVoiceList = _LoadIndividualVoicesSettings.Table<VoiceItem>()
+                          .Where(v => v.IsEnabled)
+                          .ToList();
+
+                if (enabledVoiceList.Count == 0)
+                    return null;
+
+                var random = new Random();
+                var selectedVoice = enabledVoiceList[random.Next(enabledVoiceList.Count)];
+
+                binding = new TwitchIndividualVoices
+                {
+                    UserName = username,
+                    VoiceName = selectedVoice.VoiceName
+                };
+                _LoadIndividualVoicesTwitchDb.Insert(binding);
             }
-            //Вторичная обработка
-            if (_wordToReplace.Count > 0) // Надо ли вообще менять
+
+            string voiceName = binding.VoiceName;
+
+            string erredactedMessage = message;
+            erredactedMessage = Regex.Replace(erredactedMessage, @"\.{2,}", " . ");
+            erredactedMessage = Regex.Replace(erredactedMessage, LinkReplace, "link");
+
+            if (_removeEmoji)
+                erredactedMessage = Regex.Replace(erredactedMessage, EmojiPattern, string.Empty);
+
+            if (_wordToReplace.Count > 0)
             {
                 string processedMessage = "";
                 string wordReplacedMessage = "";
-
-                // Разделяем сообщение на слова
                 string[] words = Regex.Split(erredactedMessage, @"\s+");
 
                 foreach (string word in words)
                 {
                     wordReplacedMessage = word;
 
-                    // Находим индекс слова в коллекции
                     int index = -1;
                     for (int i = 0; i < _wordToReplace.Count; i++)
                     {
@@ -70,18 +107,26 @@ namespace ToltoonTTS2.TTS
                     }
 
                     if (index != -1)
-                    {
                         wordReplacedMessage = _wordToReplaceWith[index];
-                    }
 
                     processedMessage = $"{processedMessage} {wordReplacedMessage}";
                 }
-                erredactedMessage = processedMessage;
-                //erredactedMessage = processedMessage;
 
+                erredactedMessage = processedMessage;
             }
-            return erredactedMessage;
+
+            var voiceSettings = _LoadIndividualVoicesSettings.Table<VoiceItem>()
+    .FirstOrDefault(v => v.VoiceName == voiceName);
+
+            return new ProcessedTtsMessage
+            {
+                Text = erredactedMessage,
+                VoiceName = voiceName,
+                VoiceVolume = Convert.ToInt32(voiceSettings.Volume),
+                VoiceSpeed = Convert.ToInt32(voiceSettings.Speed)
+            };
         }
+
 
         public void SetSkipMessage(string SkipMessage)
         {

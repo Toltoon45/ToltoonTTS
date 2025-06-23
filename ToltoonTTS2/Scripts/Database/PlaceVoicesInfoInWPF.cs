@@ -1,44 +1,76 @@
-﻿using System.ComponentModel;
+﻿using SQLite;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 public class PlaceVoicesInfoInWPF : INotifyPropertyChanged
 {
-    public string Name { get; set; }
     public int Id { get; set; }
 
-    private bool _isEnabled;
-    public bool IsEnabled
-    {
-        get => _isEnabled;
-        set
-        {
-            _isEnabled = value;
-            OnPropertyChanged();
-        }
-    }
     private string _textBoxVolume;
+    private string _textBoxSpeed;
+    private bool _isEnabled;
+
+    public string Name { get; set; }
+
+    public SQLiteConnection Db { get; set; } // ← передаётся из ViewModel/инициализатора
+
     public string TextBoxVolume
     {
         get => _textBoxVolume;
         set
         {
-            _textBoxVolume = value;
-            OnPropertyChanged();
+            if (_textBoxVolume != value)
+            {
+                _textBoxVolume = value;
+                OnPropertyChanged(nameof(TextBoxVolume));
+                SaveToDatabase();
+            }
         }
     }
 
-    private string _textBoxSpeed;
     public string TextBoxSpeed
     {
         get => _textBoxSpeed;
         set
         {
-            _textBoxSpeed = value;
-            OnPropertyChanged();
+            if (_textBoxSpeed != value)
+            {
+                _textBoxSpeed = value;
+                OnPropertyChanged(nameof(TextBoxSpeed));
+                SaveToDatabase();
+            }
+        }
+    }
+
+    public bool IsEnabled
+    {
+        get => _isEnabled;
+        set
+        {
+            if (_isEnabled != value)
+            {
+                _isEnabled = value;
+                OnPropertyChanged(nameof(IsEnabled));
+                SaveToDatabase();
+            }
+        }
+    }
+
+    private void SaveToDatabase()
+    {
+        if (Db == null) return;
+
+        var existing = Db.Table<VoiceItem>().FirstOrDefault(v => v.Id == Id);
+        if (existing != null)
+        {
+            existing.Volume = TextBoxVolume;
+            existing.Speed = TextBoxSpeed;
+            existing.IsEnabled = IsEnabled;
+            Db.Update(existing);
         }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string propName = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+    private void OnPropertyChanged(string propertyName) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
