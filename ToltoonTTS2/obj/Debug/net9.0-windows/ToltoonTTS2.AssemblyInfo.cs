@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ToltoonTTS2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b3445143871ab16f18ec999b5d72ec80cb71d92d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee73091633424bc9ef18775a30ab2559bc56ccd1")]
 [assembly: System.Reflection.AssemblyProductAttribute("ToltoonTTS2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ToltoonTTS2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

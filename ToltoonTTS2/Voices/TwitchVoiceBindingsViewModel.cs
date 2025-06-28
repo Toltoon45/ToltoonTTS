@@ -1,16 +1,22 @@
 ﻿using SQLite;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Windows.Input;
 
 public class TwitchVoiceBindingsViewModel
 {
+    private readonly SQLiteConnection _db; // ← добавляем нужное поле
+
     public ObservableCollection<UserVoiceBinding> UserVoiceBindings { get; set; }
+
+    public ICommand SaveCommand { get; }
 
     public TwitchVoiceBindingsViewModel(SQLiteConnection twitchDb, SQLiteConnection voicesDb)
     {
-        var userBindings = twitchDb.Table<TwitchIndividualVoices>().ToList();
+        _db = twitchDb;
+
+        var userBindings = twitchDb.Table<TwitchIndividualVoices>().ToList().OrderBy(x => x.UserName);
+            ;
+
         var enabledVoices = voicesDb.Table<VoiceItem>()
             .Where(v => v.IsEnabled)
             .Select(v => v.VoiceName)
@@ -45,5 +51,44 @@ public class TwitchVoiceBindingsViewModel
                 AvailableVoices = enabledVoices
             })
         );
+
+        SaveCommand = new RelayCommand(SaveAllUserVoiceBindings);
+    }
+
+    public void SaveAllUserVoiceBindings()
+    {
+        foreach (var binding in UserVoiceBindings)
+        {
+            var record = _db.Table<TwitchIndividualVoices>().FirstOrDefault(r => r.UserName == binding.UserName);
+            if (record != null)
+            {
+                record.VoiceName = binding.SelectedVoice;
+                _db.Update(record);
+            }
+            else
+            {
+                _db.Insert(new TwitchIndividualVoices
+                {
+                    UserName = binding.UserName,
+                    VoiceName = binding.SelectedVoice
+                });
+            }
+        }
+    }
+
+    public class RelayCommand : ICommand
+    {
+        private readonly Action _execute;
+        private readonly Func<bool> _canExecute;
+
+        public RelayCommand(Action execute, Func<bool> canExecute = null)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
+
+        public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
+        public void Execute(object parameter) => _execute();
+        public event EventHandler CanExecuteChanged;
     }
 }

@@ -62,7 +62,7 @@ namespace ToltoonTTS2
         private ObservableCollection<string> _allProfiles;
         private TwitchConnectionState _twitchConnectionState;
         private IndividualVoicesWindow IndividualVoicesWin;
-
+        private bool _individualVoicesEnabled;
         private readonly ITwitchGetID _twitchGetId;
         private readonly ITwitchConnectToChat _twitchConnectToChat;
         private readonly ITts _ttsService;
@@ -73,6 +73,7 @@ namespace ToltoonTTS2
         private readonly IBlackListServices _blackListServices;
         private readonly IWordreplace _wordReplaceService;
         private readonly ITtsMessageProcessing _messageProcessing;
+        private string _voiceTestErrorMessage;
 
         public MainViewModel
             (ITwitchGetID twitchGetId, 
@@ -291,6 +292,12 @@ namespace ToltoonTTS2
             set { _goodgamenickname = value; OnPropertyChanged(); }
         }
 
+        public bool IndividualVoicesEnabled
+        {
+            get => _individualVoicesEnabled;
+            set { _individualVoicesEnabled = value; OnPropertyChanged(); }
+        }
+
         public bool ConnectToGoodgame
         {
             get => _connectToGoodgame;
@@ -456,6 +463,16 @@ namespace ToltoonTTS2
             get => _availableVoices;
             set { _availableVoices = value; OnPropertyChanged(); }
         }
+        
+        public string VoiceTestErrorMessage
+        {
+            get => _voiceTestErrorMessage;
+            set
+            {
+                _voiceTestErrorMessage = value;
+                OnPropertyChanged(nameof(VoiceTestErrorMessage));
+            }
+        }
 
         private void DisconnectTwitch()
         {
@@ -521,7 +538,8 @@ namespace ToltoonTTS2
                             TextBoxVolume = existing.Volume,
                             TextBoxSpeed = existing.Speed,
                             IsEnabled = existing.IsEnabled,
-                            Db = _LoadIndividualVoicesSettingsDb
+                            Db = _LoadIndividualVoicesSettingsDb,
+                            StatusReporter = this
                         });
                     }
                     else
