@@ -5,19 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToltoonTTS2.Voices"
         mc:Ignorable="d"
-Title="Настройка голосов Twitch" Height="400" Width="400">
-    <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding UserVoiceBindings}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="5">
-                        <Label Content="{Binding UserName}" Width="150"/>
-                        <ComboBox ItemsSource="{Binding AvailableVoices}"
-                                  SelectedItem="{Binding SelectedVoice, Mode=TwoWay}"
-                                  Width="200"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </ScrollViewer>
+        Title="Настройка голосов Twitch" Height="400" Width="400">
+
+    <StackPanel>
+        <Button Content="Сохранить" Height="30" Margin="5" Command="{Binding SaveCommand}"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding UserVoiceBindings}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <Label Content="{Binding UserName}" Width="150"/>
+                            <ComboBox ItemsSource="{Binding AvailableVoices}"
+                                      SelectedItem="{Binding SelectedVoice, Mode=TwoWay}"
+                                      Width="200"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </StackPanel>
+
 </Window>

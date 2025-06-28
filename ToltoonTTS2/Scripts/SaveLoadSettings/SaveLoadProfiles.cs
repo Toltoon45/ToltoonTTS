@@ -19,6 +19,7 @@ namespace ToltoonTTS2.Scripts.SaveLoadSettings
                 viewModel.TtsSpeedValue,
                 viewModel.TtsVolumeValue,
                 viewModel.GoodgameNickname,
+                viewModel.IndividualVoicesEnabled
 
             };
             string fileName = viewModel.NameToSaveProfile;
@@ -52,6 +53,7 @@ namespace ToltoonTTS2.Scripts.SaveLoadSettings
                 viewModel.SelectedVoice = loadedData.SelectedVoice;
                 viewModel.TtsSpeedValue = loadedData.TtsSpeedValue;
                 viewModel.TtsVolumeValue = loadedData.TtsVolumeValue;
+                viewModel.IndividualVoicesEnabled = loadedData.IndividualVoicesEnabled;
             }
         }
 
@@ -72,5 +74,6 @@ namespace ToltoonTTS2.Scripts.SaveLoadSettings
         public int TtsVolumeValue { get; set; }
         public string GoodgameNickname { get; set; }
         public List<string> BlackList { get; set; }
+        public bool IndividualVoicesEnabled { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace ToltoonTTS2.Scripts.SaveLoadSettings
+﻿using ToltoonTTS2.Properties;
+
+namespace ToltoonTTS2.Scripts.SaveLoadSettings
 {
     public class SettingsService : ISettings
     {
@@ -21,7 +23,8 @@
                 SkipMessageAll = Properties.Settings.Default.TextBoxMessageSkipAll,
                 BlackListMembers = Properties.Settings.Default.BlackListMembers?.Cast<string>().ToList() ?? new List<string>(),  // 👈 Загрузка BlackList
                 WhatToReplace = Properties.Settings.Default.WhatToReplace?.Cast<string>().ToList() ?? new List<string>(),
-                WhatToReplaceWith = Properties.Settings.Default.WhatToReplaceWith?.Cast<string>().ToList() ?? new List<string>()
+                WhatToReplaceWith = Properties.Settings.Default.WhatToReplaceWith?.Cast<string>().ToList() ?? new List<string>(),
+                IndividualVoicesEnabled = Properties.Settings.Default.IndividualVoicesEnabled
 
             };
         }
@@ -42,6 +45,7 @@
             Properties.Settings.Default.TextBoxDoNotTtsIfStartWith = settings.DoNotTtsIfStartWith;
             Properties.Settings.Default.TextBoxMessageSkip = settings.SkipMessage;
             Properties.Settings.Default.TextBoxMessageSkipAll = settings.SkipMessageAll;
+            Properties.Settings.Default.IndividualVoicesEnabled = settings.IndividualVoicesEnabled;
 
             var blackListMembers = new System.Collections.Specialized.StringCollection();
             foreach (var item in settings.BlackListMembers)

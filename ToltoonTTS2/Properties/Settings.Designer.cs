@@ -211,5 +211,17 @@ namespace ToltoonTTS2.Properties {
                 this["WhatToReplaceWith"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IndividualVoicesEnabled {
+            get {
+                return ((bool)(this["IndividualVoicesEnabled"]));
+            }
+            set {
+                this["IndividualVoicesEnabled"] = value;
+            }
+        }
     }
 }

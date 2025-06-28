@@ -175,6 +175,7 @@
                                             <TextBox Text="{Binding TextBoxVolume, UpdateSourceTrigger=PropertyChanged}" Width="30" Margin="10,0,0,0"/>
                                             <TextBox Text="{Binding TextBoxSpeed, UpdateSourceTrigger=PropertyChanged}" Width="30" Margin="10,0,0,0"/>
                                             <CheckBox IsChecked="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0"/>
+                                            <Button Content="Проверить" Command="{Binding TestVoiceCommand}" Margin="5,0,0,0"></Button>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -269,9 +270,7 @@
                                 Margin="10,10,10,0" Content="Файлы программы" Width="120" HorizontalAlignment="Left"/>
                     </StackPanel>
                 </StackPanel>
-                <Label x:Name="LabelErrorMessages" HorizontalAlignment="Left">
-                    <Label Content="" Width="150"/>
-                </Label>
+                <Label x:Name="LabelVoiceErrorMessage" Content="{Binding VoiceTestErrorMessage}"/>
             </StackPanel>
         </StackPanel>
         <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right"/>
