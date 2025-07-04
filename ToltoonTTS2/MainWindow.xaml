@@ -95,7 +95,7 @@
                                 <CheckBox IsChecked="{Binding RemoveEmoji}" Command="{Binding RemoveEvoji}" x:Name="RemoveEmoji" Content="Удалять эмодзи" Margin="10,10,0,10"/>
                                 <StackPanel Orientation="Horizontal">
                                     <ComboBox x:Name="comboBoxInstalledVoices" SelectedItem="{Binding SelectedVoice, UpdateSourceTrigger=PropertyChanged}"
-                                              ItemsSource="{Binding AvailableVoices}"
+                                              ItemsSource="{Binding AvailableVoices}" 
                                               Width="120" HorizontalAlignment="Left" Margin="10,0,0,10" ToolTipService.InitialShowDelay="0"/>
 
                                     <Label x:Name="labelInstalledVoices" Content="Установленные голоса"></Label>
@@ -150,8 +150,10 @@
                         <!-- Верхний блок -->
                         <StackPanel Grid.Row="0">
                             <StackPanel Orientation="Horizontal">
-                                <Button x:Name="ButtonIndividualVoices" Command="{Binding OpenIndividualVoicesWindow}"
-                                        Content="Голоса каждому" Margin="10,10,0,10"/>
+                                <Button x:Name="ButtonIndividualVoicesTwitch" Command="{Binding OpenIndividualVoicesTwitchWindow}"
+                                        Content="Голоса Twitch" Margin="10,10,0,10"/>
+                                <Button x:Name="ButtonIndividualVoicesGoodgame" Content="Голоса Goodgame" Margin="10,10,0,10"
+                                        Command="{Binding OpenIndividualVoicesGoodgameWindow}"></Button>
                                 <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов"
                           IsChecked="{Binding IndividualVoicesEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,0,10"/>
                             </StackPanel>
@@ -159,8 +161,8 @@
                                 <!-- Закомментированная часть -->
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBox x:Name="TextBoxGetUserVoices" Text="{Binding CommandToGetOtherUserVoiceName, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
-                                <Label x:Name="LabelGetUserVoice" Content="Команда для чата узнать голос пользователя" ToolTip="![команда] [никнейм]"/>
+                                <TextBox IsEnabled="false" x:Name="TextBoxGetUserVoices" Text="{Binding CommandToGetOtherUserVoiceName, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
+                                <Label x:Name="LabelGetUserVoice" Content="Потом чё-нибудь сделаю" ToolTip="![команда] [никнейм]"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -258,12 +260,12 @@
             </TabControl>
             <StackPanel Orientation="Vertical">
                 <Label x:Name="LabelTwitchStatusMessage" Content="{Binding TwitchConnectionStatus, UpdateSourceTrigger=PropertyChanged}"></Label>
-                <Label x:Name="LabelGoodgameStatusMessage"></Label>
+                <Label x:Name="LabelGoodgameStatusMessage" Content="{Binding GoodgameConnectionStatus, UpdateSourceTrigger=PropertyChanged}"></Label>
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <Button x:Name="buttonConnect" Command="{Binding ConnectToChats}"
                                 Content="Connect" HorizontalAlignment="Left" Margin="10,10,0,0"/>
-                        <Button x:Name="buttonTwitchDisconnect" ToolTip="Работает только с твичом (пока что)" Content="Disconnect" HorizontalAlignment="Left" Margin="10,10,0,0"/>
+                        <Button x:Name="buttonTwitchDisconnect" ToolTip="Работает только с твичом (пока что)" Content="Disconnect" HorizontalAlignment="Left" Margin="10,10,0,0" IsEnabled="False"/>
                     </StackPanel>
                     <StackPanel>
                         <Button x:Name="ButtonOpenProgramData" Command="{Binding OpenDataDirectory}" 
@@ -273,9 +275,7 @@
                 <Label x:Name="LabelVoiceErrorMessage" Content="{Binding VoiceTestErrorMessage}"/>
             </StackPanel>
         </StackPanel>
-        <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right"/>
-        <Label x:Name="LabelProgramVersion" Content="1.1.0 x86" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
-
-
+        <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>
+        <Label x:Name="LabelProgramVersion" Content="Секретная версия 1.2.1 x86 для лапочки собаки-силикаки" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
     </Grid>
 </Window>

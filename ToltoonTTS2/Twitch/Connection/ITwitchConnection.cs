@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TwitchLib.Client;
-
-namespace ToltoonTTS2.Twitch.Connection
+﻿namespace ToltoonTTS2.Twitch.Connection
 {
     public interface ITwitchGetID
     {

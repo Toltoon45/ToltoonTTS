@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-public class TwitchIndividualVoices
+public class PlatformsIndividualVoices
 {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }

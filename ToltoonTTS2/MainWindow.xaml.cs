@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ToltoonTTS2.Goodgame.Connection;
 using ToltoonTTS2.Scripts.BlackList;
 using ToltoonTTS2.Scripts.EnsureFolderAndFileExist;
 using ToltoonTTS2.Scripts.SaveLoadSettings;
@@ -13,6 +14,7 @@ namespace ToltoonTTS2
         {
             ITwitchGetID twitchGetId = new TwitchGetId();
             ITwitchConnectToChat twitchConnectToChat = new TwitchConnectToChat();
+            IGoodgameConnection goodgameConnectionToChat = new GoodgameConnectionToChat();
             ITts TtsService = new TtsSAPI();
             ISettings SettingsService = new SettingsService();
             IDirectoryService DirectoryService = new DirectoryService();
@@ -28,7 +30,8 @@ namespace ToltoonTTS2
                 LoadProfiles,
                 BlackListService,
                 WordReplaceService,
-                MessageProcessing);
+                MessageProcessing,
+                goodgameConnectionToChat);
             //при первом изменении itemsource он становится пустым. Нужна заглушка чтобы этого не было
             //BlackListService.AddToBlackList("1");
             InitializeComponent();

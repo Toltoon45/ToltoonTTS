@@ -1,6 +1,4 @@
 ﻿using ToltoonTTS2.Twitch.Connection;
-using TwitchLib.Client.Events;
-using TwitchLib.Client.Models;
 using TwitchLib.Client;
 //using TwitchLib.PubSub;
 
@@ -11,10 +9,12 @@ public enum TwitchConnectionState
     Connected,
     Failed
 }
-public class TwitchConnectToChat : ITwitchConnectToChat
+class TwitchConnectToChat : ITwitchConnectToChat
 {
     private readonly TwitchClient _client;
     public TwitchConnectionState CurrentState { get; private set; } = TwitchConnectionState.Disconnected;
+
+    private readonly TwitchClient _test2;
 
     public event EventHandler<TwitchLib.Client.Events.OnMessageReceivedArgs> MessageReceived;
     public event EventHandler<TwitchConnectionState> ConnectionStateChanged;
@@ -22,6 +22,7 @@ public class TwitchConnectToChat : ITwitchConnectToChat
     public TwitchConnectToChat()
     {
         _client = new TwitchClient();
+        _test2 = new TwitchClient();
         _client.OnConnected += (s, e) =>
         {
             UpdateState(TwitchConnectionState.Connected);
@@ -31,6 +32,13 @@ public class TwitchConnectToChat : ITwitchConnectToChat
         {
             UpdateState(TwitchConnectionState.Failed);
         };
+
+        _test2.OnMessageReceived += (s, e) =>
+        {
+            Thread.Sleep(2000);
+            _test2.SendMessage(e.ChatMessage.Channel, $"{e.ChatMessage.Message} 1");
+        };
+
 
         _client.OnDisconnected += (s, e) =>
         {
@@ -43,6 +51,8 @@ public class TwitchConnectToChat : ITwitchConnectToChat
         };
     }
 
+
+
     public async Task ConnectToChat(string twitchApi, string twitchNickname)
     {
         try
@@ -51,8 +61,9 @@ public class TwitchConnectToChat : ITwitchConnectToChat
 
             var credentials = new TwitchLib.Client.Models.ConnectionCredentials(twitchNickname, twitchApi);
             _client.Initialize(credentials, twitchNickname);
-
+            _test2.Initialize(credentials, "toltoon47");
             _client.Connect();
+            _test2.Connect();
             //await Task.Delay(2000);
         }
         catch (Exception)

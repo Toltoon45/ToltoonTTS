@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Speech.Synthesis;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ToltoonTTS2.TTS
 {
     class TtsSAPI : ITts, IDisposable
     {
         private readonly SpeechSynthesizer _synth;
-        private readonly ConcurrentQueue<string> _messageQueue = new ConcurrentQueue<string>();
+        private readonly ConcurrentQueue<ProcessedTtsMessage> _messageQueue = new();
+
         private bool _isSpeaking = false;
         private readonly object _lock = new object();
 
@@ -50,9 +47,9 @@ namespace ToltoonTTS2.TTS
             {
                 SetVoice(result.VoiceName);
             }
-
-            // Устанавливаем громкость (приводим float [0.0–1.0] к int [0–100])
-            int volume = (int)(Math.Clamp(result.VoiceVolume, 0f, 1f) * 100);
+            
+                // Устанавливаем громкость (приводим float [0.0–1.0] к int [0–100])
+                int volume = (int)(Math.Clamp(result.VoiceVolume, 0f, 1f) * 100);
             SetVolume(volume);
 
             // Устанавливаем скорость (приводим float к int [-10 – 10])
@@ -60,7 +57,7 @@ namespace ToltoonTTS2.TTS
             SetRate(rate);
 
             // Очередь обычных сообщений
-            _messageQueue.Enqueue(result.Text);
+            _messageQueue.Enqueue(result);
             lock (_lock)
             {
                 if (!_isSpeaking)
@@ -73,12 +70,21 @@ namespace ToltoonTTS2.TTS
 
         private void ProcessQueue()
         {
-            if (_messageQueue.TryDequeue(out var message))
+            if (_messageQueue.TryDequeue(out var result))
             {
                 _isSpeaking = true;
 
-                // Обработка текста (упрощённая)
-                message = PreprocessMessage(message);
+                // Применяем настройки, сохранённые именно с этим сообщением
+                if (!string.IsNullOrEmpty(result.VoiceName))
+                    SetVoice(result.VoiceName);
+
+                int volume = (int)(Math.Clamp(result.VoiceVolume, 0f, 1f) * 100);
+                SetVolume(volume);
+
+                int rate = (int)Math.Clamp(result.VoiceSpeed, -10f, 10f);
+                SetRate(rate);
+
+                var message = PreprocessMessage(result.Text);
 
                 try
                 {
@@ -97,6 +103,7 @@ namespace ToltoonTTS2.TTS
                 _isSpeaking = false;
             }
         }
+
 
         private void Synth_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {

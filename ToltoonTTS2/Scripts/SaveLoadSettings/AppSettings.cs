@@ -15,12 +15,11 @@
         public string DoNotTtsIfStartWith { get; set; }
         public string SkipMessage { get; set; }
         public string SkipMessageAll { get; set; }
-        public bool IndividualVoicesEnabled { get; set; }
         public string CommandToGetOtherUserVoiceName { get; set; }
         public List<string> BlackListMembers { get; set; } = new List<string>();
         public List<string> WhatToReplace { get; set; } = new List<string>();
         public List<string> WhatToReplaceWith { get; set; } = new List<string>();
-
+        public bool IndividualVoicesEnabled { get; set; }
     }
 
 }
