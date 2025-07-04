@@ -193,7 +193,7 @@
               "RelativeDocumentMoniker": "ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
               "ToolTip": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
               "RelativeToolTip": "ToltoonTTS2\\TTS\\TtsMessageProcessing.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAmwDcAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACwAAAAAAAAAAAAmwDMAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-21T17:59:07.196Z",
               "EditorCaption": ""
@@ -486,17 +486,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "Settings.settings",
-              "DocumentMoniker": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Properties\\Settings.settings",
-              "RelativeDocumentMoniker": "ToltoonTTS2\\Properties\\Settings.settings",
-              "ToolTip": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Properties\\Settings.settings",
-              "RelativeToolTip": "ToltoonTTS2\\Properties\\Settings.settings",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002767|",
-              "WhenOpened": "2025-05-29T03:31:18.16Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 25,
               "Title": "SaveLoadProfiles.cs",
               "DocumentMoniker": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Scripts\\SaveLoadSettings\\SaveLoadProfiles.cs",
@@ -616,6 +605,21 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-16T10:38:53.031Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Settings.settings",
+              "DocumentMoniker": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Properties\\Settings.settings",
+              "RelativeDocumentMoniker": "ToltoonTTS2\\Properties\\Settings.settings",
+              "ToolTip": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\Properties\\Settings.settings",
+              "RelativeToolTip": "ToltoonTTS2\\Properties\\Settings.settings",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002767|",
+              "WhenOpened": "2025-05-29T03:31:18.16Z"
             }
           ]
         }
