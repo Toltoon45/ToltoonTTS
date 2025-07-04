@@ -6,7 +6,7 @@ namespace ToltoonTTS2.Scripts.SaveLoadSettings
     {
         public AppSettings LoadSettings()
         {
-            return new AppSettings
+            return new AppSettings 
             {
                 TwitchApi = Properties.Settings.Default.TwitchApi,
                 TwitchClientId = Properties.Settings.Default.TwitchID,

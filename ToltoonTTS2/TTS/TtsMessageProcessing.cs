@@ -14,14 +14,24 @@ namespace ToltoonTTS2.TTS
         private string _doNotTtsIfStartWith;
         private string _skipMessage;
         private string _skipMessageAll;
+        private bool _individualVoicesEnabled;
+
+        private string _standartVoiceName;
+        private int _standartVoiceVolume;
+        private int _standartVoiceSpeed;
 
         private SQLiteConnection _LoadIndividualVoicesTwitchDb;
+        private SQLiteConnection _LoadIndividualVoicesGoodGameDb;
+
         private SQLiteConnection _LoadIndividualVoicesSettings;
+
+
         private ObservableCollection<PlaceVoicesInfoInWPF> _enabledVoices;
-        public void SetDatabase(SQLiteConnection db, SQLiteConnection db2)
+        public void SetDatabase(SQLiteConnection TwitchIndividualVoicesDb, SQLiteConnection IndividualVoicesSettingsDb, SQLiteConnection GoodgameIndividualVoicesDb)
         {
-            _LoadIndividualVoicesTwitchDb = db;
-            _LoadIndividualVoicesSettings = db2;
+            _LoadIndividualVoicesTwitchDb = TwitchIndividualVoicesDb;
+            _LoadIndividualVoicesSettings = IndividualVoicesSettingsDb;
+            _LoadIndividualVoicesGoodGameDb = GoodgameIndividualVoicesDb;
         }
 
         public void SetEnabledVoices(ObservableCollection<PlaceVoicesInfoInWPF> voices)
@@ -29,11 +39,11 @@ namespace ToltoonTTS2.TTS
             _enabledVoices = voices;
         }
 
-        public string GetVoiceForUser(string username)
-        {
-            var binding = _LoadIndividualVoicesTwitchDb.Table<TwitchIndividualVoices>().FirstOrDefault(x => x.UserName == username);
-            return binding?.VoiceName;
-        }
+        //public string GetVoiceForUser(string username)
+        //{
+        //    var binding = _LoadIndividualVoicesTwitchDb.Table<PlatformsIndividualVoices>().FirstOrDefault(x => x.UserName == username);
+        //    return binding?.VoiceName;
+        //}
 
 
 
@@ -42,8 +52,9 @@ namespace ToltoonTTS2.TTS
         //переделывание ссылок в слово link
         private const string LinkReplace = @"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+";
 
-        public ProcessedTtsMessage ProcessIncomingMessage(string username, string message)
+        public ProcessedTtsMessage ProcessIncomingMessage(string username, string message, string platform)
         {
+            string voiceName = "";
             if (_blackList.Any(blackListMember => username.Contains(blackListMember, StringComparison.OrdinalIgnoreCase)))
                 return null;
 
@@ -55,29 +66,41 @@ namespace ToltoonTTS2.TTS
 
             if (!string.IsNullOrEmpty(_doNotTtsIfStartWith) && message.StartsWith(_doNotTtsIfStartWith))
                 return null;
-
-            var binding = _LoadIndividualVoicesTwitchDb.Table<TwitchIndividualVoices>().FirstOrDefault(x => x.UserName == username);
-            if (binding == null)
+            PlatformsIndividualVoices binding = null;
+            if (_individualVoicesEnabled)
             {
-                var enabledVoiceList = _LoadIndividualVoicesSettings.Table<VoiceItem>()
-                          .Where(v => v.IsEnabled)
-                          .ToList();
+                var db = platform.Equals("goodgame", StringComparison.OrdinalIgnoreCase)
+    ? _LoadIndividualVoicesGoodGameDb
+    : _LoadIndividualVoicesTwitchDb;
 
-                if (enabledVoiceList.Count == 0)
-                    return null;
-
-                var random = new Random();
-                var selectedVoice = enabledVoiceList[random.Next(enabledVoiceList.Count)];
-
-                binding = new TwitchIndividualVoices
+                binding = db.Table<PlatformsIndividualVoices>().FirstOrDefault(x => x.UserName == username);
+                if (binding == null)
                 {
-                    UserName = username,
-                    VoiceName = selectedVoice.VoiceName
-                };
-                _LoadIndividualVoicesTwitchDb.Insert(binding);
-            }
+                    var enabledVoiceList = _LoadIndividualVoicesSettings.Table<VoiceItem>()
+                              .Where(v => v.IsEnabled)
+                              .ToList();
 
-            string voiceName = binding.VoiceName;
+                    if (enabledVoiceList.Count == 0)
+                        return null;
+
+                    var random = new Random();
+                    var selectedVoice = enabledVoiceList[random.Next(enabledVoiceList.Count)];
+
+                    binding = new PlatformsIndividualVoices
+                    {
+                        UserName = username,
+                        VoiceName = selectedVoice.VoiceName
+                    };
+                    db.Insert(binding);
+                }
+                
+            }
+            try
+            {
+                voiceName = binding.VoiceName;
+            }
+            catch { }
+
 
             string erredactedMessage = message;
             erredactedMessage = Regex.Replace(erredactedMessage, @"\.{2,}", " . ");
@@ -118,13 +141,27 @@ namespace ToltoonTTS2.TTS
             var voiceSettings = _LoadIndividualVoicesSettings.Table<VoiceItem>()
     .FirstOrDefault(v => v.VoiceName == voiceName);
 
-            return new ProcessedTtsMessage
+            if (_individualVoicesEnabled)
             {
-                Text = erredactedMessage,
-                VoiceName = voiceName,
-                VoiceVolume = Convert.ToInt32(voiceSettings.Volume),
-                VoiceSpeed = Convert.ToInt32(voiceSettings.Speed)
-            };
+                return new ProcessedTtsMessage
+                {
+                    Text = erredactedMessage,
+                    VoiceName = voiceName,
+                    VoiceVolume = Convert.ToInt32(voiceSettings.Volume),
+                    VoiceSpeed = Convert.ToInt32(voiceSettings.Speed)
+                };
+            }
+            else
+            {
+                return new ProcessedTtsMessage
+                {
+                    Text = erredactedMessage,
+                    VoiceName = _standartVoiceName,
+                    VoiceVolume = _standartVoiceVolume,
+                    VoiceSpeed = _standartVoiceSpeed
+                };
+            }
+
         }
 
 
@@ -161,6 +198,26 @@ namespace ToltoonTTS2.TTS
         public void SetDoNotTtsIfStartWith(string start)
         {
             _doNotTtsIfStartWith = start;
+        }
+
+        public void SetIndividualVoicesEnabled(bool enabled)
+        {
+            _individualVoicesEnabled = enabled;
+        }
+
+        public void SetStandartVoiceName(string name)
+        {
+            _standartVoiceName = name;
+        }
+
+        public void SetStandardVoiceVolume(int volume)
+        {
+            _standartVoiceVolume = volume;
+        }
+
+        public void SetStandartVoiceSpeed(int speed)
+        {
+            _standartVoiceSpeed = speed;
         }
     }
 }

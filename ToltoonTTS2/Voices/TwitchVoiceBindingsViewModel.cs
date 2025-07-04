@@ -4,18 +4,19 @@ using System.Windows.Input;
 
 public class TwitchVoiceBindingsViewModel
 {
-    private readonly SQLiteConnection _db; // ← добавляем нужное поле
+    private readonly SQLiteConnection _platformDb; // ← добавляем нужное поле
+    private readonly SQLiteConnection _dbGoodgame; // ← добавляем нужное поле
 
     public ObservableCollection<UserVoiceBinding> UserVoiceBindings { get; set; }
 
     public ICommand SaveCommand { get; }
 
-    public TwitchVoiceBindingsViewModel(SQLiteConnection twitchDb, SQLiteConnection voicesDb)
+    public TwitchVoiceBindingsViewModel(SQLiteConnection platformDb, SQLiteConnection voicesDb)
     {
-        _db = twitchDb;
+        _platformDb = platformDb;
 
-        var userBindings = twitchDb.Table<TwitchIndividualVoices>().ToList().OrderBy(x => x.UserName);
-            ;
+        var userBindings = _platformDb.Table<PlatformsIndividualVoices>().ToList().OrderBy(x => x.UserName);
+
 
         var enabledVoices = voicesDb.Table<VoiceItem>()
             .Where(v => v.IsEnabled)
@@ -39,7 +40,7 @@ public class TwitchVoiceBindingsViewModel
             {
                 var newVoice = enabledVoices[rng.Next(enabledVoices.Count)];
                 binding.VoiceName = newVoice;
-                twitchDb.Update(binding); // сохраняем замену в базу
+                _platformDb.Update(binding); // сохраняем замену в базу
             }
         }
 
@@ -59,15 +60,15 @@ public class TwitchVoiceBindingsViewModel
     {
         foreach (var binding in UserVoiceBindings)
         {
-            var record = _db.Table<TwitchIndividualVoices>().FirstOrDefault(r => r.UserName == binding.UserName);
+            var record = _platformDb.Table<PlatformsIndividualVoices>().FirstOrDefault(r => r.UserName == binding.UserName);
             if (record != null)
             {
                 record.VoiceName = binding.SelectedVoice;
-                _db.Update(record);
+                _platformDb.Update(record);
             }
             else
             {
-                _db.Insert(new TwitchIndividualVoices
+                _platformDb.Insert(new PlatformsIndividualVoices
                 {
                     UserName = binding.UserName,
                     VoiceName = binding.SelectedVoice

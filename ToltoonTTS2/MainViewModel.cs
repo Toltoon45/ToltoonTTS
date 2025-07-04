@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Speech.Synthesis;
 using System.Windows.Input;
+using ToltoonTTS2.Goodgame.Connection;
 using ToltoonTTS2.Scripts.BlackList;
 using ToltoonTTS2.Scripts.EnsureFolderAndFileExist;
 using ToltoonTTS2.Scripts.SaveLoadSettings;
@@ -17,16 +18,19 @@ namespace ToltoonTTS2
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private readonly SQLiteConnection _LoadIndividualVoicesSettingsDb; //индивидуальные голоса 
+        private readonly SQLiteConnection _LoadIndividualVoicesSettingsDb; //индивидуальные голоса
+        private readonly SQLiteConnection _individualVoicesGoodgameDb; //голоса для людей с гудгейма
         private readonly SQLiteConnection _individualVoicesTwitchDb; //голоса для людей с твича
 
         ObservableCollection<VoiceItem> _voiceItems;          // для работы с БД
         ObservableCollection<PlaceVoicesInfoInWPF> _uiItems;  // для биндинга к UI
 
         private readonly string _LoadIndividualVoicesSettingsDbPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db");
-        private readonly string _individualVoicesDbPath = Path.Combine(
+        AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db");
+        private readonly string _individualVoicesTwitchDbPath = Path.Combine(
         AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "TwitchIndividualVoices.db");
+        private readonly string _individualVoicesGoodgameDbPath = Path.Combine(
+        AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "GoodgameIndividualVoices.db");
         public ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices { get; set; } = new ObservableCollection<PlaceVoicesInfoInWPF>();
 
         private string _twitchApi;
@@ -61,10 +65,12 @@ namespace ToltoonTTS2
         private string _nameToLoadProfile;
         private ObservableCollection<string> _allProfiles;
         private TwitchConnectionState _twitchConnectionState;
+        private GoodgameConnectionState _goodgameConnectionState;
         private IndividualVoicesWindow IndividualVoicesWin;
         private bool _individualVoicesEnabled;
         private readonly ITwitchGetID _twitchGetId;
         private readonly ITwitchConnectToChat _twitchConnectToChat;
+        private readonly IGoodgameConnection _goodgameConnectionToChat;
         private readonly ITts _ttsService;
         private readonly ISettings _serviceSettings;
         private readonly IDirectoryService _directoryService;
@@ -85,11 +91,13 @@ namespace ToltoonTTS2
             ILoadProfilesList loadProfiles,
             IBlackListServices blackListSerives,
             IWordreplace wordReplaceService,
-            ITtsMessageProcessing messageProcessing)
+            ITtsMessageProcessing messageProcessing,
+            IGoodgameConnection goodgameConnectionToChat)
         {
             _serviceSettings = settingsService;
             _twitchGetId = twitchGetId;
             _twitchConnectToChat = twitchConnectToChat;
+            _goodgameConnectionToChat = goodgameConnectionToChat;
             _ttsService = ttsService;
             _loadAvailableVoices = getInstalledVoices;
             _loadProfiles = loadProfiles;
@@ -115,7 +123,9 @@ namespace ToltoonTTS2
             OpenDataDirectory = new RelayCommand(OpenProgramData);
             AddWordReplace = new RelayCommand(AddWordToReplace);
             DeleteWordReplace = new RelayCommand(DeleteWordFromReplace);
-            OpenIndividualVoicesWindow = new RelayCommand(OpenIndividualVoices);
+            OpenIndividualVoicesTwitchWindow = new RelayCommand(() => OpenIndividualVoices("Twitch"));
+            OpenIndividualVoicesGoodgameWindow = new RelayCommand(() => OpenIndividualVoices("Goodgame"));
+
             _directoryService = directoryService;
             _directoryService.EnsureAppStructureExists();
 
@@ -124,25 +134,62 @@ namespace ToltoonTTS2
             _LoadIndividualVoicesSettingsDb = new SQLiteConnection(_LoadIndividualVoicesSettingsDbPath);
             _LoadIndividualVoicesSettingsDb.CreateTable<VoiceItem>();
 
-            _individualVoicesTwitchDb = new SQLiteConnection(_individualVoicesDbPath);  // ← создаём подключение к нужной БД
-            _individualVoicesTwitchDb.CreateTable<TwitchIndividualVoices>();
+            _individualVoicesTwitchDb = new SQLiteConnection(_individualVoicesTwitchDbPath);  // ← создаём подключение к нужной БД
+            _individualVoicesTwitchDb.CreateTable<PlatformsIndividualVoices>();
+            _individualVoicesGoodgameDb = new SQLiteConnection(_individualVoicesGoodgameDbPath);
+            _individualVoicesGoodgameDb.CreateTable<PlatformsIndividualVoices>();
 
             LoadInstalledVoices();
-            _messageProcessing.SetDatabase(_individualVoicesTwitchDb, _LoadIndividualVoicesSettingsDb);
+            _messageProcessing.SetDatabase(_individualVoicesTwitchDb, _LoadIndividualVoicesSettingsDb, _individualVoicesGoodgameDb);
             _loadProfiles.GetListOfAvailableProfiles(AvailableProfiles);
             _loadAvailableVoices.GetListOfAvailableVoices(AvailableVoices);
 
+            //получение сообщений
             _twitchConnectToChat.MessageReceived += OnTwitchMessageReceived;
+            _goodgameConnectionToChat.MessageReceived += (sender, e) =>
+            {
+                // обработка сообщения
+                if ((e.UserName.ToLower() == "toltoon45" || e.UserName == "s1llyc4k3") && e.Message.StartsWith("!забанить пидораса"))
+                {
+                    var words = e.Message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (words.Length > 0)
+                    {
+                        var lastWord = words[^1];
+                        BlackListMembers.Add(lastWord);
+                    }
+                }
+
+                if ((e.UserName.ToLower() == "toltoon45" || e.UserName == "s1llyc4k3") && e.Message.StartsWith("!разбанить пидораса"))
+                {
+                    var words = e.Message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    if (words.Length > 0)
+                    {
+                        var lastWord = words[^1];
+                        BlackListMembers.Remove(lastWord);
+                    }
+                }
+                var message = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "goodgame");
+                if (message != null)
+                    _ttsService.Speak(message);
+            };
         }
 
-        private void OpenIndividualVoices()
+        private void OpenIndividualVoices(string platform)
         {
 
             var twitchDb = new SQLiteConnection(Path.Combine(
-        AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "TwitchIndividualVoices.db"));
-            var voicesDb = new SQLiteConnection(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db"));
+                AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "TwitchIndividualVoices.db"));
+            var goodgameDb = new SQLiteConnection(Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "GoodgameIndividualVoices.db"));
+            var voicesDb = new SQLiteConnection(Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db"));
 
-            var viewModel = new TwitchVoiceBindingsViewModel(twitchDb, voicesDb);
+            // Выбор нужной базы в зависимости от платформы
+            var selectedDb = platform.Equals("Twitch", StringComparison.OrdinalIgnoreCase)
+                ? twitchDb //у тебя всё сделано для твич, надо сделать общим
+                : goodgameDb;
+
+            var viewModel = new TwitchVoiceBindingsViewModel(selectedDb, voicesDb);
 
 
             var window = new IndividualVoicesWindow
@@ -152,22 +199,6 @@ namespace ToltoonTTS2
 
             window.ShowDialog();
         }
-
-        //// Метод преобразования VoiceItem -> PlaceVoicesInfoInWPF
-        //private PlaceVoicesInfoInWPF ToPlaceVoicesInfo(VoiceItem item) => new PlaceVoicesInfoInWPF
-        //{
-        //    Name = item.VoiceName,
-        //    TextBoxVolume = item.Volume,
-        //    TextBoxSpeed = item.Speed
-        //};
-        // если всё будет работать то удали это два блока
-        //// Метод преобразования PlaceVoicesInfoInWPF -> VoiceItem
-        //private VoiceItem ToVoiceItem(PlaceVoicesInfoInWPF place, VoiceItem original)
-        //{
-        //    original.Volume = place.TextBoxVolume;
-        //    original.Speed = place.TextBoxSpeed;
-        //    return original;
-        //}
         private void DeleteWordFromReplace()
         {
             _wordReplaceService.DeleteWordFromReplace(_wordReplaceSelectedIndex);
@@ -186,29 +217,13 @@ namespace ToltoonTTS2
             if (BlackListMembers.Any(badWord => username.Contains(badWord, StringComparison.OrdinalIgnoreCase)))
                 return;
 
-            var result = _messageProcessing.ProcessIncomingMessage(username, message);
+            var result = _messageProcessing.ProcessIncomingMessage(username, message, "twitch");
 
             if (result != null && !string.IsNullOrEmpty(result.Text))
             {
                 _ttsService.Speak(result);
             }
         }
-
-
-
-
-        //private async Task ConnectToStreamingChats()
-        //{
-        //    if (ConnectToTwitch)
-        //    {
-        //        //твич выключил pubsub. поулчать id - пока что не для чего
-        //        //string userId = await _twitchGetId.GetTwitchUserId(TwitchApi, TwitchClientId, TwitchNickname);
-        //        //await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchClientId, TwitchNickname);
-        //        await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
-        //        TwitchConnectionStatus = "Twitch подключился";
-        //    }
-        //    //GoodGame
-        //}
 
         public TwitchConnectionState TwitchConnectionState
         {
@@ -218,6 +233,17 @@ namespace ToltoonTTS2
                 _twitchConnectionState = value;
                 OnPropertyChanged();
                 TwitchConnectionStatus = $"Twitch: {value}";
+            }
+        }
+
+        public GoodgameConnectionState GoodgameConnectionState
+        {
+            get => _goodgameConnectionState;
+            set
+            {
+                _goodgameConnectionState = value;
+                OnPropertyChanged();
+                GoodgameConnectionStatus = $"Гудгейм: {value}";
             }
         }
 
@@ -231,6 +257,14 @@ namespace ToltoonTTS2
                 };
 
                 await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
+            }
+            if (ConnectToGoodgame)
+            {
+                _goodgameConnectionToChat.ConnectionStateChanged += (s, state) =>
+                {
+                    GoodgameConnectionState = state;
+                };
+                await _goodgameConnectionToChat.Connection(GoodgameNickname);
             }
         }
 
@@ -247,7 +281,8 @@ namespace ToltoonTTS2
         public ICommand AddWordReplace { get; }
         public ICommand DeleteWordReplace { get; }
         public ICommand DeleteProfile { get; set; }
-        public ICommand OpenIndividualVoicesWindow { get; }
+        public ICommand OpenIndividualVoicesTwitchWindow { get; }
+        public ICommand OpenIndividualVoicesGoodgameWindow { get; }
 
         // Свойства
         public string TwitchApi
@@ -280,6 +315,12 @@ namespace ToltoonTTS2
             set { _twitchConnectionStatus = value; OnPropertyChanged(); }
         }
 
+        public string GoodgameConnectionStatus
+        {
+            get => _goodgameConnectionStatus;
+            set { _goodgameConnectionStatus = value; OnPropertyChanged(); }
+        }
+
         public bool ConnectToTwitch
         {
             get => _connectToTwitch;
@@ -295,7 +336,10 @@ namespace ToltoonTTS2
         public bool IndividualVoicesEnabled
         {
             get => _individualVoicesEnabled;
-            set { _individualVoicesEnabled = value; OnPropertyChanged(); }
+            set { _individualVoicesEnabled = value; OnPropertyChanged();
+                _messageProcessing.SetIndividualVoicesEnabled(value);
+            }
+            
         }
 
         public bool ConnectToGoodgame
@@ -317,6 +361,7 @@ namespace ToltoonTTS2
             get => _selectedVoice;
             set { _selectedVoice = value; OnPropertyChanged();
                 _ttsService?.SetVoice(value);
+                _messageProcessing.SetStandartVoiceName(value);
             }
         }
 
@@ -326,6 +371,7 @@ namespace ToltoonTTS2
             set { _ttsSpeedValue = value; OnPropertyChanged();
                 _ttsService?.SetRate(value);
                 LabelTtsSpeed = Convert.ToString(value);
+                _messageProcessing.SetStandartVoiceSpeed(value);
             }
         }
         
@@ -346,6 +392,7 @@ namespace ToltoonTTS2
                 _ttsVolumeValue = value; OnPropertyChanged();
                 _ttsService?.SetVolume(value);
                 LabelTtsVolume = Convert.ToString(value);
+                _messageProcessing.SetStandardVoiceVolume(value);
             }
         }
 
@@ -503,6 +550,7 @@ namespace ToltoonTTS2
             DoNotTtsIfStartWith = settings.DoNotTtsIfStartWith;
             SkipMessage = settings.SkipMessage;
             SkipMessageAll = settings.SkipMessageAll;
+            IndividualVoicesEnabled = settings.IndividualVoicesEnabled;
             foreach(var item in settings.BlackListMembers)
             {
                 BlackListMembers.Add(item);
@@ -589,7 +637,8 @@ namespace ToltoonTTS2
                 SkipMessageAll = SkipMessageAll,
                 BlackListMembers = BlackListMembers.ToList(),
                 WhatToReplace = WordToReplace.ToList(),
-                WhatToReplaceWith = WordWhatToReplaceWith.ToList()
+                WhatToReplaceWith = WordWhatToReplaceWith.ToList(),
+                IndividualVoicesEnabled = IndividualVoicesEnabled
             };
             foreach (var uiItem in ItemSourceAllVoices)
             {
