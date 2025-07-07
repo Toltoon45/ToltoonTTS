@@ -163,6 +163,8 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBox IsEnabled="false" x:Name="TextBoxGetUserVoices" Text="{Binding CommandToGetOtherUserVoiceName, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
                                 <Label x:Name="LabelGetUserVoice" Content="Потом чё-нибудь сделаю" ToolTip="![команда] [никнейм]"/>
+                                <Button Command="{Binding buttonMakeEnabledVoicesLouder}" x:Name="buttonMakeAllEnabledVoiceLouder" Content="Сделать громче на1" Height="20"></Button>
+                                <Button Command="{Binding buttonMakeEnabledVoicesQuiet}" x:Name="buttonMakeAllEnabledVoiceQuiet" Content="Сделать тише на 1" Height="20"></Button>
                             </StackPanel>
                         </StackPanel>
 

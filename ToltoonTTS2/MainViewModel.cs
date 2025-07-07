@@ -125,6 +125,8 @@ namespace ToltoonTTS2
             DeleteWordReplace = new RelayCommand(DeleteWordFromReplace);
             OpenIndividualVoicesTwitchWindow = new RelayCommand(() => OpenIndividualVoices("Twitch"));
             OpenIndividualVoicesGoodgameWindow = new RelayCommand(() => OpenIndividualVoices("Goodgame"));
+            buttonMakeEnabledVoicesLouder = new RelayCommand(() => ChangeEnabledVoicesVolume(1));
+            buttonMakeEnabledVoicesQuiet = new RelayCommand(() => ChangeEnabledVoicesVolume(-1));
 
             _directoryService = directoryService;
             _directoryService.EnsureAppStructureExists();
@@ -172,6 +174,20 @@ namespace ToltoonTTS2
                 if (message != null)
                     _ttsService.Speak(message);
             };
+        }
+
+        private void ChangeEnabledVoicesVolume(int v)
+        {
+            foreach(var item in ItemSourceAllVoices)
+            {
+                if (item.IsEnabled)
+                {
+                   int a = Convert.ToInt32(item.TextBoxVolume);
+                    int result = a + v;
+                   item.TextBoxVolume = Convert.ToString(result); 
+                }
+                
+            }
         }
 
         private void OpenIndividualVoices(string platform)
@@ -283,6 +299,8 @@ namespace ToltoonTTS2
         public ICommand DeleteProfile { get; set; }
         public ICommand OpenIndividualVoicesTwitchWindow { get; }
         public ICommand OpenIndividualVoicesGoodgameWindow { get; }
+        public ICommand buttonMakeEnabledVoicesLouder { get; }
+        public ICommand buttonMakeEnabledVoicesQuiet { get; }
 
         // Свойства
         public string TwitchApi

@@ -78,7 +78,7 @@ namespace ToltoonTTS2.TTS
                 if (!string.IsNullOrEmpty(result.VoiceName))
                     SetVoice(result.VoiceName);
 
-                int volume = (int)(Math.Clamp(result.VoiceVolume, 0f, 1f) * 100);
+                int volume = Math.Clamp(result.VoiceVolume, 0, 100);
                 SetVolume(volume);
 
                 int rate = (int)Math.Clamp(result.VoiceSpeed, -10f, 10f);
