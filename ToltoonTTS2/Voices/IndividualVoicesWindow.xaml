@@ -8,8 +8,10 @@
         Title="Настройка голосов Twitch" Height="400" Width="400">
 
     <StackPanel>
+        <StackPanel>
         <Button Content="Сохранить" Height="30" Margin="5" Command="{Binding SaveCommand}"/>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
             <ItemsControl ItemsSource="{Binding UserVoiceBindings}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

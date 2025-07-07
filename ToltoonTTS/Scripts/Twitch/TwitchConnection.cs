@@ -190,8 +190,6 @@ namespace ToltoonTTS.Scripts.Twitch
                 TClientOnConnectionError(null, null);
                 isConnected = false;
             }
-            catch { TClientOnConnectionError(null, null); }
-            ReconnectTryNumber = 1;
 
             if (_instance.TClient.IsConnected == false)
                 TClientOnConnectionError(null, null);
