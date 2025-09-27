@@ -223,5 +223,65 @@ namespace ToltoonTTS2.Properties {
                 this["IndividualVoicesEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DynamicSpeed {
+            get {
+                return ((string)(this["DynamicSpeed"]));
+            }
+            set {
+                this["DynamicSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DynamicSpeed2 {
+            get {
+                return ((string)(this["DynamicSpeed2"]));
+            }
+            set {
+                this["DynamicSpeed2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DynamicSpeed3 {
+            get {
+                return ((string)(this["DynamicSpeed3"]));
+            }
+            set {
+                this["DynamicSpeed3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DynamicSpeed4 {
+            get {
+                return ((string)(this["DynamicSpeed4"]));
+            }
+            set {
+                this["DynamicSpeed4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DynamicSpeed5 {
+            get {
+                return ((string)(this["DynamicSpeed5"]));
+            }
+            set {
+                this["DynamicSpeed5"] = value;
+            }
+        }
     }
 }
