@@ -4,7 +4,7 @@
     <_LastSelectedProfileId>C:\ToltoonTTS versions\Toltoon-TTS-new-version-test3\ToltoonTTS\ToltoonTTS2\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Voices\IndividualVoicesWindow.xaml.cs">
+    <Compile Update="Services\Voices\IndividualVoicesWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
