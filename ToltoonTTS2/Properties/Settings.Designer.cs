@@ -12,7 +12,7 @@ namespace ToltoonTTS2.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.13.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -238,49 +238,49 @@ namespace ToltoonTTS2.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DynamicSpeed2 {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StreamerChecked {
             get {
-                return ((string)(this["DynamicSpeed2"]));
+                return ((bool)(this["StreamerChecked"]));
             }
             set {
-                this["DynamicSpeed2"] = value;
+                this["StreamerChecked"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DynamicSpeed3 {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ModeratorChecked {
             get {
-                return ((string)(this["DynamicSpeed3"]));
+                return ((bool)(this["ModeratorChecked"]));
             }
             set {
-                this["DynamicSpeed3"] = value;
+                this["ModeratorChecked"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DynamicSpeed4 {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool VipChecked {
             get {
-                return ((string)(this["DynamicSpeed4"]));
+                return ((bool)(this["VipChecked"]));
             }
             set {
-                this["DynamicSpeed4"] = value;
+                this["VipChecked"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string DynamicSpeed5 {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AllChecked {
             get {
-                return ((string)(this["DynamicSpeed5"]));
+                return ((bool)(this["AllChecked"]));
             }
             set {
-                this["DynamicSpeed5"] = value;
+                this["AllChecked"] = value;
             }
         }
     }

@@ -1,12 +1,8 @@
 ﻿using System.Windows;
 using ToltoonTTS2.Services.BlackList;
 using ToltoonTTS2.Services.SaveLoadSettings;
-using ToltoonTTS2.Services.BlackList;
 using ToltoonTTS2.Services.EnsureFolderAndFileExist;
 using ToltoonTTS2.Services.Goodgame.Connection;
-using ToltoonTTS2.Services.SaveLoadSettings;
-using ToltoonTTS2.Services.TTS;
-using ToltoonTTS2.Services.Twitch.Connection;
 using ToltoonTTS2.Services.TTS;
 using ToltoonTTS2.Services.Twitch.Connection;
 using ToltoonTTS2.ViewModels;
@@ -57,6 +53,11 @@ namespace ToltoonTTS2
         }
 
         private void PasswordboxTwitchApi_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TabControlMainWindow_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
 
         }
