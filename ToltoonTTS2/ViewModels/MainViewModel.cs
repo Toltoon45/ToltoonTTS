@@ -33,6 +33,8 @@ namespace ToltoonTTS2.ViewModels
         AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "GoodgameIndividualVoices.db");
         public ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices { get; set; } = new ObservableCollection<PlaceVoicesInfoInWPF>();
         public List<string> DynamicSpeedLabels => new List<string> { "100", "200", "300", "400", "500" };
+        public AdditionalSettingsViewModel AdditionalSettings { get; } = new();
+
 
         private string _twitchApi;
         private string _twitchClientId;
