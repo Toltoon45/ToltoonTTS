@@ -7,7 +7,7 @@ namespace ToltoonTTS2.Services.TTS
 {
     public class TtsMessageProcessing : ITtsMessageProcessing
     {
-        private ObservableCollection<string> _blackList;
+        //private ObservableCollection<string> _blackList;
         private ObservableCollection<string> _wordToReplace;
         private ObservableCollection<string> _wordToReplaceWith;
         private readonly ITts _tts;
@@ -16,6 +16,8 @@ namespace ToltoonTTS2.Services.TTS
         private string _skipMessage;
         private string _skipMessageAll;
         private bool _individualVoicesEnabled;
+
+        private HashSet<string> _blackList = new(StringComparer.OrdinalIgnoreCase);
 
         private string _standartVoiceName;
         private int _standartVoiceVolume;
@@ -178,7 +180,7 @@ namespace ToltoonTTS2.Services.TTS
 
         public void SetBlackList(ObservableCollection<string> blackList)
         {
-            _blackList = blackList;
+            _blackList = new HashSet<string>(blackList, StringComparer.OrdinalIgnoreCase);
         }
 
         public void SetRemoveEmoji(bool removeEmoji)

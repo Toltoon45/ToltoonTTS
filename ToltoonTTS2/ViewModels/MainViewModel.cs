@@ -179,16 +179,6 @@ namespace ToltoonTTS2.ViewModels
             _goodgameConnectionToChat.MessageReceived += (sender, e) =>
             {
                 // обработка сообщения
-                if ((e.UserName.ToLower() == "toltoon45" || e.UserName == "s1llyc4k3") && e.Message.StartsWith("!забанить пидораса"))
-                {
-                    var words = e.Message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    if (words.Length > 0)
-                    {
-                        var lastWord = words[^1];
-                        BlackListMembers.Add(lastWord);
-                    }
-                }
-
                 if ((e.UserName.ToLower() == "toltoon45" || e.UserName == "s1llyc4k3") && e.Message.StartsWith("!разбанить пидораса"))
                 {
                     var words = e.Message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -257,9 +247,6 @@ namespace ToltoonTTS2.ViewModels
         {
             string message = e.ChatMessage.Message;
             string username = e.ChatMessage.Username;
-
-            if (BlackListMembers.Any(badWord => username.Contains(badWord, StringComparison.OrdinalIgnoreCase)))
-                return;
 
             var result = _messageProcessing.ProcessIncomingMessage(username, message, "twitch");
 
@@ -742,12 +729,14 @@ namespace ToltoonTTS2.ViewModels
             if (!string.IsNullOrWhiteSpace(BlackListInput))
             {
                 _blackListServices.AddToBlackList(BlackListInput);
+                _messageProcessing.SetBlackList(BlackListMembers);
             }
         }
 
         private void DeleteFromBlackList()
         {
             _blackListServices.RemoveFromBlackList(BlackListSelectedItem);
+            _messageProcessing.SetBlackList(BlackListMembers);
         }
 
 
