@@ -323,6 +323,7 @@
                         <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="110">
                             <StackPanel>
                                 <CheckBox Content="Все" IsChecked="{Binding AllChecked}" Margin="10,5,0,3"/>
+                                <CheckBox Content="Подписчик" IsChecked="{Binding SubscriberlChecked}" Margin="10,5,0,3"/>
                                 <CheckBox Content="Стример" IsChecked="{Binding StreamerChecked}" Margin="10,0,0,3"/>
                                 <CheckBox Content="Модератор" IsChecked="{Binding ModeratorChecked}" Margin="10,0,0,3"/>
                                 <CheckBox Content="Вип" IsChecked="{Binding VipChecked}" Margin="10,0,0,10"/>
