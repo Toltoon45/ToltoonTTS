@@ -13,8 +13,11 @@ namespace ToltoonTTS2
     {
         public MainWindow()
         {
+
+            var additionalSettings = new AdditionalSettingsViewModel();
+ 
+            ITwitchConnectToChat twitchConnectToChat = new TwitchConnectToChat(additionalSettings);
             ITwitchGetID twitchGetId = new TwitchGetId();
-            ITwitchConnectToChat twitchConnectToChat = new TwitchConnectToChat();
             IGoodgameConnection goodgameConnectionToChat = new GoodgameConnectionToChat();
             ITts TtsService = new TtsSAPI();
             ISettings SettingsService = new SettingsService();
@@ -24,15 +27,17 @@ namespace ToltoonTTS2
             IBlackListServices BlackListService = new BlackListServices();
             IWordreplace WordReplaceService = new WordReplace();
             ITtsMessageProcessing MessageProcessing = new TtsMessageProcessing();
-            DataContext = new MainViewModel(twitchGetId, 
-                twitchConnectToChat, 
-                TtsService, SettingsService, 
+
+            DataContext = new MainViewModel(twitchGetId,
+                twitchConnectToChat,
+                TtsService, SettingsService,
                 DirectoryService, LoadAvailableVoices,
                 LoadProfiles,
                 BlackListService,
                 WordReplaceService,
                 MessageProcessing,
-                goodgameConnectionToChat);
+                goodgameConnectionToChat,
+                additionalSettings);
             //при первом изменении itemsource он становится пустым. Нужна заглушка чтобы этого не было
             //BlackListService.AddToBlackList("1");
             InitializeComponent();

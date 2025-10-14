@@ -283,5 +283,17 @@ namespace ToltoonTTS2.Properties {
                 this["AllChecked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SubscriberlChecked {
+            get {
+                return ((bool)(this["SubscriberlChecked"]));
+            }
+            set {
+                this["SubscriberlChecked"] = value;
+            }
+        }
     }
 }

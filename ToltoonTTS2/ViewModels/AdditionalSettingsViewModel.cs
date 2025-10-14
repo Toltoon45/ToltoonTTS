@@ -11,6 +11,7 @@ namespace ToltoonTTS2.ViewModels
             ModeratorChecked = Properties.Settings.Default.ModeratorChecked;
             VipChecked = Properties.Settings.Default.VipChecked;
             AllChecked = Properties.Settings.Default.AllChecked;
+            SubscriberlChecked = Properties.Settings.Default.SubscriberlChecked;
         }
 
 
@@ -18,6 +19,22 @@ namespace ToltoonTTS2.ViewModels
         private bool _moderatorChecked;
         private bool _vipChecked;
         private bool _allChecked;
+        private bool _subscriberlChecked;
+
+        public bool SubscriberlChecked
+        {
+            get => _subscriberlChecked;
+            set
+            {
+                if (_subscriberlChecked != value)
+                {
+                    _subscriberlChecked = value;
+                    OnPropertyChanged(nameof(SubscriberlChecked));
+                    OnPropertyChanged(nameof(IsAnyChecked));
+                    Save(nameof(SubscriberlChecked), value);
+                }
+            }
+        }
 
         public bool StreamerChecked
         {
@@ -86,7 +103,7 @@ namespace ToltoonTTS2.ViewModels
             Properties.Settings.Default.Save();
         }
 
-        public bool IsAnyChecked => StreamerChecked || ModeratorChecked || VipChecked || AllChecked;
+        public bool IsAnyChecked => StreamerChecked || ModeratorChecked || VipChecked || AllChecked || SubscriberlChecked;
 
 
         public event PropertyChangedEventHandler PropertyChanged;

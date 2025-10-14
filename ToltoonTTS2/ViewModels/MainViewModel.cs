@@ -96,8 +96,10 @@ namespace ToltoonTTS2.ViewModels
             IBlackListServices blackListSerives,
             IWordreplace wordReplaceService,
             ITtsMessageProcessing messageProcessing,
-            IGoodgameConnection goodgameConnectionToChat)
+            IGoodgameConnection goodgameConnectionToChat,
+            AdditionalSettingsViewModel additionalSettings)
         {
+            AdditionalSettings = additionalSettings;
             _serviceSettings = settingsService;
             _twitchGetId = twitchGetId;
             _twitchConnectToChat = twitchConnectToChat;
@@ -598,6 +600,7 @@ namespace ToltoonTTS2.ViewModels
             foreach (var item in settings.BlackListMembers)
             {
                 BlackListMembers.Add(item);
+                _messageProcessing.SetBlackList(BlackListMembers);
             }
             foreach (var item in settings.WhatToReplace)
             {
