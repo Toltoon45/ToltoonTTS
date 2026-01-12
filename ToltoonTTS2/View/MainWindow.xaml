@@ -396,8 +396,8 @@
                                 Margin="10,10,10,0" Content="Файлы программы" Width="120" HorizontalAlignment="Left"/>
                     </StackPanel>
                 </StackPanel>
-                <Label x:Name="LabelVoiceErrorMessage" Content="{Binding VoiceTestErrorMessage}"/>
-                <Label x:Name="LabelDownloadPiperVoiceStatus" Content="{Binding VoicePiperDownload}"></Label>
+                <Label x:Name="LabelVoiceErrorMessage" Content="{Binding VoiceTestErrorMessage, FallbackValue='Ожидание'}"/>
+                <Label x:Name="LabelDownloadPiperVoiceStatus" Content="{Binding VoicePiperDownload, FallbackValue='пидора4с'}"></Label>
             </StackPanel>
         </StackPanel>
         <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>

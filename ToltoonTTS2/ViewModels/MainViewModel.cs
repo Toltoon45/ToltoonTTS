@@ -583,17 +583,6 @@ namespace ToltoonTTS2.ViewModels
             _websocketService.SetNameForChannelPoints(value);}
         }
 
-        public string VoicePiperDownload
-        {
-            get => _voicePiperDownload;
-            set
-            {
-                _voicePiperDownload = value;
-                OnPropertyChanged();
-                _ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
-            }
-        }
-
         public string LabelTtsSpeed
         {
             get => _labelTtsSpeedValue;
@@ -740,6 +729,17 @@ namespace ToltoonTTS2.ViewModels
             {
                 _voiceTestErrorMessage = value;
                 OnPropertyChanged(nameof(VoiceTestErrorMessage));
+                //_ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
+            }
+        }
+
+        public string VoicePiperDownload
+        {
+            get => _voicePiperDownload;
+            set
+            {
+                _voicePiperDownload = value;
+                OnPropertyChanged();
                 _ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
             }
         }
@@ -790,7 +790,10 @@ namespace ToltoonTTS2.ViewModels
             {
                 _wordToReplaceWith.Add(item);
             }
-
+            if (!File.Exists("models/PiperVoices.txt"))
+                using (File.Create("models/PiperVoices.txt"))
+                {
+                }
                     PiperVoicesData.EnsureFileExists();
             foreach (var item in File.ReadAllLines("models/PiperVoices.txt"))
             {
@@ -800,7 +803,7 @@ namespace ToltoonTTS2.ViewModels
             {
                 ListBoxPiperVoiceInstalledVoices.Add(dir.Replace("models\\", ""));
             }
-            
+            //_voiceTestErrorMessage = "123123";
         }
         private void LoadInstalledVoices()
         {
