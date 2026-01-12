@@ -790,10 +790,9 @@ namespace ToltoonTTS2.ViewModels
             {
                 _wordToReplaceWith.Add(item);
             }
-            if (!File.Exists("models/PiperVoices.txt"))
-                File.Create("models/PiperVoices.txt");
-                
-            foreach(var item in File.ReadAllLines("models/PiperVoices.txt"))
+
+                    PiperVoicesData.EnsureFileExists();
+            foreach (var item in File.ReadAllLines("models/PiperVoices.txt"))
             {
                 InstalledPiperVoice.Add(item);
             }
@@ -801,6 +800,7 @@ namespace ToltoonTTS2.ViewModels
             {
                 ListBoxPiperVoiceInstalledVoices.Add(dir.Replace("models\\", ""));
             }
+            
         }
         private void LoadInstalledVoices()
         {
