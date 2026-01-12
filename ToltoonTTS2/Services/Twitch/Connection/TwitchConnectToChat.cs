@@ -1,7 +1,10 @@
-﻿using System.ComponentModel;
+﻿using NAudio.Wave.Asio;
+using System.ComponentModel;
+using System.Text;
 using ToltoonTTS2.Services.Twitch.Connection;
 using ToltoonTTS2.ViewModels;
 using TwitchLib.Client;
+using static System.Net.Mime.MediaTypeNames;
 //using TwitchLib.PubSub;
 
 public enum TwitchConnectionState
@@ -28,7 +31,6 @@ class TwitchConnectToChat : ITwitchConnectToChat
     {
         _settings = additionalSettings;
         _client = new TwitchClient();
-        _test2 = new TwitchClient();
         _client.OnConnected += (s, e) =>
         {
             UpdateState(TwitchConnectionState.Connected);
@@ -39,13 +41,6 @@ class TwitchConnectToChat : ITwitchConnectToChat
             UpdateState(TwitchConnectionState.Failed);
         };
 
-        //_test2.OnMessageReceived += (s, e) =>
-        //{
-        //    Thread.Sleep(2000);
-        //    //_test2.SendMessage(e.ChatMessage.Channel, $"{e.ChatMessage.Message} 1");
-        //};
-
-
         _client.OnDisconnected += (s, e) =>
         {
             UpdateState(TwitchConnectionState.Disconnected);
@@ -54,6 +49,7 @@ class TwitchConnectToChat : ITwitchConnectToChat
         _settings.PropertyChanged += OnSettingsChanged;
         _client.OnMessageReceived += (s, e) =>
         {
+
             if (_settings.AllChecked)
             {
                 MessageReceived?.Invoke(this, e);
@@ -104,10 +100,7 @@ class TwitchConnectToChat : ITwitchConnectToChat
 
             var credentials = new TwitchLib.Client.Models.ConnectionCredentials(twitchNickname, twitchApi);
             _client.Initialize(credentials, twitchNickname);
-            //_test2.Initialize(credentials, "toltoon47");
             _client.Connect();
-            //_test2.Connect();
-            //await Task.Delay(2000);
         }
         catch (Exception)
         {

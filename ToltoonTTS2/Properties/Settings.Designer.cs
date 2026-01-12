@@ -295,5 +295,29 @@ namespace ToltoonTTS2.Properties {
                 this["SubscriberlChecked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TtsForChannelPoints {
+            get {
+                return ((bool)(this["TtsForChannelPoints"]));
+            }
+            set {
+                this["TtsForChannelPoints"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NameOfRewardTtsForChannelPoints {
+            get {
+                return ((string)(this["NameOfRewardTtsForChannelPoints"]));
+            }
+            set {
+                this["NameOfRewardTtsForChannelPoints"] = value;
+            }
+        }
     }
 }

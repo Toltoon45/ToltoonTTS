@@ -22,7 +22,9 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
                 viewModel.TtsSpeedValue,
                 viewModel.TtsVolumeValue,
                 viewModel.GoodgameNickname,
-                viewModel.IndividualVoicesEnabled
+                viewModel.IndividualVoicesEnabled,
+                viewModel.TtsForChannelPoints,
+                viewModel.NameOfRewardTtsForChannelPoints
 
             };
             string fileName = viewModel.NameToSaveProfile;
@@ -57,6 +59,8 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
                 viewModel.TtsSpeedValue = loadedData.TtsSpeedValue;
                 viewModel.TtsVolumeValue = loadedData.TtsVolumeValue;
                 viewModel.IndividualVoicesEnabled = loadedData.IndividualVoicesEnabled;
+                viewModel.TtsForChannelPoints = loadedData.TtsForChannelPoints;
+                viewModel.NameOfRewardTtsForChannelPoints = loadedData.NameOfRewardTtsForChannelPoints;
             }
         }
 
@@ -78,6 +82,8 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
         public string GoodgameNickname { get; set; }
         public List<string> BlackList { get; set; }
         public bool IndividualVoicesEnabled { get; set; }
+        public bool TtsForChannelPoints { get; set; }
+        public string NameOfRewardTtsForChannelPoints { get; set; } 
     }
     //для сохранения ускорения сообщения в зависимости от длины
     public class BindableInt : INotifyPropertyChanged

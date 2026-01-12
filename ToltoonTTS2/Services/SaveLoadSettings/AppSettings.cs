@@ -12,6 +12,8 @@
         public string SelectedVoice { get; set; }
         public int TtsSpeedValue { get; set; }
         public int TtsVolumeValue { get; set; }
+        public bool TtsForChannelPoints { get; set; }
+        public string NameOfRewardTtsForChannelPoints { get; set; }
         public string DoNotTtsIfStartWith { get; set; }
         public string SkipMessage { get; set; }
         public string SkipMessageAll { get; set; }
@@ -22,5 +24,4 @@
         public bool IndividualVoicesEnabled { get; set; }
         public List<int> DynamicSpeedThresholds { get; set; } = new List<int>();
     }
-
 }

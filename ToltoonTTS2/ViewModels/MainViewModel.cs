@@ -1,10 +1,14 @@
-﻿using SQLite;
+﻿using Microsoft.Extensions.Logging;
+using SQLite;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.IO;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Speech.Synthesis;
+using System.Windows;
 using System.Windows.Input;
 using ToltoonTTS2.Services.BlackList;
 using ToltoonTTS2.Services.EnsureFolderAndFileExist;
@@ -12,7 +16,12 @@ using ToltoonTTS2.Services.Goodgame.Connection;
 using ToltoonTTS2.Services.SaveLoadSettings;
 using ToltoonTTS2.Services.TTS;
 using ToltoonTTS2.Services.Twitch.Connection;
+using ToltoonTTS2.Services.Youtube;
 using ToltoonTTS2.Voices;
+using TwitchLib.Api.Helix.Models.Bits;
+using TwitchLib.Client.Events;
+using TwitchLib.EventSub.Websockets;
+using TwitchLib.EventSub.Websockets.Example;
 
 namespace ToltoonTTS2.ViewModels
 {
@@ -32,7 +41,9 @@ namespace ToltoonTTS2.ViewModels
         private readonly string _individualVoicesGoodgameDbPath = Path.Combine(
         AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "GoodgameIndividualVoices.db");
         public ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices { get; set; } = new ObservableCollection<PlaceVoicesInfoInWPF>();
+        public ObservableCollection<string> ListBoxPiperVoiceInstalledVoices { get; set; } = new ObservableCollection<string>();
         public List<string> DynamicSpeedLabels => new List<string> { "100", "200", "300", "400", "500" };
+        public ObservableCollection<string> InstalledPiperVoice { get; set; } = new ObservableCollection<string>();
         public AdditionalSettingsViewModel AdditionalSettings { get; } = new();
 
 
@@ -42,10 +53,15 @@ namespace ToltoonTTS2.ViewModels
         private bool _connectToTwitch;
         private string _goodgamenickname;
         private bool _connectToGoodgame;
+        private bool _connectToYoutube;
+        private string _youtubeId;
         private bool _removeEmoji;
         private string _selectedVoice;
         private int _ttsSpeedValue;
         private int _ttsVolumeValue;
+        private bool _ttsForChannelPoints;
+        private string _nameOfRewardTtsForChannelPoints;
+        private string _voicePiperDownload;
         private string _labelTtsSpeedValue;
         private string _labelTtsVolumeValue;
         private string _doNotTtsIfStartWith;
@@ -65,6 +81,7 @@ namespace ToltoonTTS2.ViewModels
         private ObservableCollection<string> _profiles;
         private string _twitchConnectionStatus;
         private string _goodgameConnectionStatus;
+        private string _youtubeConnectionStatus;
         private string _nameToSaveProfile;
         private string _nameToLoadProfile;
         private ObservableCollection<string> _allProfiles;
@@ -72,9 +89,12 @@ namespace ToltoonTTS2.ViewModels
         private GoodgameConnectionState _goodgameConnectionState;
         private IndividualVoicesWindow IndividualVoicesWin;
         private bool _individualVoicesEnabled;
+        private string _piperVoiceForInstall;
+        private string _piperVoiceForDeleting;
         private readonly ITwitchGetID _twitchGetId;
         private readonly ITwitchConnectToChat _twitchConnectToChat;
         private readonly IGoodgameConnection _goodgameConnectionToChat;
+        private readonly IYoutubeConnection _youtubeConnectionToChat;
         private readonly ITts _ttsService;
         private readonly ISettings _serviceSettings;
         private readonly IDirectoryService _directoryService;
@@ -84,6 +104,10 @@ namespace ToltoonTTS2.ViewModels
         private readonly IWordreplace _wordReplaceService;
         private readonly ITtsMessageProcessing _messageProcessing;
         private string _voiceTestErrorMessage;
+        private WebsocketHostedService _websocketService = new WebsocketHostedService();
+        private EventSubWebsocketClient websocketClient = new EventSubWebsocketClient();
+        private bool _isTtsForChannelPointsEnabled;
+        private CancellationTokenSource _clearCts;
 
         public MainViewModel
             (ITwitchGetID twitchGetId, 
@@ -97,6 +121,7 @@ namespace ToltoonTTS2.ViewModels
             IWordreplace wordReplaceService,
             ITtsMessageProcessing messageProcessing,
             IGoodgameConnection goodgameConnectionToChat,
+            IYoutubeConnection youtubeConnectionToChat,
             AdditionalSettingsViewModel additionalSettings)
         {
             AdditionalSettings = additionalSettings;
@@ -104,12 +129,19 @@ namespace ToltoonTTS2.ViewModels
             _twitchGetId = twitchGetId;
             _twitchConnectToChat = twitchConnectToChat;
             _goodgameConnectionToChat = goodgameConnectionToChat;
+            _youtubeConnectionToChat = youtubeConnectionToChat;
             _ttsService = ttsService;
             _loadAvailableVoices = getInstalledVoices;
             _loadProfiles = loadProfiles;
             _blackListServices = blackListSerives;
             _wordReplaceService = wordReplaceService;
             _messageProcessing = messageProcessing;
+
+            using var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            });
+            var logger = loggerFactory.CreateLogger<WebsocketHostedService>();
 
             BlackListMembers = _blackListServices.BlackList;
             WordToReplace = _wordReplaceService.WordToReplace;
@@ -129,11 +161,12 @@ namespace ToltoonTTS2.ViewModels
             OpenDataDirectory = new RelayCommand(OpenProgramData);
             AddWordReplace = new RelayCommand(AddWordToReplace);
             DeleteWordReplace = new RelayCommand(DeleteWordFromReplace);
-            OpenIndividualVoicesTwitchWindow = new RelayCommand(() => OpenIndividualVoices("Twitch"));
-            OpenIndividualVoicesGoodgameWindow = new RelayCommand(() => OpenIndividualVoices("Goodgame"));
+            OpenIndividualVoicesTwitchWindow = new RelayCommand(() => OpenIndividualVoices("Twitch", ItemSourceAllVoices, true));
+            OpenIndividualVoicesGoodgameWindow = new RelayCommand(() => OpenIndividualVoices("Goodgame", ItemSourceAllVoices, true));
             buttonMakeEnabledVoicesLouder = new RelayCommand(() => ChangeEnabledVoicesVolume(1));
             buttonMakeEnabledVoicesQuiet = new RelayCommand(() => ChangeEnabledVoicesVolume(-1));
-
+            InstallPiperVoice = new RelayCommand(() => InstallPiperVoices(PiperVoiceName));
+            DeletePiperVoice = new RelayCommand(() => DeletePiperVoices(PiperSelectedVoice));
             DynamicSpeedValues.Clear();
 
             var raw = Properties.Settings.Default.DynamicSpeed;
@@ -154,9 +187,6 @@ namespace ToltoonTTS2.ViewModels
             }
             var values = DynamicSpeedValues.Select(x => x.Value);
             _ttsService.SetDynamicSpeed(values);
-
-
-
 
             _directoryService = directoryService;
             _directoryService.EnsureAppStructureExists();
@@ -181,19 +211,70 @@ namespace ToltoonTTS2.ViewModels
             _goodgameConnectionToChat.MessageReceived += (sender, e) =>
             {
                 // обработка сообщения
-                if ((e.UserName.ToLower() == "toltoon45" || e.UserName == "s1llyc4k3") && e.Message.StartsWith("!разбанить пидораса"))
-                {
-                    var words = e.Message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    if (words.Length > 0)
-                    {
-                        var lastWord = words[^1];
-                        BlackListMembers.Remove(lastWord);
-                    }
-                }
                 var message = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "goodgame");
                 if (message != null)
                     _ttsService.Speak(message);
             };
+            _youtubeConnectionToChat.MessageReceived += (sender, e) =>
+            {
+                // обработка сообщения
+                //библиотека ютуба сломана, юзернейм всегда пустой. Поэтому стандартный голос
+                var message = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "youtube");
+                if (message != null)
+                    _ttsService.Speak(message);
+            };
+        }
+
+        private async void InstallPiperVoices(string piperVoiceName)
+        {
+            if (!string.IsNullOrEmpty(piperVoiceName))
+            {
+                VoicePiperDownload = "Голос качается...";
+                //скачивать голос, добавлять в список скачанных голосов и индив. голосов.
+                bool DownloadSuccsess = await PiperSharpTTS.DownloadPiper(piperVoiceName);
+                if (DownloadSuccsess)
+                {
+                    AvailableVoices.Add(piperVoiceName);
+                    ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
+                    {
+                        Name = piperVoiceName,
+                        TextBoxVolume = "100",
+                        TextBoxSpeed = "5",
+                        IsEnabled = true,
+                        Db = _LoadIndividualVoicesSettingsDb,
+                        StatusReporter = this
+                    });
+                    ListBoxPiperVoiceInstalledVoices.Add(piperVoiceName);
+                    VoicePiperDownload = "Готово";
+                }
+            }
+        }
+
+        private void DeletePiperVoices(string piperSelectedVoice)
+        {
+            if (string.IsNullOrEmpty(piperSelectedVoice))
+                return;
+
+            AvailableVoices.Remove(piperSelectedVoice);
+
+            var voiceToRemove = ItemSourceAllVoices
+                .FirstOrDefault(v => v.Name == piperSelectedVoice);
+
+            if (voiceToRemove != null)
+            {
+                ItemSourceAllVoices.Remove(voiceToRemove);
+            }
+
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string voiceFolderPath = Path.Combine(basePath, "models", piperSelectedVoice);
+
+            if (Directory.Exists(voiceFolderPath))
+            {
+                Directory.Delete(voiceFolderPath, true);
+                ListBoxPiperVoiceInstalledVoices.Remove(piperSelectedVoice);
+            }
+            OpenIndividualVoices("goodgame", ItemSourceAllVoices, false);
+            OpenIndividualVoices("twitch", ItemSourceAllVoices, false);
         }
 
         private void ChangeEnabledVoicesVolume(int v)
@@ -210,7 +291,7 @@ namespace ToltoonTTS2.ViewModels
             }
         }
 
-        private void OpenIndividualVoices(string platform)
+        private void OpenIndividualVoices(string platform, ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices, bool ShowWindow)
         {
 
             var twitchDb = new SQLiteConnection(Path.Combine(
@@ -220,12 +301,11 @@ namespace ToltoonTTS2.ViewModels
             var voicesDb = new SQLiteConnection(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db"));
 
-            // Выбор нужной базы в зависимости от платформы
             var selectedDb = platform.Equals("Twitch", StringComparison.OrdinalIgnoreCase)
                 ? twitchDb //у тебя всё сделано для твич, надо сделать общим
                 : goodgameDb;
 
-            var viewModel = new TwitchVoiceBindingsViewModel(selectedDb, voicesDb);
+            var viewModel = new VoiceBindingsViewModel(selectedDb, voicesDb, ItemSourceAllVoices);
 
 
             var window = new IndividualVoicesWindow
@@ -233,7 +313,19 @@ namespace ToltoonTTS2.ViewModels
                 DataContext = viewModel
             };
 
-            window.ShowDialog();
+            if (ShowWindow)
+            {
+                window.ShowDialog();
+            }
+            else
+            {
+                window.Opacity = 0;
+                window.ShowInTaskbar = false;
+                window.AllowsTransparency = true;
+                window.WindowStyle = WindowStyle.None;
+                window.Show();
+                window.Close();
+            }     
         }
         private void DeleteWordFromReplace()
         {
@@ -245,18 +337,22 @@ namespace ToltoonTTS2.ViewModels
             Process.Start("explorer.exe", "DataForProgram");
         }
 
-        private void OnTwitchMessageReceived(object sender, TwitchLib.Client.Events.OnMessageReceivedArgs e)
+        private void OnTwitchMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            string message = e.ChatMessage.Message;
-            string username = e.ChatMessage.Username;
+            var msg = e.ChatMessage;
 
-            var result = _messageProcessing.ProcessIncomingMessage(username, message, "twitch");
+            // Обрабатываем сообщение
+            var result = _messageProcessing.ProcessIncomingMessage(msg.Username, msg.Message, "twitch");
 
-            if (result != null && !string.IsNullOrEmpty(result.Text))
+            if (_ttsForChannelPoints)
             {
-                _ttsService.Speak(result);
+                if (!msg.IsHighlighted)
+                    return;
             }
+            if (result != null)
+                _ttsService.Speak(result);
         }
+
 
         public TwitchConnectionState TwitchConnectionState
         {
@@ -284,13 +380,33 @@ namespace ToltoonTTS2.ViewModels
         {
             if (ConnectToTwitch)
             {
+                //ID канала нужен для подключения к вебсокету.
+                string twitchId = Convert.ToString(await _twitchGetId.GetTwitchUserId(_twitchApi, TwitchClientId, TwitchNickname));
                 _twitchConnectToChat.ConnectionStateChanged += (s, state) =>
                 {
                     TwitchConnectionState = state;
                 };
+                if (_websocketService != null)
+                {
+                    //подключение в событиям чата
+                    var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<WebsocketHostedService>();
+                    //var websocketClient = new EventSubWebsocketClient();
+                    //string asd = websocketClient.GetType().ToString();
+                    _websocketService = new WebsocketHostedService(logger, websocketClient, TwitchApi, TwitchClientId, twitchId, TtsForChannelPoints, NameOfRewardTtsForChannelPoints); //передавай все параметры для подключения);
+                    _ = _websocketService.StartAsync(CancellationToken.None);
+                    _websocketService.RewardRedeemed += (s, e) =>
+                    {
+                        var result = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "twitchPoints");
+
+                        if (result != null && !string.IsNullOrEmpty(result.Text))
+                            _ttsService.Speak(result); //добавить отдельные голоса и один 
+                    };
+                }
+
 
                 await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
             }
+            //YoutubeConnection.YoutubeConnect(_youtubeId, _youtubeConnectionStatus);
             if (ConnectToGoodgame)
             {
                 _goodgameConnectionToChat.ConnectionStateChanged += (s, state) =>
@@ -298,6 +414,10 @@ namespace ToltoonTTS2.ViewModels
                     GoodgameConnectionState = state;
                 };
                 await _goodgameConnectionToChat.Connection(GoodgameNickname);
+            }
+            if (ConnectToYoutube)
+            {
+                _youtubeConnectionToChat.Connect(YoutubeId, YoutubeConnectionStatus);
             }
         }
 
@@ -318,18 +438,24 @@ namespace ToltoonTTS2.ViewModels
         public ICommand OpenIndividualVoicesGoodgameWindow { get; }
         public ICommand buttonMakeEnabledVoicesLouder { get; }
         public ICommand buttonMakeEnabledVoicesQuiet { get; }
+        public ICommand InstallPiperVoice { get; set; }
+        public ICommand DeletePiperVoice { get; set; }
 
         // Свойства
         public string TwitchApi
         {
             get => _twitchApi;
-            set { _twitchApi = value; OnPropertyChanged(); }
+            set { _twitchApi = value; OnPropertyChanged();
+                if (_websocketService != null) ;
+            }
         }
 
         public string TwitchClientId
         {
             get => _twitchClientId;
-            set { _twitchClientId = value; OnPropertyChanged(); }
+            set { _twitchClientId = value; OnPropertyChanged();
+                if (_websocketService != null) ;
+            }
         }
 
         public ObservableCollection<string> AvailableProfiles
@@ -356,6 +482,18 @@ namespace ToltoonTTS2.ViewModels
             set { _goodgameConnectionStatus = value; OnPropertyChanged(); }
         }
 
+        public string YoutubeConnectionStatus
+        {
+            get => _youtubeConnectionStatus;
+            set { _youtubeConnectionStatus = value; OnPropertyChanged(); }
+        }
+
+        public string YoutubeId
+        {
+            get => _youtubeId;
+            set { _youtubeId = value; OnPropertyChanged(); }
+        }
+
         public bool ConnectToTwitch
         {
             get => _connectToTwitch;
@@ -377,10 +515,28 @@ namespace ToltoonTTS2.ViewModels
             
         }
 
+        public string PiperVoiceName
+        {
+            get => _piperVoiceForInstall;
+            set { _piperVoiceForInstall = value; OnPropertyChanged(); }
+        }
+
+        public string PiperSelectedVoice
+        {
+            get => _piperVoiceForDeleting;
+            set { _piperVoiceForDeleting = value; OnPropertyChanged(); }
+        }
+
         public bool ConnectToGoodgame
         {
             get => _connectToGoodgame;
             set { _connectToGoodgame = value; OnPropertyChanged(); }
+        }
+        
+        public bool ConnectToYoutube
+        {
+            get => _connectToYoutube;
+            set { _connectToYoutube = value; OnPropertyChanged(); }
         }
 
         public bool RemoveEmoji
@@ -409,7 +565,35 @@ namespace ToltoonTTS2.ViewModels
                 _messageProcessing.SetStandartVoiceSpeed(value);
             }
         }
-        
+
+        public bool TtsForChannelPoints
+        {
+            get => _ttsForChannelPoints;
+            set { _ttsForChannelPoints = value; OnPropertyChanged();
+                _websocketService.EnableTtsForChannelPoint(value);
+                //_ttsService.SetTtsForChannelPoints(value);
+                _ttsForChannelPoints = value;
+            }
+        }
+
+        public string NameOfRewardTtsForChannelPoints
+        {
+            get => _nameOfRewardTtsForChannelPoints;
+            set { _nameOfRewardTtsForChannelPoints = value; OnPropertyChanged();
+            _websocketService.SetNameForChannelPoints(value);}
+        }
+
+        public string VoicePiperDownload
+        {
+            get => _voicePiperDownload;
+            set
+            {
+                _voicePiperDownload = value;
+                OnPropertyChanged();
+                _ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
+            }
+        }
+
         public string LabelTtsSpeed
         {
             get => _labelTtsSpeedValue;
@@ -487,7 +671,7 @@ namespace ToltoonTTS2.ViewModels
             get => _blackListInput;
             set { _blackListInput = value; OnPropertyChanged(); }
         }
-        
+
         public string SelectedProfile
         {
             get => _profileSelected;
@@ -505,12 +689,6 @@ namespace ToltoonTTS2.ViewModels
             get => _wordReplaceSelectedIndex;
             set { _wordReplaceSelectedIndex = value; OnPropertyChanged(); }
         }
-
-        //public ObservableCollection< ItemSourceAllVoices
-        //{
-        //    get = _itemSourceAllVoices;
-        //    set { _itemSourceAllVoices = value; OnPropertyChanged(); }
-        //}
 
         public ObservableCollection<string> WordToReplace
         {
@@ -562,6 +740,7 @@ namespace ToltoonTTS2.ViewModels
             {
                 _voiceTestErrorMessage = value;
                 OnPropertyChanged(nameof(VoiceTestErrorMessage));
+                _ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
             }
         }
 
@@ -572,8 +751,6 @@ namespace ToltoonTTS2.ViewModels
 
         private void LoadSettings()
         {
-
-
             var settings = _serviceSettings.LoadSettings();
 
             TwitchApi = settings.TwitchApi;
@@ -594,6 +771,9 @@ namespace ToltoonTTS2.ViewModels
             DoNotTtsIfStartWith = settings.DoNotTtsIfStartWith;
             SkipMessage = settings.SkipMessage;
             SkipMessageAll = settings.SkipMessageAll;
+            TtsForChannelPoints = settings.TtsForChannelPoints;
+            NameOfRewardTtsForChannelPoints = settings.NameOfRewardTtsForChannelPoints;
+            //напоминание сделать для выделения сообщения цветом
 
             IndividualVoicesEnabled = settings.IndividualVoicesEnabled;
             
@@ -610,6 +790,17 @@ namespace ToltoonTTS2.ViewModels
             {
                 _wordToReplaceWith.Add(item);
             }
+            if (!File.Exists("models/PiperVoices.txt"))
+                File.Create("models/PiperVoices.txt");
+                
+            foreach(var item in File.ReadAllLines("models/PiperVoices.txt"))
+            {
+                InstalledPiperVoice.Add(item);
+            }
+            foreach(string dir in Directory.GetDirectories("models"))
+            {
+                ListBoxPiperVoiceInstalledVoices.Add(dir.Replace("models\\", ""));
+            }
         }
         private void LoadInstalledVoices()
         {
@@ -618,6 +809,53 @@ namespace ToltoonTTS2.ViewModels
 
             using (var synth = new SpeechSynthesizer())
             {
+                string path = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "models"
+                );
+                //голоса пайпер
+                foreach (string item in Directory.GetDirectories(path))
+                {
+                    var existing = voicesInDb.FirstOrDefault(v => v.VoiceName == Path.GetFileName(item));
+
+                    if (existing != null)
+                    {
+                        // Если голос уже есть в базе — добавляем из базы
+                        ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
+                        {
+                            Id = existing.Id,
+                            Name = existing.VoiceName,
+                            TextBoxVolume = existing.Volume,
+                            TextBoxSpeed = existing.Speed,
+                            IsEnabled = existing.IsEnabled,
+                            Db = _LoadIndividualVoicesSettingsDb,
+                            StatusReporter = this
+                        });
+                    }
+                    else
+                    {
+                        // Если нет — создаём новый, добавляем в БД и UI
+                        var newVoice = new VoiceItem
+                        {
+                            VoiceName = Path.GetFileName(item),
+                            Volume = "50",
+                            Speed = "0",
+                            IsEnabled = false
+                        };
+                        _LoadIndividualVoicesSettingsDb.Insert(newVoice);
+
+                        ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
+                        {
+                            Id = newVoice.Id,
+                            Name = newVoice.VoiceName,
+                            TextBoxVolume = newVoice.Volume,
+                            TextBoxSpeed = newVoice.Speed,
+                            IsEnabled = newVoice.IsEnabled,
+                            Db = _LoadIndividualVoicesSettingsDb
+                        });
+                    }
+                }
+                //голоса sapi4/5
                 foreach (InstalledVoice installedVoice in synth.GetInstalledVoices())
                 {
                     var info = installedVoice.VoiceInfo;
@@ -704,10 +942,12 @@ namespace ToltoonTTS2.ViewModels
                 WhatToReplace = WordToReplace.ToList(),
                 WhatToReplaceWith = WordWhatToReplaceWith.ToList(),
                 IndividualVoicesEnabled = IndividualVoicesEnabled,
-
+                TtsForChannelPoints = TtsForChannelPoints,
+                NameOfRewardTtsForChannelPoints = NameOfRewardTtsForChannelPoints
             };
             foreach (var uiItem in ItemSourceAllVoices)
             {
+                //if ()
                 var dbItem = new VoiceItem
                 {
                     Id = uiItem.Id,
@@ -720,6 +960,20 @@ namespace ToltoonTTS2.ViewModels
                 _LoadIndividualVoicesSettingsDb.Update(dbItem);
             }
             _serviceSettings.SaveSettings(settings);
+        }
+
+        private async Task ClearStatusAsync(Action<string> setValue, int ms = 5000)
+        {
+            _clearCts?.Cancel();
+            _clearCts = new CancellationTokenSource();
+            var token = _clearCts.Token;
+
+            try
+            {
+                await Task.Delay(ms, token);
+                setValue(string.Empty);
+            }
+            catch (TaskCanceledException) { }
         }
 
         private void AddWordToReplace()
@@ -741,7 +995,6 @@ namespace ToltoonTTS2.ViewModels
             _blackListServices.RemoveFromBlackList(BlackListSelectedItem);
             _messageProcessing.SetBlackList(BlackListMembers);
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

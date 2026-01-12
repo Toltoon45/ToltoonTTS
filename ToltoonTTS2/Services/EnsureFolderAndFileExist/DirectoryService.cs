@@ -13,6 +13,7 @@ namespace ToltoonTTS2.Services.EnsureFolderAndFileExist
             CreateFolder("Profiles", "DataForProgram/Profiles");
             CreateFolder("WordReplace", "DataForProgram/WordReplace");
             CreateFolder("Voices", "DataForProgram/Voices");
+            CreateFolder("SoundEffects", "DataForProgram/SoundEffects");
 
             // Проверка и создание файлов с дефолтным содержимым
             CreateFile("BlackListUsers.json", "DataForProgram/BlackList");
