@@ -2,45 +2,67 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-public class TwitchVoiceBindingsViewModel
+public class VoiceBindingsViewModel
 {
-    private readonly SQLiteConnection _platformDb; // ← добавляем нужное поле
-    private readonly SQLiteConnection _dbGoodgame; // ← добавляем нужное поле
+    private readonly SQLiteConnection _platformDb;
+    private readonly ObservableCollection<PlaceVoicesInfoInWPF> _allVoices;
 
     public ObservableCollection<UserVoiceBinding> UserVoiceBindings { get; set; }
 
     public ICommand SaveCommand { get; }
 
-    public TwitchVoiceBindingsViewModel(SQLiteConnection platformDb, SQLiteConnection voicesDb)
+    public VoiceBindingsViewModel(
+        SQLiteConnection platformDb,
+        SQLiteConnection voicesDb,
+        ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices)
     {
         _platformDb = platformDb;
+        _allVoices = ItemSourceAllVoices;
 
-        var userBindings = _platformDb.Table<PlatformsIndividualVoices>().ToList().OrderBy(x => x.UserName);
+        voicesDb.RunInTransaction(() =>
+        {
+            voicesDb.DeleteAll<VoiceItem>();
 
+            foreach (var uiVoice in ItemSourceAllVoices)
+            {
+                voicesDb.Insert(new VoiceItem
+                {
+                    VoiceName = uiVoice.Name,
+                    IsEnabled = uiVoice.IsEnabled,
+                    Speed = uiVoice.TextBoxSpeed,
+                    Volume = uiVoice.TextBoxVolume
+                    // другие поля — если появятся
+                });
+            }
+        });
 
         var enabledVoices = voicesDb.Table<VoiceItem>()
             .Where(v => v.IsEnabled)
             .Select(v => v.VoiceName)
             .ToList();
 
-        var allAvailableVoices = voicesDb.Table<VoiceItem>()
-            .Select(v => v.VoiceName)
-            .ToList();
+        // fallback: если вдруг все голоса выключены
+        if (enabledVoices.Count == 0)
+        {
+            enabledVoices = voicesDb.Table<VoiceItem>()
+                .Select(v => v.VoiceName)
+                .ToList();
+        }
 
         var rng = new Random();
 
+        var userBindings = _platformDb
+            .Table<PlatformsIndividualVoices>()
+            .ToList()
+            .OrderBy(x => x.UserName)
+            .ToList();
+
         foreach (var binding in userBindings)
         {
-            // Проверяем, включён ли голос
-            bool isVoiceEnabled = voicesDb.Table<VoiceItem>()
-                .Any(v => v.VoiceName == binding.VoiceName && v.IsEnabled);
-
-            // Если голос отключён, выбираем случайный включённый
-            if (!isVoiceEnabled && enabledVoices.Count > 0)
+            if (!enabledVoices.Contains(binding.VoiceName))
             {
-                var newVoice = enabledVoices[rng.Next(enabledVoices.Count)];
-                binding.VoiceName = newVoice;
-                _platformDb.Update(binding); // сохраняем замену в базу
+                binding.VoiceName = enabledVoices[rng.Next(enabledVoices.Count)];
+                _platformDb.Update(binding);
             }
         }
 
@@ -55,6 +77,7 @@ public class TwitchVoiceBindingsViewModel
 
         SaveCommand = new RelayCommand(SaveAllUserVoiceBindings);
     }
+
 
     public void SaveAllUserVoiceBindings()
     {

@@ -148,7 +148,7 @@ namespace ToltoonTTS2.Services.Goodgame.Connection
                 CurrentState = newState;
                 ConnectionStateChanged?.Invoke(this, newState);
             }
-        } 
+        }
     }
 
     public class GoodgameMessageEventArgs : EventArgs

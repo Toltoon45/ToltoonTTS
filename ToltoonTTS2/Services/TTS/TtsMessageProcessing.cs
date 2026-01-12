@@ -28,17 +28,11 @@ namespace ToltoonTTS2.Services.TTS
 
         private SQLiteConnection _LoadIndividualVoicesSettings;
 
-        private ObservableCollection<PlaceVoicesInfoInWPF> _enabledVoices;
         public void SetDatabase(SQLiteConnection TwitchIndividualVoicesDb, SQLiteConnection IndividualVoicesSettingsDb, SQLiteConnection GoodgameIndividualVoicesDb)
         {
             _LoadIndividualVoicesTwitchDb = TwitchIndividualVoicesDb;
             _LoadIndividualVoicesSettings = IndividualVoicesSettingsDb;
             _LoadIndividualVoicesGoodGameDb = GoodgameIndividualVoicesDb;
-        }
-
-        public void SetEnabledVoices(ObservableCollection<PlaceVoicesInfoInWPF> voices)
-        {
-            _enabledVoices = voices;
         }
 
         //удаление эмодзи
@@ -61,7 +55,7 @@ namespace ToltoonTTS2.Services.TTS
             if (!string.IsNullOrEmpty(_doNotTtsIfStartWith) && message.StartsWith(_doNotTtsIfStartWith))
                 return null;
             PlatformsIndividualVoices binding = null;
-            if (_individualVoicesEnabled)
+            if (_individualVoicesEnabled || platform != "youtube")
             {
                 var db = platform.Equals("goodgame", StringComparison.OrdinalIgnoreCase)
     ? _LoadIndividualVoicesGoodGameDb
@@ -71,7 +65,7 @@ namespace ToltoonTTS2.Services.TTS
                 if (binding == null)
                 {
                     var enabledVoiceList = _LoadIndividualVoicesSettings.Table<VoiceItem>()
-                              .Where(v => v.IsEnabled)
+                              .Where(v => v.IsEnabled )
                               .ToList();
 
                     if (enabledVoiceList.Count == 0)
@@ -91,7 +85,8 @@ namespace ToltoonTTS2.Services.TTS
             }
             try
             {
-                voiceName = binding.VoiceName;
+                if (binding != null)
+                    voiceName = binding.VoiceName;
             }
             catch { }
 

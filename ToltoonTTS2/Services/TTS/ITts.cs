@@ -11,7 +11,7 @@ namespace ToltoonTTS2.Services.TTS
         void SetRate(int rate);
         void SetVolume(int volume);
         void SetDynamicSpeed(IEnumerable<int> settings);
-        }      
+    }      
     
     public interface ITtsMessageProcessing
     {

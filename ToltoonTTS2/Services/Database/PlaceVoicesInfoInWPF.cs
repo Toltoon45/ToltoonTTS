@@ -60,6 +60,8 @@ public class PlaceVoicesInfoInWPF : INotifyPropertyChanged
 
     public ICommand TestVoiceCommand => new RelayCommand(TestVoice);
 
+    public object VoiceName { get; internal set; }
+
     private SpeechSynthesizer _synth;
 
     private void TestVoice()
@@ -106,14 +108,6 @@ public class PlaceVoicesInfoInWPF : INotifyPropertyChanged
     public event PropertyChangedEventHandler PropertyChanged;
     private void OnPropertyChanged(string propertyName) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-
-
-
-
-
-
-
 
     public class RelayCommand : ICommand
     {

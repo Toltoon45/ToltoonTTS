@@ -10,14 +10,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.12.1" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.6" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="CSCore" Version="1.2.1.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="PiperSharp" Version="1.0.6" />
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.11" />
-    <PackageReference Include="System.Speech" Version="9.0.6" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.2" />
+    <PackageReference Include="System.Speech" Version="10.0.1" />
     <PackageReference Include="TwitchLib" Version="3.5.3" />
-    <PackageReference Include="TwitchLib.EventSub.Websockets" Version="0.7.0" />
+    <PackageReference Include="TwitchLib.EventSub.Websockets" Version="0.8.0" />
+    <PackageReference Include="YoutubeLiveChatSharp" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

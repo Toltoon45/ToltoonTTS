@@ -6,7 +6,6 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
     {
         public AppSettings LoadSettings()
         {
-            // Попробуем разобрать строку динамической скорости в список int
             var dynamicSpeedList = Settings.Default.DynamicSpeed?
                 .Split(',')
                 .Select(s => int.TryParse(s, out var val) ? val : 0)
@@ -24,6 +23,8 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
                 SelectedVoice = Settings.Default.InstalledVoiceSelect,
                 TtsSpeedValue = Settings.Default.TtsSpeedValue,
                 TtsVolumeValue = Settings.Default.TtsVolumeValue,
+                TtsForChannelPoints = Settings.Default.TtsForChannelPoints,
+                NameOfRewardTtsForChannelPoints = Settings.Default.NameOfRewardTtsForChannelPoints,
                 DoNotTtsIfStartWith = Settings.Default.TextBoxDoNotTtsIfStartWith,
                 SkipMessage = Settings.Default.TextBoxMessageSkip,
                 SkipMessageAll = Settings.Default.TextBoxMessageSkipAll,
@@ -48,6 +49,8 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
             Settings.Default.InstalledVoiceSelect = settings.SelectedVoice;
             Settings.Default.TtsSpeedValue = settings.TtsSpeedValue;
             Settings.Default.TtsVolumeValue = settings.TtsVolumeValue;
+            Settings.Default.TtsForChannelPoints = settings.TtsForChannelPoints;
+            Settings.Default.NameOfRewardTtsForChannelPoints = settings.NameOfRewardTtsForChannelPoints;
             Settings.Default.TextBoxDoNotTtsIfStartWith = settings.DoNotTtsIfStartWith;
             Settings.Default.TextBoxMessageSkip = settings.SkipMessage;
             Settings.Default.TextBoxMessageSkipAll = settings.SkipMessageAll;

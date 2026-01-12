@@ -6,6 +6,7 @@ using ToltoonTTS2.Services.Goodgame.Connection;
 using ToltoonTTS2.Services.TTS;
 using ToltoonTTS2.Services.Twitch.Connection;
 using ToltoonTTS2.ViewModels;
+using ToltoonTTS2.Services.Youtube;
 
 namespace ToltoonTTS2
 {
@@ -19,6 +20,7 @@ namespace ToltoonTTS2
             ITwitchConnectToChat twitchConnectToChat = new TwitchConnectToChat(additionalSettings);
             ITwitchGetID twitchGetId = new TwitchGetId();
             IGoodgameConnection goodgameConnectionToChat = new GoodgameConnectionToChat();
+            IYoutubeConnection youtubeConnectionToChat = new YoutubeConnection();
             ITts TtsService = new TtsSAPI();
             ISettings SettingsService = new SettingsService();
             IDirectoryService DirectoryService = new DirectoryService();
@@ -28,6 +30,7 @@ namespace ToltoonTTS2
             IWordreplace WordReplaceService = new WordReplace();
             ITtsMessageProcessing MessageProcessing = new TtsMessageProcessing();
 
+            InitializeComponent();
             DataContext = new MainViewModel(twitchGetId,
                 twitchConnectToChat,
                 TtsService, SettingsService,
@@ -37,10 +40,9 @@ namespace ToltoonTTS2
                 WordReplaceService,
                 MessageProcessing,
                 goodgameConnectionToChat,
+                youtubeConnectionToChat,
                 additionalSettings);
-            //при первом изменении itemsource он становится пустым. Нужна заглушка чтобы этого не было
-            //BlackListService.AddToBlackList("1");
-            InitializeComponent();
+
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

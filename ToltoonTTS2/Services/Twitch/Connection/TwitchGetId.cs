@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
-using TwitchLib.Client;
-using TwitchLib.PubSub;
-using TwitchLib.Client.Models;
-using TwitchLib.Client.Events;
 
 namespace ToltoonTTS2.Services.Twitch.Connection
 {
