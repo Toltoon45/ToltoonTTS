@@ -55,18 +55,14 @@ namespace ToltoonTTS2.Services.TTS
                 if (result.Text.Contains(SkipCommandAll, StringComparison.OrdinalIgnoreCase))
                 {
                     ClearQueue();
-                    //_synth.SpeakAsyncCancelAll();
                     _waveOut.Stop();
                     return;
                 }
 
                 if (result.Text.Contains(SkipCommandOne, StringComparison.OrdinalIgnoreCase))
                 {
-                    //var current = _synth.GetCurrentlySpokenPrompt();
-                    //if (current != null)
                     if (_waveOut != null)
                         _waveOut.Stop();
-                    //_synth.SpeakAsyncCancel(current);
 
                     return;
                 }
@@ -107,7 +103,6 @@ namespace ToltoonTTS2.Services.TTS
         {
             //проверка, является ли голос piper
 
-            //if (IsPiperVoice(voiceName) )
             var stream = new MemoryStream();
             _synth.SelectVoice(_synth.Voice.Name);
             _synth.Volume = _synth.Volume;

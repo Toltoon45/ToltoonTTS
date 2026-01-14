@@ -28,8 +28,7 @@ namespace ToltoonTTS2.Services.TTS
         void SetStandartVoiceName(string name);
         void SetStandardVoiceVolume(int volume);
         void SetStandartVoiceSpeed(int speed);
-  
-        //string GetVoiceForUser(string username);
+
         void SetDatabase(SQLiteConnection TwitchIndividualVoicesDb, SQLiteConnection IndividualVoicesSettingsDb, SQLiteConnection GoodgameIndividualVoicesDb);
     }
 }
