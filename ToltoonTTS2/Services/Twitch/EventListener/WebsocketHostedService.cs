@@ -117,17 +117,17 @@ namespace TwitchLib.EventSub.Websockets.Example
                 // You need BOTH broadcaster and moderator values or EventSub returns an Error!
                 var condition = new Dictionary<string, string> { { "broadcaster_user_id", _userId }, { "moderator_user_id", _userId } };
                 // Create and send EventSubscription
-                await _twitchApi.Helix.EventSub.CreateEventSubSubscriptionAsync("channel.follow", "2", condition, EventSubTransportMethod.Websocket,
-                    _eventSubWebsocketClient.SessionId, accessToken: _twitchApi.Settings.AccessToken);
+                //await _twitchApi.Helix.EventSub.CreateEventSubSubscriptionAsync("channel.follow", "2", condition, EventSubTransportMethod.Websocket,
+                //    _eventSubWebsocketClient.SessionId, accessToken: _twitchApi.Settings.AccessToken);
 
-                await _twitchApi.Helix.EventSub.CreateEventSubSubscriptionAsync(
-                    "channel.channel_points_custom_reward_redemption.add", // событие о редемпшене награды
-                    "1",
-                    condition,
-                    EventSubTransportMethod.Websocket,
-                    _eventSubWebsocketClient.SessionId,
-                    accessToken: _twitchApi.Settings.AccessToken
-                );
+                //await _twitchApi.Helix.EventSub.CreateEventSubSubscriptionAsync(
+                //    "channel.channel_points_custom_reward_redemption.add", // событие о редемпшене награды
+                //    "1",
+                //    condition,
+                //    EventSubTransportMethod.Websocket,
+                //    _eventSubWebsocketClient.SessionId,
+                //    accessToken: _twitchApi.Settings.AccessToken
+                //);
 
                 //_twitchApi.Helix.Chat.SendChatAnnouncementAsync();
 
