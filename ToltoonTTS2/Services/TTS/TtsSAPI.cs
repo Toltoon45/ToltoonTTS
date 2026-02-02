@@ -41,8 +41,7 @@ namespace ToltoonTTS2.Services.TTS
 
         private bool IsPiperVoice(string voiceName)
         {
-            if (voiceName.Contains("_") || voiceName.Contains("-")) return true;
-            else return false;
+            return Regex.IsMatch(voiceName, @"^[a-z]{2}_[A-Z]{2}-");
         }
 
         public void Speak(ProcessedTtsMessage result)
@@ -132,14 +131,15 @@ namespace ToltoonTTS2.Services.TTS
             {
                 wavMessage = GenerateSpeech(message);
             }
+            //ты тут насрал. Почему-то при разных моделях всё ломаентся
             else if (_isPiperVoice)
             {
                 wavMessage = await PiperSharpTTS.GenerateVoice(result.VoiceName, result.Text, result.VoiceSpeed);
 
             }
 
+            WaveFileReader reader = new WaveFileReader(wavMessage);
 
-            var reader = new WaveFileReader(wavMessage);
 
             // 1. Первый проход — ищем пик
             var sampleProvider = reader.ToSampleProvider();
