@@ -189,9 +189,7 @@ namespace ToltoonTTS2.ViewModels
             _ttsService.SetDynamicSpeed(values);
 
             _directoryService = directoryService;
-            _directoryService.EnsureAppStructureExists();
-
-            LoadSettings();
+            InitializeAsync();
 
             _LoadIndividualVoicesSettingsDb = new SQLiteConnection(_LoadIndividualVoicesSettingsDbPath);
             _LoadIndividualVoicesSettingsDb.CreateTable<VoiceItem>();
@@ -353,6 +351,12 @@ namespace ToltoonTTS2.ViewModels
                 _ttsService.Speak(result);
         }
 
+        public async Task InitializeAsync()
+        {
+            await _directoryService.EnsureAppStructureExists();
+
+            LoadSettings();
+        }
 
         public TwitchConnectionState TwitchConnectionState
         {
@@ -749,7 +753,7 @@ namespace ToltoonTTS2.ViewModels
             // Логика отключения от Twitch
         }
 
-        private void LoadSettings()
+        private async void LoadSettings()
         {
             var settings = _serviceSettings.LoadSettings();
 
@@ -790,11 +794,8 @@ namespace ToltoonTTS2.ViewModels
             {
                 _wordToReplaceWith.Add(item);
             }
-            if (!File.Exists("models/PiperVoices.txt"))
-                using (File.Create("models/PiperVoices.txt"))
-                {
-                }
-                    PiperVoicesData.EnsureFileExists();
+            await PiperVoicesData.EnsureFileExists();
+
             foreach (var item in File.ReadAllLines("models/PiperVoices.txt"))
             {
                 InstalledPiperVoice.Add(item);
@@ -803,7 +804,6 @@ namespace ToltoonTTS2.ViewModels
             {
                 ListBoxPiperVoiceInstalledVoices.Add(dir.Replace("models\\", ""));
             }
-            //_voiceTestErrorMessage = "123123";
         }
         private void LoadInstalledVoices()
         {

@@ -5,7 +5,8 @@ namespace ToltoonTTS2.Services.EnsureFolderAndFileExist
     public class DirectoryService : IDirectoryService
     {
         private string DefaultJsonContent = "[]";
-        public void EnsureAppStructureExists()
+        string cwd = Environment.CurrentDirectory;
+        public Task EnsureAppStructureExists()
         {
             // Проверка и создание папок
             CreateFolder("DataForProgram", "DataForProgram");
@@ -14,19 +15,25 @@ namespace ToltoonTTS2.Services.EnsureFolderAndFileExist
             CreateFolder("WordReplace", "DataForProgram/WordReplace");
             CreateFolder("Voices", "DataForProgram/Voices");
             CreateFolder("SoundEffects", "DataForProgram/SoundEffects");
+            CreateFolder("models", cwd);
+            CreateFolder("piper", cwd);
 
             // Проверка и создание файлов с дефолтным содержимым
             CreateFile("BlackListUsers.json", "DataForProgram/BlackList");
             CreateFile("WhatToReplace.json", "DataForProgram/WordReplace");
             CreateFile("WhatToReplaceWith.json", "DataForProgram/WordReplace");
+
+            return Task.CompletedTask;
         }
 
 
-        public void CreateFolder(string folderName, string folderPath)
+        public void CreateFolder(string folderName, string basePath)
         {
-            if (!Directory.Exists(folderPath))
+            var fullPath = Path.Combine(basePath, folderName);
+
+            if (!Directory.Exists(fullPath))
             {
-                Directory.CreateDirectory(folderPath);
+                Directory.CreateDirectory(fullPath);
             }
         }
 

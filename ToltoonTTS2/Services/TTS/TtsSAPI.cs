@@ -130,6 +130,10 @@ namespace ToltoonTTS2.Services.TTS
             if (!_isPiperVoice)
             {
                 wavMessage = GenerateSpeech(message);
+                if (wavMessage == null)
+                {
+                    Console.WriteLine();
+                }
             }
             //ты тут насрал. Почему-то при разных моделях всё ломаентся
             else if (_isPiperVoice)
@@ -137,7 +141,10 @@ namespace ToltoonTTS2.Services.TTS
                 wavMessage = await PiperSharpTTS.GenerateVoice(result.VoiceName, result.Text, result.VoiceSpeed);
 
             }
-
+            //if (wavMessage == null)
+            //{
+            //    return;
+            //}
             WaveFileReader reader = new WaveFileReader(wavMessage);
 
 
