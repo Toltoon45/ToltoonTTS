@@ -17,14 +17,6 @@ namespace ToltoonTTS2.Services.TTS
         private bool _isSpeaking = false;
         private readonly object _lock = new object();
 
-        private string[] _pipeVoices =
-{
-    "ru_RU-denis-medium",
-    "ru_RU-dmitri-medium",
-    "ru_RU-irina-medium",
-    "ru_RU-ruslan-medium"
-};
-
         private WaveOutEvent? _waveOut;
 
         public string SkipCommandOne { get; set; } = "пропуск1";
@@ -90,7 +82,7 @@ namespace ToltoonTTS2.Services.TTS
                 {
                     if (!_isSpeaking)
                     {
-                        ProcessQueue(_isPiperVoice);
+                        ProcessQueue();
                     }
                 }
             }
@@ -114,9 +106,8 @@ namespace ToltoonTTS2.Services.TTS
             return stream;
         }
 
-        private async void ProcessQueue(bool _isPiperVoice)
+        private async void ProcessQueue()
         {
-            MemoryStream wavMessage = new MemoryStream();
             if (!_messageQueue.TryDequeue(out var result))
             {
                 _isSpeaking = false;
@@ -125,26 +116,30 @@ namespace ToltoonTTS2.Services.TTS
 
             _isSpeaking = true;
 
+            bool isPiperVoice = IsPiperVoice(result.VoiceName);
             var message = PreprocessMessage(result.Text);
 
-            if (!_isPiperVoice)
+            MemoryStream wavMessage;
+
+            if (!isPiperVoice)
             {
                 wavMessage = GenerateSpeech(message);
-                if (wavMessage == null)
-                {
-                    Console.WriteLine();
-                }
             }
-            //ты тут насрал. Почему-то при разных моделях всё ломаентся
-            else if (_isPiperVoice)
+            else
             {
-                wavMessage = await PiperSharpTTS.GenerateVoice(result.VoiceName, result.Text, result.VoiceSpeed);
-
+                wavMessage = await PiperSharpTTS.GenerateVoice(
+                    result.VoiceName,
+                    message,
+                    result.VoiceSpeed
+                );
             }
-            //if (wavMessage == null)
-            //{
-            //    return;
-            //}
+
+            if (wavMessage == null)
+            {
+                _isSpeaking = false;
+                ProcessQueue();
+                return;
+            }
             WaveFileReader reader = new WaveFileReader(wavMessage);
 
 
@@ -176,7 +171,7 @@ namespace ToltoonTTS2.Services.TTS
                 lock (_lock)
                 {
                     _isSpeaking = false;
-                    ProcessQueue(_isPiperVoice);
+                    ProcessQueue();
                 }
             };
             //volumeProvider = PiperSharpTTS.GenerateVoice();
@@ -211,7 +206,7 @@ namespace ToltoonTTS2.Services.TTS
                 lock (_lock)
                 {
                     _isSpeaking = false;
-                    ProcessQueue(false);
+                    ProcessQueue();
                 }
             };
             wavStream.Position = 0;
