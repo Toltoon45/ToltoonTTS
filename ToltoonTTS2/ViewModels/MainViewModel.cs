@@ -327,8 +327,8 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
             var selectedDb = platform.ToLower() switch
             {
-                "goodgame" => twitchDb,
-                "twitch" => goodgameDb,
+                "twitch" => twitchDb,
+                "goodgame" => goodgameDb,
                 "vk" => vkDb,
                 _ => throw new ArgumentException($"Unknown platform: {platform}")
             };

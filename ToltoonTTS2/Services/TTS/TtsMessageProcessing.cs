@@ -56,28 +56,6 @@ namespace ToltoonTTS2.Services.TTS
             if (!string.IsNullOrEmpty(_doNotTtsIfStartWith) && message.StartsWith(_doNotTtsIfStartWith))
                 return null;
             PlatformsIndividualVoices binding = null;
-            if (_individualVoicesEnabled)
-            {
-
-                switch (platform)
-                {
-                    case "twitch":
-
-                        break;
-
-                    case "goodgame":
-
-                        break;
-
-                    case "youtube":
-
-                        break;
-
-                    case "vk":
-
-                        break;
-                }
-            }
 
             if (_individualVoicesEnabled || platform != "youtube")
             {

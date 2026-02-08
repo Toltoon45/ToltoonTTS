@@ -10,12 +10,14 @@ namespace ToltoonTTS2.Services.TTS
     class TtsSAPI : ITts, IDisposable
     {
         private readonly SpeechSynthesizer _synth;
-        private readonly ConcurrentQueue<ProcessedTtsMessage> _messageQueue = new();
+
+        // Очередь уже готовых WAV
+        private readonly ConcurrentQueue<ReadyTtsMessage> _audioQueue = new();
+
+        private bool _isPlaying = false;
+        private readonly object _lock = new object();
 
         private IEnumerable<int> _dynamicSpeedSettings;
-
-        private bool _isSpeaking = false;
-        private readonly object _lock = new object();
 
         private WaveOutEvent? _waveOut;
 
@@ -25,10 +27,6 @@ namespace ToltoonTTS2.Services.TTS
         public TtsSAPI()
         {
             _synth = new SpeechSynthesizer();
-            //_synth.SetOutputToDefaultAudioDevice();
-            MemoryStream audioStream = new MemoryStream();
-            _synth.SetOutputToWaveStream(audioStream);
-
         }
 
         private bool IsPiperVoice(string voiceName)
@@ -36,68 +34,74 @@ namespace ToltoonTTS2.Services.TTS
             return Regex.IsMatch(voiceName, @"^[a-z]{2}_[A-Z]{2}-");
         }
 
-        public void Speak(ProcessedTtsMessage result)
+        public void Speak(ProcessedTtsMessage msg)
         {
-            try
+            if (string.IsNullOrWhiteSpace(msg.Text))
+                return;
+
+            // Команды пропуска
+            if (msg.Text.Contains(SkipCommandAll, StringComparison.OrdinalIgnoreCase))
             {
-                if (string.IsNullOrWhiteSpace(result.Text)) return;
-
-                // Обработка команд — выполняется мгновенно, не попадает в очередь
-                if (result.Text.Contains(SkipCommandAll, StringComparison.OrdinalIgnoreCase))
-                {
-                    ClearQueue();
-                    _waveOut.Stop();
-                    return;
-                }
-
-                if (result.Text.Contains(SkipCommandOne, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (_waveOut != null)
-                        _waveOut.Stop();
-
-                    return;
-                }
-
-                // Устанавливаем голос
-                bool _isPiperVoice = IsPiperVoice(result.VoiceName);
-                int AdjustSpeed = GetDynamicRateAdjustment(result.Text.Length);
-                if (!_isPiperVoice)
-                {
-                    SetVoice(result.VoiceName);
-                    // Устанавливаем громкость (приводим float [0.0–1.0] к int [0–100])
-                    int volume = (int)(Math.Clamp(result.VoiceVolume, 0f, 1f) * 100);
-                    SetVolume(volume);
-                    // Устанавливаем скорость (приводим float к int [-10 – 10])
-                    int rate = (int)Math.Clamp(result.VoiceSpeed + AdjustSpeed, -10f, 10f);
-                    SetRate(rate);
-                }
-                else
-                {
-
-                }
-
-                    // Очередь обычных сообщений
-                    _messageQueue.Enqueue(result);
-                lock (_lock)
-                {
-                    if (!_isSpeaking)
-                    {
-                        ProcessQueue();
-                    }
-                }
+                ClearQueue();
+                _waveOut?.Stop();
+                return;
             }
-            catch { }
-            
+
+            if (msg.Text.Contains(SkipCommandOne, StringComparison.OrdinalIgnoreCase))
+            {
+                _waveOut?.Stop();
+                return;
+            }
+
+            // Асинхронная подготовка сообщения
+            Task.Run(async () =>
+            {
+                var ready = await PrepareMessageAsync(msg);
+                _audioQueue.Enqueue(ready);
+
+                StartPlayback();
+            });
+        }
+
+        private async Task<ReadyTtsMessage> PrepareMessageAsync(ProcessedTtsMessage msg)
+        {
+            string text = PreprocessMessage(msg.Text);
+
+            bool isPiper = IsPiperVoice(msg.VoiceName);
+            MemoryStream wav;
+
+            if (!isPiper)
+            {
+                SetVoice(msg.VoiceName);
+
+                int volume = (int)(Math.Clamp(msg.VoiceVolume, 0f, 1f) * 100);
+                SetVolume(volume);
+
+                int adjust = GetDynamicRateAdjustment(text.Length);
+                int rate = (int)Math.Clamp(msg.VoiceSpeed + adjust, -10f, 10f);
+                SetRate(rate);
+
+                wav = GenerateSpeech(text);
+            }
+            else
+            {
+                wav = await PiperSharpTTS.GenerateVoice(
+                    msg.VoiceName,
+                    text,
+                    msg.VoiceSpeed
+                );
+            }
+
+            return new ReadyTtsMessage
+            {
+                Wav = wav,
+                Original = msg
+            };
         }
 
         private MemoryStream GenerateSpeech(string text)
         {
-            //проверка, является ли голос piper
-
             var stream = new MemoryStream();
-            _synth.SelectVoice(_synth.Voice.Name);
-            _synth.Volume = _synth.Volume;
-            _synth.Rate = _synth.Rate;
 
             _synth.SetOutputToWaveStream(stream);
             _synth.Speak(text);
@@ -106,118 +110,59 @@ namespace ToltoonTTS2.Services.TTS
             return stream;
         }
 
-        private async void ProcessQueue()
+        private void StartPlayback()
         {
-            if (!_messageQueue.TryDequeue(out var result))
+            lock (_lock)
             {
-                _isSpeaking = false;
+                if (_isPlaying) return;
+                _isPlaying = true;
+            }
+
+            PlayNext();
+        }
+
+        private void PlayNext()
+        {
+            if (!_audioQueue.TryDequeue(out var ready))
+            {
+                _isPlaying = false;
                 return;
             }
 
-            _isSpeaking = true;
+            var reader = new WaveFileReader(ready.Wav);
 
-            bool isPiperVoice = IsPiperVoice(result.VoiceName);
-            var message = PreprocessMessage(result.Text);
-
-            MemoryStream wavMessage;
-
-            if (!isPiperVoice)
-            {
-                wavMessage = GenerateSpeech(message);
-            }
-            else
-            {
-                wavMessage = await PiperSharpTTS.GenerateVoice(
-                    result.VoiceName,
-                    message,
-                    result.VoiceSpeed
-                );
-            }
-
-            if (wavMessage == null)
-            {
-                _isSpeaking = false;
-                ProcessQueue();
-                return;
-            }
-            WaveFileReader reader = new WaveFileReader(wavMessage);
-
-
-            // 1. Первый проход — ищем пик
+            // Нормализация
             var sampleProvider = reader.ToSampleProvider();
             float gain = CalculateNormalizationGain(sampleProvider);
 
-            // 2. Сброс
             reader.Position = 0;
             sampleProvider = reader.ToSampleProvider();
 
-            // 3. Нормализация
             var volumeProvider = new VolumeSampleProvider(sampleProvider)
             {
                 Volume = gain + 1
             };
 
-            // (опционально) рация
-             //var distorted = new DistortionSampleProvider(volumeProvider) { Drive = 10f };
-
             _waveOut = new WaveOutEvent();
-
-            _waveOut.PlaybackStopped += (s, e) =>
-            {
-                _waveOut.Dispose();
-                reader.Dispose();
-                wavMessage.Dispose();
-
-                lock (_lock)
-                {
-                    _isSpeaking = false;
-                    ProcessQueue();
-                }
-            };
-            //volumeProvider = PiperSharpTTS.GenerateVoice();
             _waveOut.Init(volumeProvider);
-            _waveOut.Play();
-        }
 
-
-
-        public void PlayStream(MemoryStream wavStream)
-        {
-            wavStream.Position = 0;
-
-            // Для WAV используем WaveFileReader
-            // Остановить предыдущее проигрывание
-            _waveOut?.Stop();
-            _waveOut?.Dispose();
-
-            var reader = new WaveFileReader(wavStream);
-            _waveOut = new WaveOutEvent();
-            _waveOut.Init(reader);
-
-            _waveOut.Play();
-
-            // Когда звук доиграет → переход к следующему
             _waveOut.PlaybackStopped += (s, e) =>
             {
                 reader.Dispose();
+                ready.Wav.Dispose();
                 _waveOut.Dispose();
                 _waveOut = null;
 
-                lock (_lock)
-                {
-                    _isSpeaking = false;
-                    ProcessQueue();
-                }
+                PlayNext(); // без паузы
             };
-            wavStream.Position = 0;
+
+            _waveOut.Play();
         }
 
         public void SetVoice(string voiceName)
         {
             if (_synth.GetInstalledVoices().Any(v => v.VoiceInfo.Name == voiceName))
-            {
                 _synth.SelectVoice(voiceName);
-            }
         }
 
         public void SetRate(int rate) => _synth.Rate = rate;
@@ -225,29 +170,29 @@ namespace ToltoonTTS2.Services.TTS
 
         private string PreprocessMessage(string message)
         {
-            // Удаление повторяющихся точек
             message = Regex.Replace(message, @"\.{2,}", " . ");
 
-            // Пример удаления ссылок
             message = Regex.Replace(message,
                 @"(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]*|(?:https?:\/\/)?[\w.-]+\D(?:\.[\w\.-]+)+[\w\-\._~:/?%#[\]@!\$&'\(\)\*\+,;=.]+",
                 "ссылка");
 
-            // Удаление эмодзи (по желанию можно добавить флаг и сделать опционально)
             string emojiPattern = @"(?:[\u203C-\u3299\u00A9\u00AE\u2000-\u3300\uF000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF])";
             message = Regex.Replace(message, emojiPattern, string.Empty);
 
             return message;
         }
+
         private int GetDynamicRateAdjustment(int textLength)
         {
             int[] thresholds = { 100, 200, 300, 400, 500 };
             var settings = _dynamicSpeedSettings?.ToList();
 
+            if (settings == null) return 0;
+
             for (int i = thresholds.Length - 1; i >= 0; i--)
             {
                 if (textLength >= thresholds[i])
-                    return settings[i]; // теперь settings поддерживает индекс
+                    return settings[i];
             }
 
             return 0;
@@ -255,8 +200,8 @@ namespace ToltoonTTS2.Services.TTS
 
         private void ClearQueue()
         {
-            while (_messageQueue.TryDequeue(out _)) { }
-            _isSpeaking = false;
+            while (_audioQueue.TryDequeue(out _)) { }
+            _isPlaying = false;
         }
 
         public void Dispose()
@@ -267,11 +212,6 @@ namespace ToltoonTTS2.Services.TTS
         public void SetDynamicSpeed(IEnumerable<int> settings)
         {
             _dynamicSpeedSettings = settings;
-        }
-
-        public void SetTtsForChannelPointsEnabled(bool enabled)
-        {
-            _isSpeaking = enabled;
         }
 
         public static float CalculateNormalizationGain(ISampleProvider provider, float targetPeak = 0.99f)
@@ -294,37 +234,9 @@ namespace ToltoonTTS2.Services.TTS
         }
     }
 
-    public class DistortionSampleProvider : ISampleProvider
+    public class ReadyTtsMessage
     {
-        private readonly ISampleProvider _source;
-        public float Drive { get; set; } = 5f; // 1..20
-
-        public DistortionSampleProvider(ISampleProvider source)
-        {
-            _source = source;
-            WaveFormat = source.WaveFormat;
-        }
-
-        public WaveFormat WaveFormat { get; }
-
-        public int Read(float[] buffer, int offset, int count)
-        {
-            int read = _source.Read(buffer, offset, count);
-
-            for (int i = 0; i < read; i++)
-            {
-                float sample = buffer[offset + i] * Drive;
-
-                // ЖЁСТКИЙ КЛИППИНГ
-                if (sample > 1f) sample = 1f;
-                if (sample < -1f) sample = -1f;
-
-                buffer[offset + i] = sample;
-            }
-
-            return read;
-        }
+        public MemoryStream Wav { get; set; }
+        public ProcessedTtsMessage Original { get; set; }
     }
-
-
 }
