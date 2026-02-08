@@ -15,6 +15,9 @@ namespace ToltoonTTS2.Services.EnsureFolderAndFileExist
             var piperEngine = Path.Combine(cwd, "piper");
             var filePath = Path.Combine(folderPath, "PiperVoices.txt");
 
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
             if (!Directory.Exists(piperEngine))
             {
                 Directory.CreateDirectory(piperEngine); 
@@ -25,8 +28,6 @@ namespace ToltoonTTS2.Services.EnsureFolderAndFileExist
             await PiperDownloader.DownloadPiper().ExtractPiper(cwd);
             }
 
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
 
             if (!File.Exists(filePath))
             {

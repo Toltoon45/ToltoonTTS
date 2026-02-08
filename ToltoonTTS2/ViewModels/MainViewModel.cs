@@ -16,6 +16,7 @@ using ToltoonTTS2.Services.Goodgame.Connection;
 using ToltoonTTS2.Services.SaveLoadSettings;
 using ToltoonTTS2.Services.TTS;
 using ToltoonTTS2.Services.Twitch.Connection;
+using ToltoonTTS2.Services.VK;
 using ToltoonTTS2.Services.Youtube;
 using ToltoonTTS2.Voices;
 using TwitchLib.Api.Helix.Models.Bits;
@@ -30,6 +31,7 @@ namespace ToltoonTTS2.ViewModels
         private readonly SQLiteConnection _LoadIndividualVoicesSettingsDb; //индивидуальные голоса
         private readonly SQLiteConnection _individualVoicesGoodgameDb; //голоса для людей с гудгейма
         private readonly SQLiteConnection _individualVoicesTwitchDb; //голоса для людей с твича
+        private readonly SQLiteConnection _individualVoicesVkDb;
 
         ObservableCollection<VoiceItem> _voiceItems;          // для работы с БД
         ObservableCollection<PlaceVoicesInfoInWPF> _uiItems;  // для биндинга к UI
@@ -40,6 +42,8 @@ namespace ToltoonTTS2.ViewModels
         AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "TwitchIndividualVoices.db");
         private readonly string _individualVoicesGoodgameDbPath = Path.Combine(
         AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "GoodgameIndividualVoices.db");
+        private readonly string _individualVoicesVkDbPath = Path.Combine(
+AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualVoices.db");
         public ObservableCollection<PlaceVoicesInfoInWPF> ItemSourceAllVoices { get; set; } = new ObservableCollection<PlaceVoicesInfoInWPF>();
         public ObservableCollection<string> ListBoxPiperVoiceInstalledVoices { get; set; } = new ObservableCollection<string>();
         public List<string> DynamicSpeedLabels => new List<string> { "100", "200", "300", "400", "500" };
@@ -50,10 +54,14 @@ namespace ToltoonTTS2.ViewModels
         private string _twitchApi;
         private string _twitchClientId;
         private string _twitchNickname;
+        private string _vkLogin;
+        private string _VkAppId;
+        private string _vkSecretApi;
         private bool _connectToTwitch;
         private string _goodgamenickname;
         private bool _connectToGoodgame;
         private bool _connectToYoutube;
+        private bool _connectToVk;
         private string _youtubeId;
         private bool _removeEmoji;
         private string _selectedVoice;
@@ -82,11 +90,14 @@ namespace ToltoonTTS2.ViewModels
         private string _twitchConnectionStatus;
         private string _goodgameConnectionStatus;
         private string _youtubeConnectionStatus;
+        private string _vkConnectionStatus;
         private string _nameToSaveProfile;
         private string _nameToLoadProfile;
         private ObservableCollection<string> _allProfiles;
         private TwitchConnectionState _twitchConnectionState;
         private GoodgameConnectionState _goodgameConnectionState;
+        private GoodgameConnectionState _youtubeConnectionState; //я сделаю сюда ютуб
+        private VkConnectionState _vkConnectionState;
         private IndividualVoicesWindow IndividualVoicesWin;
         private bool _individualVoicesEnabled;
         private string _piperVoiceForInstall;
@@ -95,6 +106,7 @@ namespace ToltoonTTS2.ViewModels
         private readonly ITwitchConnectToChat _twitchConnectToChat;
         private readonly IGoodgameConnection _goodgameConnectionToChat;
         private readonly IYoutubeConnection _youtubeConnectionToChat;
+        private readonly IVkConnection _vkConnectionToChat;
         private readonly ITts _ttsService;
         private readonly ISettings _serviceSettings;
         private readonly IDirectoryService _directoryService;
@@ -122,6 +134,7 @@ namespace ToltoonTTS2.ViewModels
             ITtsMessageProcessing messageProcessing,
             IGoodgameConnection goodgameConnectionToChat,
             IYoutubeConnection youtubeConnectionToChat,
+            IVkConnection vkConnectionToChat,
             AdditionalSettingsViewModel additionalSettings)
         {
             AdditionalSettings = additionalSettings;
@@ -130,6 +143,7 @@ namespace ToltoonTTS2.ViewModels
             _twitchConnectToChat = twitchConnectToChat;
             _goodgameConnectionToChat = goodgameConnectionToChat;
             _youtubeConnectionToChat = youtubeConnectionToChat;
+            _vkConnectionToChat = vkConnectionToChat;
             _ttsService = ttsService;
             _loadAvailableVoices = getInstalledVoices;
             _loadProfiles = loadProfiles;
@@ -163,6 +177,7 @@ namespace ToltoonTTS2.ViewModels
             DeleteWordReplace = new RelayCommand(DeleteWordFromReplace);
             OpenIndividualVoicesTwitchWindow = new RelayCommand(() => OpenIndividualVoices("Twitch", ItemSourceAllVoices, true));
             OpenIndividualVoicesGoodgameWindow = new RelayCommand(() => OpenIndividualVoices("Goodgame", ItemSourceAllVoices, true));
+            OpenIndividualVoicesVkWindow = new RelayCommand(() => OpenIndividualVoices("Vk", ItemSourceAllVoices, true));
             buttonMakeEnabledVoicesLouder = new RelayCommand(() => ChangeEnabledVoicesVolume(1));
             buttonMakeEnabledVoicesQuiet = new RelayCommand(() => ChangeEnabledVoicesVolume(-1));
             InstallPiperVoice = new RelayCommand(() => InstallPiperVoices(PiperVoiceName));
@@ -198,9 +213,11 @@ namespace ToltoonTTS2.ViewModels
             _individualVoicesTwitchDb.CreateTable<PlatformsIndividualVoices>();
             _individualVoicesGoodgameDb = new SQLiteConnection(_individualVoicesGoodgameDbPath);
             _individualVoicesGoodgameDb.CreateTable<PlatformsIndividualVoices>();
+            _individualVoicesVkDb = new SQLiteConnection(_individualVoicesVkDbPath);
+            _individualVoicesVkDb.CreateTable<PlatformsIndividualVoices>();
 
             LoadInstalledVoices();
-            _messageProcessing.SetDatabase(_individualVoicesTwitchDb, _LoadIndividualVoicesSettingsDb, _individualVoicesGoodgameDb);
+            _messageProcessing.SetDatabase(_individualVoicesTwitchDb, _LoadIndividualVoicesSettingsDb, _individualVoicesGoodgameDb, _individualVoicesVkDb);
             _loadProfiles.GetListOfAvailableProfiles(AvailableProfiles);
             _loadAvailableVoices.GetListOfAvailableVoices(AvailableVoices);
 
@@ -218,6 +235,13 @@ namespace ToltoonTTS2.ViewModels
                 // обработка сообщения
                 //библиотека ютуба сломана, юзернейм всегда пустой. Поэтому стандартный голос
                 var message = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "youtube");
+                if (message != null)
+                    _ttsService.Speak(message);
+            };
+            _vkConnectionToChat.MessageReceived += (sender, e) =>
+            {
+                // обработка сообщения
+                var message = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "vk");
                 if (message != null)
                     _ttsService.Speak(message);
             };
@@ -296,12 +320,19 @@ namespace ToltoonTTS2.ViewModels
                 AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "TwitchIndividualVoices.db"));
             var goodgameDb = new SQLiteConnection(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "GoodgameIndividualVoices.db"));
+            var vkDb = new SQLiteConnection(Path.Combine(
+    AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualVoices.db"));
             var voicesDb = new SQLiteConnection(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "IndividualVoices.db"));
 
-            var selectedDb = platform.Equals("Twitch", StringComparison.OrdinalIgnoreCase)
-                ? twitchDb //у тебя всё сделано для твич, надо сделать общим
-                : goodgameDb;
+            var selectedDb = platform.ToLower() switch
+            {
+                "goodgame" => twitchDb,
+                "twitch" => goodgameDb,
+                "vk" => vkDb,
+                _ => throw new ArgumentException($"Unknown platform: {platform}")
+            };
+
 
             var viewModel = new VoiceBindingsViewModel(selectedDb, voicesDb, ItemSourceAllVoices);
 
@@ -380,6 +411,17 @@ namespace ToltoonTTS2.ViewModels
             }
         }
 
+        public VkConnectionState VkConnectionState
+        {
+            get => _vkConnectionState;
+            set
+            {
+                _vkConnectionState = value;
+                OnPropertyChanged();
+                VkConnectionStatus = $"Вконтакте: {value}";
+            }
+        }
+
         private async Task ConnectToStreamingChats()
         {
             if (ConnectToTwitch)
@@ -394,8 +436,7 @@ namespace ToltoonTTS2.ViewModels
                 {
                     //подключение в событиям чата
                     var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<WebsocketHostedService>();
-                    //var websocketClient = new EventSubWebsocketClient();
-                    //string asd = websocketClient.GetType().ToString();
+
                     _websocketService = new WebsocketHostedService(logger, websocketClient, TwitchApi, TwitchClientId, twitchId, TtsForChannelPoints, NameOfRewardTtsForChannelPoints); //передавай все параметры для подключения);
                     _ = _websocketService.StartAsync(CancellationToken.None);
                     _websocketService.RewardRedeemed += (s, e) =>
@@ -410,7 +451,6 @@ namespace ToltoonTTS2.ViewModels
 
                 await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
             }
-            //YoutubeConnection.YoutubeConnect(_youtubeId, _youtubeConnectionStatus);
             if (ConnectToGoodgame)
             {
                 _goodgameConnectionToChat.ConnectionStateChanged += (s, state) =>
@@ -422,6 +462,16 @@ namespace ToltoonTTS2.ViewModels
             if (ConnectToYoutube)
             {
                 _youtubeConnectionToChat.Connect(YoutubeId, YoutubeConnectionStatus);
+            }
+            if (ConnectToVk)
+            {
+                _vkConnectionToChat.ConnectionStateChanged += (s, state) =>
+                {
+                    VkConnectionState = state;
+                };
+                _vkConnectionToChat.Connection(VkLogin, VkSecretApi, VkAppId);
+
+
             }
         }
 
@@ -440,6 +490,7 @@ namespace ToltoonTTS2.ViewModels
         public ICommand DeleteProfile { get; set; }
         public ICommand OpenIndividualVoicesTwitchWindow { get; }
         public ICommand OpenIndividualVoicesGoodgameWindow { get; }
+        public ICommand OpenIndividualVoicesVkWindow { get; }
         public ICommand buttonMakeEnabledVoicesLouder { get; }
         public ICommand buttonMakeEnabledVoicesQuiet { get; }
         public ICommand InstallPiperVoice { get; set; }
@@ -473,6 +524,24 @@ namespace ToltoonTTS2.ViewModels
             get => _twitchNickname;
             set { _twitchNickname = value; OnPropertyChanged(); }
         }
+        
+        public string VkLogin
+        {
+            get => _vkLogin;
+            set { _vkLogin = value; OnPropertyChanged(); }
+        }
+
+        public string VkAppId
+        {
+            get => _VkAppId;
+            set { _VkAppId = value; OnPropertyChanged(); }
+        }
+
+        public string VkSecretApi
+        {
+            get => _vkSecretApi;
+            set { _vkSecretApi = value; OnPropertyChanged(); }
+        }
 
         public string TwitchConnectionStatus
         {
@@ -484,6 +553,12 @@ namespace ToltoonTTS2.ViewModels
         {
             get => _goodgameConnectionStatus;
             set { _goodgameConnectionStatus = value; OnPropertyChanged(); }
+        }
+
+        public string VkConnectionStatus
+        {
+            get => _vkConnectionStatus;
+            set { _vkConnectionStatus = value; OnPropertyChanged(); }
         }
 
         public string YoutubeConnectionStatus
@@ -541,6 +616,12 @@ namespace ToltoonTTS2.ViewModels
         {
             get => _connectToYoutube;
             set { _connectToYoutube = value; OnPropertyChanged(); }
+        }
+
+        public bool ConnectToVk
+        {
+            get => _connectToVk;
+            set { _connectToVk = value; OnPropertyChanged(); }
         }
 
         public bool RemoveEmoji
@@ -777,6 +858,10 @@ namespace ToltoonTTS2.ViewModels
             SkipMessageAll = settings.SkipMessageAll;
             TtsForChannelPoints = settings.TtsForChannelPoints;
             NameOfRewardTtsForChannelPoints = settings.NameOfRewardTtsForChannelPoints;
+            VkLogin = settings.VkLogin;
+            ConnectToVk = settings.ConnectToVk;
+            VkAppId = settings.VkOpenApi;
+            VkSecretApi = settings.VkSecretApi;
             //напоминание сделать для выделения сообщения цветом
 
             IndividualVoicesEnabled = settings.IndividualVoicesEnabled;
@@ -946,7 +1031,11 @@ namespace ToltoonTTS2.ViewModels
                 WhatToReplaceWith = WordWhatToReplaceWith.ToList(),
                 IndividualVoicesEnabled = IndividualVoicesEnabled,
                 TtsForChannelPoints = TtsForChannelPoints,
-                NameOfRewardTtsForChannelPoints = NameOfRewardTtsForChannelPoints
+                NameOfRewardTtsForChannelPoints = NameOfRewardTtsForChannelPoints,
+                VkLogin = VkLogin,
+                VkOpenApi = VkAppId,
+                VkSecretApi = VkSecretApi,
+                ConnectToVk = ConnectToVk
             };
             foreach (var uiItem in ItemSourceAllVoices)
             {

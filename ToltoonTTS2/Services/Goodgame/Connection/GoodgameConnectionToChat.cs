@@ -75,9 +75,6 @@ namespace ToltoonTTS2.Services.Goodgame.Connection
                         string receivedMessage = Encoding.UTF8.GetString(bufferToReceive, 0, result.Count);
                         JObject jsonObj = JObject.Parse(receivedMessage);
                         string textUserName2 = jsonObj["data"]?["user_name"]?.ToString();
-                        //public static ListBox GoodGameBlackList;
-                        //if (GoodGameBlackList!= null && GoodGameBlackList.Items.Contains(textUserName2.ToLower()))
-                        //    return;
                         string textValue = jsonObj["data"]?["text"]?.ToString();
                         if (textValue != null)
                         {

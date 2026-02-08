@@ -32,7 +32,11 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
                 WhatToReplace = Settings.Default.WhatToReplace?.Cast<string>().ToList() ?? new List<string>(),
                 WhatToReplaceWith = Settings.Default.WhatToReplaceWith?.Cast<string>().ToList() ?? new List<string>(),
                 IndividualVoicesEnabled = Settings.Default.IndividualVoicesEnabled,
-                DynamicSpeedThresholds = dynamicSpeedList
+                DynamicSpeedThresholds = dynamicSpeedList,
+                VkLogin = Settings.Default.ConnectToVkLogin,
+                ConnectToVk = Settings.Default.ConnectToVkCheckBox,
+                VkOpenApi = Settings.Default.ConnectToVkAppId,
+                VkSecretApi = Settings.Default.ConnectToVkSecretApi,
             };
         }
 
@@ -55,6 +59,10 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
             Settings.Default.TextBoxMessageSkip = settings.SkipMessage;
             Settings.Default.TextBoxMessageSkipAll = settings.SkipMessageAll;
             Settings.Default.IndividualVoicesEnabled = settings.IndividualVoicesEnabled;
+            Settings.Default.ConnectToVkLogin = settings.VkLogin;
+            Settings.Default.ConnectToVkCheckBox = settings.ConnectToVk;
+            Settings.Default.ConnectToVkAppId = settings.VkOpenApi;
+            Settings.Default.ConnectToVkSecretApi = settings.VkSecretApi;
 
             var blackListMembers = new System.Collections.Specialized.StringCollection();
             foreach (var item in settings.BlackListMembers)

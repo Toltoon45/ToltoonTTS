@@ -7,6 +7,7 @@ using ToltoonTTS2.Services.TTS;
 using ToltoonTTS2.Services.Twitch.Connection;
 using ToltoonTTS2.ViewModels;
 using ToltoonTTS2.Services.Youtube;
+using ToltoonTTS2.Services.VK;
 
 namespace ToltoonTTS2
 {
@@ -21,6 +22,7 @@ namespace ToltoonTTS2
             ITwitchGetID twitchGetId = new TwitchGetId();
             IGoodgameConnection goodgameConnectionToChat = new GoodgameConnectionToChat();
             IYoutubeConnection youtubeConnectionToChat = new YoutubeConnection();
+            IVkConnection vkConnectionToChat = new VkConnection();
             ITts TtsService = new TtsSAPI();
             ISettings SettingsService = new SettingsService();
             IDirectoryService DirectoryService = new DirectoryService();
@@ -41,6 +43,7 @@ namespace ToltoonTTS2
                 MessageProcessing,
                 goodgameConnectionToChat,
                 youtubeConnectionToChat,
+                vkConnectionToChat,
                 additionalSettings);
 
         }

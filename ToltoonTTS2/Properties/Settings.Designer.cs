@@ -319,5 +319,53 @@ namespace ToltoonTTS2.Properties {
                 this["NameOfRewardTtsForChannelPoints"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ConnectToVkLogin {
+            get {
+                return ((string)(this["ConnectToVkLogin"]));
+            }
+            set {
+                this["ConnectToVkLogin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ConnectToVkCheckBox {
+            get {
+                return ((bool)(this["ConnectToVkCheckBox"]));
+            }
+            set {
+                this["ConnectToVkCheckBox"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ConnectToVkAppId {
+            get {
+                return ((string)(this["ConnectToVkAppId"]));
+            }
+            set {
+                this["ConnectToVkAppId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ConnectToVkSecretApi {
+            get {
+                return ((string)(this["ConnectToVkSecretApi"]));
+            }
+            set {
+                this["ConnectToVkSecretApi"] = value;
+            }
+        }
     }
 }

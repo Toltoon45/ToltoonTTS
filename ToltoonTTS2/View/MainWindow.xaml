@@ -26,7 +26,7 @@
 
                             <!-- Подключение к Twitch -->
                             <StackPanel Grid.Column="0" Margin="5">
-                                <Label Content="Подключение к Twitch" HorizontalAlignment="Center" />
+                                <Label Content="Twitch" HorizontalAlignment="Center" />
                                 <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="176" Height="152">
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
@@ -50,7 +50,7 @@
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                                             <TextBox x:Name="TextboxTwitchNickName" Text="{Binding TwitchNickname, UpdateSourceTrigger=PropertyChanged}" Margin="10,0,0,0" MaxHeight="50" TextWrapping="Wrap" VerticalAlignment="Center" Width="50" MaxWidth="50"/>
                                             <Label x:Name="labelTwitchNick" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center">
-                                                <TextBlock IsEnabled="False"><Run Text="Название канала"/><LineBreak/><Run Text="куда подключаться"/></TextBlock>
+                                                <TextBlock IsEnabled="False"><Run Text="Ник канала"/><LineBreak/><Run Text="который слушать"/></TextBlock>
                                             </Label>
                                         </StackPanel>
                                         <CheckBox x:Name="CheckBoxConnectToTwitch" IsChecked="{Binding ConnectToTwitch}" 
@@ -61,7 +61,7 @@
 
                             <!-- Подключение к GoodGame -->
                             <StackPanel Grid.Column="1" Margin="5">
-                                <Label Content="Подключение к GoodGame" HorizontalAlignment="Center" />
+                                <Label Content="GoodGame" HorizontalAlignment="Center" />
                                 <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="190">
                                     <StackPanel x:Name="StackPanelGoodgameConnection" Orientation="Vertical" Margin="10,0,0,0">
                                         <StackPanel Orientation="Horizontal">
@@ -73,7 +73,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Label Content="Подключение к Youtube" HorizontalAlignment="Center" />
+                                <Label Content="Youtube" HorizontalAlignment="Center" />
                                 <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="190">
                                     <StackPanel x:Name="StackPanelYoutubeConnection" Orientation="Vertical" Margin="10,0,0,0">
                                         <StackPanel Orientation="Horizontal">
@@ -84,6 +84,29 @@
                                                   Content="Подключаться" Margin="0,5,0,10"/>
                                     </StackPanel>
                                 </Border>
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <StackPanel HorizontalAlignment="Left">
+                            <Label Content="Вконтакте" HorizontalAlignment="Center" />
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="190">
+                                <StackPanel x:Name="StackVkConnection" Orientation="Vertical" Margin="10,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                            <TextBox Text="{Binding VkLogin, UpdateSourceTrigger=PropertyChanged}" x:Name="TextBoxVkLogin" Width="50" MaxHeight="20" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        <Label x:Name="LabelVkLogin" Content="Куда подключаться"></Label>
+                                    </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Text="{Binding VkAppId, UpdateSourceTrigger=PropertyChanged}" x:Name="TextBoxVkAppId" Width="50" MaxHeight="20" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            <Label x:Name="LabelVkAppId" Content="App Id"></Label>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Text="{Binding VkSecretApi, UpdateSourceTrigger=PropertyChanged}" x:Name="TextBoxVkSecretApi" Width="50" MaxHeight="20" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                            <Label x:Name="LabelVkSecretApi" Content="SecretApi"></Label>
+                                        </StackPanel>
+                                        <CheckBox x:Name="CheckBoxConnectToVk" IsChecked="{Binding ConnectToVk, UpdateSourceTrigger=PropertyChanged}"
+              Content="Подключаться (трогай)" Margin="0,5,0,10"/>
+                                </StackPanel>
+                            </Border>
                             </StackPanel>
                         </Grid>
 
@@ -235,9 +258,11 @@
                                         Content="Голоса Twitch" Margin="10,10,0,10"/>
                                 <Button x:Name="ButtonIndividualVoicesGoodgame" Content="Голоса Goodgame" Margin="10,10,0,10"
                                         Command="{Binding OpenIndividualVoicesGoodgameWindow}"></Button>
-                                <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить привязку голосов"
-                          IsChecked="{Binding IndividualVoicesEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,0,10"/>
+                                <Button x:Name="ButtonIndividualVoicesVk" Content="Голоса ВКонтакте" Margin="10,10,0,10"
+                                        Command="{Binding OpenIndividualVoicesVkWindow}"></Button>
                             </StackPanel>
+                                <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить индивидуальные голоса"
+                          IsChecked="{Binding IndividualVoicesEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,0,10"/>
                             <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
                                 <!-- Закомментированная часть -->
                             </StackPanel>
@@ -398,6 +423,7 @@
             <StackPanel Orientation="Vertical">
                 <Label x:Name="LabelTwitchStatusMessage" Content="{Binding TwitchConnectionStatus, UpdateSourceTrigger=PropertyChanged}"></Label>
                 <Label x:Name="LabelGoodgameStatusMessage" Content="{Binding GoodgameConnectionStatus, UpdateSourceTrigger=PropertyChanged}"></Label>
+                <Label x:Name="LabelVkStatusMessage" Content="{Binding VkConnectionStatus, UpdateSourceTrigger=PropertyChanged}"></Label>
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <Button x:Name="buttonConnect" Command="{Binding ConnectToChats}"
@@ -410,7 +436,7 @@
                     </StackPanel>
                 </StackPanel>
                 <Label x:Name="LabelVoiceErrorMessage" Content="{Binding VoiceTestErrorMessage, FallbackValue='Ожидание'}"/>
-                <Label x:Name="LabelDownloadPiperVoiceStatus" Content="{Binding VoicePiperDownload, FallbackValue='пидора4с'}"></Label>
+                <Label x:Name="LabelDownloadPiperVoiceStatus" Content="{Binding VoicePiperDownload, FallbackValue=''}"></Label>
             </StackPanel>
         </StackPanel>
         <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>

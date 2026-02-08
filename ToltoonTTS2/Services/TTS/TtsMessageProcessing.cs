@@ -25,14 +25,15 @@ namespace ToltoonTTS2.Services.TTS
 
         private SQLiteConnection _LoadIndividualVoicesTwitchDb;
         private SQLiteConnection _LoadIndividualVoicesGoodGameDb;
-
+        private SQLiteConnection _LoadIndividualVoicesVkDb;
         private SQLiteConnection _LoadIndividualVoicesSettings;
 
-        public void SetDatabase(SQLiteConnection TwitchIndividualVoicesDb, SQLiteConnection IndividualVoicesSettingsDb, SQLiteConnection GoodgameIndividualVoicesDb)
+        public void SetDatabase(SQLiteConnection TwitchIndividualVoicesDb, SQLiteConnection IndividualVoicesSettingsDb, SQLiteConnection GoodgameIndividualVoicesDb, SQLiteConnection VkIndividualVoicesDb)
         {
             _LoadIndividualVoicesTwitchDb = TwitchIndividualVoicesDb;
             _LoadIndividualVoicesSettings = IndividualVoicesSettingsDb;
             _LoadIndividualVoicesGoodGameDb = GoodgameIndividualVoicesDb;
+            _LoadIndividualVoicesVkDb = VkIndividualVoicesDb;
         }
 
         //удаление эмодзи
@@ -55,11 +56,39 @@ namespace ToltoonTTS2.Services.TTS
             if (!string.IsNullOrEmpty(_doNotTtsIfStartWith) && message.StartsWith(_doNotTtsIfStartWith))
                 return null;
             PlatformsIndividualVoices binding = null;
+            if (_individualVoicesEnabled)
+            {
+
+                switch (platform)
+                {
+                    case "twitch":
+
+                        break;
+
+                    case "goodgame":
+
+                        break;
+
+                    case "youtube":
+
+                        break;
+
+                    case "vk":
+
+                        break;
+                }
+            }
+
             if (_individualVoicesEnabled || platform != "youtube")
             {
-                var db = platform.Equals("goodgame", StringComparison.OrdinalIgnoreCase)
-    ? _LoadIndividualVoicesGoodGameDb
-    : _LoadIndividualVoicesTwitchDb;
+                var db = platform.ToLower() switch
+                {
+                    "goodgame" => _LoadIndividualVoicesGoodGameDb,
+                    "twitch" => _LoadIndividualVoicesTwitchDb,
+                    "vk" => _LoadIndividualVoicesVkDb,
+                    _ => throw new ArgumentException($"Unknown platform: {platform}")
+                };
+
 
                 binding = db.Table<PlatformsIndividualVoices>().FirstOrDefault(x => x.UserName == username);
                 if (binding == null)

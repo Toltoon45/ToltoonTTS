@@ -23,5 +23,9 @@
         public List<string> WhatToReplaceWith { get; set; } = new List<string>();
         public bool IndividualVoicesEnabled { get; set; }
         public List<int> DynamicSpeedThresholds { get; set; } = new List<int>();
+        public string VkLogin { get; set; }
+        public string VkOpenApi {  get; set; }
+        public string VkSecretApi { get; set; }
+        public bool ConnectToVk { get; set; }
     }
 }
