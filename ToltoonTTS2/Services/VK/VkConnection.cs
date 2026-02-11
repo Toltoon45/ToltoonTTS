@@ -367,8 +367,8 @@ namespace ToltoonTTS2.Services.VK
                 string responseHtml = @"
 <html>
 <body>
-    <h3>Код получен</h3>
-    <p>ВК скоро подключится, можешь закрывать/p>
+    <h3>YA VSE POLUCHIL</h3>
+    <p>VK SKORO PODKLUCHITSYA, MOZHESH ZAKRIVAT/p>
 </body>
 </html>";
 

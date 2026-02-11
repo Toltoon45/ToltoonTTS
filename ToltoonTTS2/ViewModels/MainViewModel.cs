@@ -451,14 +451,7 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
                 await _twitchConnectToChat.ConnectToChat(TwitchApi, TwitchNickname);
             }
-            if (ConnectToGoodgame)
-            {
-                _goodgameConnectionToChat.ConnectionStateChanged += (s, state) =>
-                {
-                    GoodgameConnectionState = state;
-                };
-                await _goodgameConnectionToChat.Connection(GoodgameNickname);
-            }
+
             if (ConnectToYoutube)
             {
                 _youtubeConnectionToChat.Connect(YoutubeId, YoutubeConnectionStatus);
@@ -472,6 +465,14 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 _vkConnectionToChat.Connection(VkLogin, VkSecretApi, VkAppId);
 
 
+            }
+            if (ConnectToGoodgame)
+            {
+                _goodgameConnectionToChat.ConnectionStateChanged += (s, state) =>
+                {
+                    GoodgameConnectionState = state;
+                };
+                await _goodgameConnectionToChat.Connection(GoodgameNickname);
             }
         }
 
