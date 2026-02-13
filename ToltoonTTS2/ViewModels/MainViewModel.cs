@@ -454,17 +454,7 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
             if (ConnectToYoutube)
             {
-                _youtubeConnectionToChat.Connect(YoutubeId, YoutubeConnectionStatus);
-            }
-            if (ConnectToVk)
-            {
-                _vkConnectionToChat.ConnectionStateChanged += (s, state) =>
-                {
-                    VkConnectionState = state;
-                };
-                _vkConnectionToChat.Connection(VkLogin, VkSecretApi, VkAppId);
-
-
+                await _youtubeConnectionToChat.Connect(YoutubeId, YoutubeConnectionStatus);
             }
             if (ConnectToGoodgame)
             {
@@ -472,7 +462,16 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 {
                     GoodgameConnectionState = state;
                 };
-                await _goodgameConnectionToChat.Connection(GoodgameNickname);
+
+                _ = Task.Run(() => _goodgameConnectionToChat.Connection(GoodgameNickname));
+            }
+            if (ConnectToVk)
+            {
+                _vkConnectionToChat.ConnectionStateChanged += (s, state) =>
+                {
+                    VkConnectionState = state;
+                };
+                await _vkConnectionToChat.Connection(VkLogin, VkSecretApi, VkAppId);
             }
         }
 

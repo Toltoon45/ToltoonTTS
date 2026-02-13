@@ -140,8 +140,10 @@ namespace ToltoonTTS2.Services.TTS
 
             var volumeProvider = new VolumeSampleProvider(sampleProvider)
             {
-                Volume = gain + 1
+                Volume = gain
             };
+            
+            //var effect = panning
 
             _waveOut = new WaveOutEvent();
             _waveOut.Init(volumeProvider);

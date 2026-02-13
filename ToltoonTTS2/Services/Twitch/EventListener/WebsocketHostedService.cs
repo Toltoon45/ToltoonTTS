@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System.IO;
 using TwitchLib.Api;
-using TwitchLib.Api.Core.Enums;
 using TwitchLib.EventSub.Core.EventArgs.Channel;
 using TwitchLib.EventSub.Websockets.Core.EventArgs;
 using TwitchLib.EventSub.Websockets.Core.Models;
@@ -35,7 +32,6 @@ namespace TwitchLib.EventSub.Websockets.Example
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             _eventSubWebsocketClient = eventSubWebsocketClient ?? throw new ArgumentNullException(nameof(eventSubWebsocketClient));
-            _eventSubWebsocketClient.WebsocketConnected += OnWebsocketConnected;
             _eventSubWebsocketClient.WebsocketDisconnected += OnWebsocketDisconnected;
             _eventSubWebsocketClient.WebsocketReconnected += OnWebsocketReconnected;
             _eventSubWebsocketClient.ChannelPointsCustomRewardRedemptionAdd += OnChannelPointsRedemption;
@@ -66,29 +62,6 @@ namespace TwitchLib.EventSub.Websockets.Example
             }
         }
 
-        public async static void SaveWavToEffectsFolder(MemoryStream wavStream)
-        {//
-            // Папка рядом с exe: /DataForProgram/SoundEffects
-            string basePath = AppDomain.CurrentDomain.BaseDirectory;
-            string folder = Path.Combine(basePath, "DataForProgram", "SoundEffects");
-            Directory.CreateDirectory(folder);
-            string saveFolder = Path.Combine(basePath, "DataForProgram", "SoundEffects");
-            Process.Start("SilentReverb.vbs", "DataForProgram\\SoundEffects");
-            // Имя файла
-            string fileName = "SoundEffect.wav";
-            string filePath = Path.Combine(folder, fileName);
-
-            // Сохраняем поток
-            wavStream.Position = 0;
-            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            {
-                wavStream.CopyToAsync(fs);
-            }
-
-            wavStream.Position = 0;
-        }
-
-
         public event EventHandler<ChannelPointsMessageEventArgs> RewardRedeemed;
         protected virtual void OnRewardRedeemed(ChannelPointsMessageEventArgs e)
         {
@@ -103,41 +76,6 @@ namespace TwitchLib.EventSub.Websockets.Example
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             await _eventSubWebsocketClient.DisconnectAsync();
-        }
-
-        private async Task OnWebsocketConnected(object sender, WebsocketConnectedArgs e)
-        {
-
-            _logger.LogInformation($"Websocket {_eventSubWebsocketClient.SessionId} connected!");
-
-            if (!e.IsRequestedReconnect)
-            {
-                // subscribe to topics
-                // create condition Dictionary
-                // You need BOTH broadcaster and moderator values or EventSub returns an Error!
-                var condition = new Dictionary<string, string> { { "broadcaster_user_id", _userId }, { "moderator_user_id", _userId } };
-                // Create and send EventSubscription
-                //await _twitchApi.Helix.EventSub.CreateEventSubSubscriptionAsync("channel.follow", "2", condition, EventSubTransportMethod.Websocket,
-                //    _eventSubWebsocketClient.SessionId, accessToken: _twitchApi.Settings.AccessToken);
-
-                //await _twitchApi.Helix.EventSub.CreateEventSubSubscriptionAsync(
-                //    "channel.channel_points_custom_reward_redemption.add", // событие о редемпшене награды
-                //    "1",
-                //    condition,
-                //    EventSubTransportMethod.Websocket,
-                //    _eventSubWebsocketClient.SessionId,
-                //    accessToken: _twitchApi.Settings.AccessToken
-                //);
-
-                //_twitchApi.Helix.Chat.SendChatAnnouncementAsync();
-
-                // If you want to get Events for special Events you need to additionally add the AccessToken of the ChannelOwner to the request.
-                // https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/
-            }
-
-
-
-
         }
 
         private async Task OnWebsocketDisconnected(object sender, WebsocketDisconnectedArgs e)
