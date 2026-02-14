@@ -130,23 +130,27 @@ namespace ToltoonTTS2.Services.TTS
             }
 
             var reader = new WaveFileReader(ready.Wav);
-
-            // Нормализация
+            string msg = ready.Original.Text;
             var sampleProvider = reader.ToSampleProvider();
+            
+            //робовойс_тест
+            ISampleProvider chain = reader.ToSampleProvider();
+            chain = new VibratoSampleProvider(chain, 6f, 15f);
             float gain = CalculateNormalizationGain(sampleProvider);
-
-            reader.Position = 0;
-            sampleProvider = reader.ToSampleProvider();
-
-            var volumeProvider = new VolumeSampleProvider(sampleProvider)
+            chain = new VolumeSampleProvider(chain)
             {
                 Volume = gain
             };
             
+            // Нормализация
+
+            reader.Position = 0;
+            sampleProvider = reader.ToSampleProvider();
+            
             //var effect = panning
 
             _waveOut = new WaveOutEvent();
-            _waveOut.Init(volumeProvider);
+            _waveOut.Init(chain);
 
             _waveOut.PlaybackStopped += (s, e) =>
             {
