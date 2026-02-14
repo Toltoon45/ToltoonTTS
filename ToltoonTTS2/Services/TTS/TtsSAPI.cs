@@ -132,10 +132,14 @@ namespace ToltoonTTS2.Services.TTS
             var reader = new WaveFileReader(ready.Wav);
             string msg = ready.Original.Text;
             var sampleProvider = reader.ToSampleProvider();
-            
+            Random rand = new Random();
             //робовойс_тест
             ISampleProvider chain = reader.ToSampleProvider();
-            chain = new VibratoSampleProvider(chain, 6f, 15f);
+            if (rand.Next(0, 10) > 8)
+                chain = new VibratoSampleProvider(chain, 6f, 15f);
+            //chain = new RobotSampleProvider(chain, 30f);
+            if (rand.Next(0, 10) > 9)
+                chain = new DistortionSampleProvider(chain, 50f);
             float gain = CalculateNormalizationGain(sampleProvider);
             chain = new VolumeSampleProvider(chain)
             {

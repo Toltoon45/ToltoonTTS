@@ -68,3 +68,99 @@ class VibratoSampleProvider : ISampleProvider
         return read;
     }
 }
+
+class RobotSampleProvider : ISampleProvider
+{
+    private readonly ISampleProvider source;
+    private double phase;
+    private readonly float freq;
+
+    public RobotSampleProvider(ISampleProvider source, float frequency = 30f)
+    {
+        this.source = source;
+        this.freq = frequency;
+    }
+
+    public WaveFormat WaveFormat => source.WaveFormat;
+
+    public int Read(float[] buffer, int offset, int count)
+    {
+        int read = source.Read(buffer, offset, count);
+        float sampleRate = WaveFormat.SampleRate;
+
+        for (int i = 0; i < read; i++)
+        {
+            float mod = (float)Math.Sin(phase);
+            buffer[offset + i] *= mod;
+
+            phase += 2 * Math.PI * freq / sampleRate;
+        }
+
+        return read;
+    }
+}
+
+class DelaySampleProvider : ISampleProvider
+{
+    private readonly ISampleProvider source;
+    private readonly float[] buffer;
+    private int position;
+    private readonly float feedback;
+
+    public DelaySampleProvider(ISampleProvider source, int delayMs, float feedback = 0.4f)
+    {
+        this.source = source;
+        this.feedback = feedback;
+
+        int samples = source.WaveFormat.SampleRate * delayMs / 1000 * source.WaveFormat.Channels;
+        buffer = new float[samples];
+    }
+
+    public WaveFormat WaveFormat => source.WaveFormat;
+
+    public int Read(float[] dest, int offset, int count)
+    {
+        int read = source.Read(dest, offset, count);
+
+        for (int n = 0; n < read; n++)
+        {
+            float delayed = buffer[position];
+            float input = dest[offset + n];
+
+            dest[offset + n] = input + delayed;
+            buffer[position] = input + delayed * feedback;
+
+            position++;
+            if (position >= buffer.Length) position = 0;
+        }
+
+        return read;
+    }
+}
+
+class DistortionSampleProvider : ISampleProvider
+{
+    private readonly ISampleProvider source;
+    private readonly float gain;
+
+    public DistortionSampleProvider(ISampleProvider source, float gain = 5f)
+    {
+        this.source = source;
+        this.gain = gain;
+    }
+
+    public WaveFormat WaveFormat => source.WaveFormat;
+
+    public int Read(float[] buffer, int offset, int count)
+    {
+        int read = source.Read(buffer, offset, count);
+
+        for (int i = 0; i < read; i++)
+        {
+            float sample = buffer[offset + i] * gain;
+            buffer[offset + i] = MathF.Tanh(sample);
+        }
+
+        return read;
+    }
+}
