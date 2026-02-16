@@ -135,15 +135,15 @@ namespace ToltoonTTS2.Services.TTS
             Random rand = new Random();
             //робовойс_тест
             ISampleProvider chain = reader.ToSampleProvider();
-            if (rand.Next(0, 10) > 8)
-                chain = new VibratoSampleProvider(chain, 6f, 15f);
+            //if (rand.Next(0, 10) > 6)
+            //    chain = new VibratoSampleProvider(chain, rand.Next(0,10), rand.Next(10, 15));
             //chain = new RobotSampleProvider(chain, 30f);
-            if (rand.Next(0, 10) > 9)
-                chain = new DistortionSampleProvider(chain, 50f);
-            float gain = CalculateNormalizationGain(sampleProvider);
+            //if (rand.Next(0, 100) > 95)
+            //    chain = new DistortionSampleProvider(chain, rand.Next(3,8));
+            //float gain = CalculateNormalizationGain(sampleProvider);
             chain = new VolumeSampleProvider(chain)
             {
-                Volume = gain
+                //Volume = gain + 5
             };
             
             // Нормализация
