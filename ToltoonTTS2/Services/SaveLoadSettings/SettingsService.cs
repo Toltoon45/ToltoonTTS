@@ -22,7 +22,7 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
                 RemoveEmoji = Settings.Default.RemoveEmoji,
                 SelectedVoice = Settings.Default.InstalledVoiceSelect,
                 TtsSpeedValue = Settings.Default.TtsSpeedValue,
-                TtsVolumeValue = Settings.Default.TtsVolumeValue,
+                TtsVolumeValue = Settings.Default.TtsVolumeValue == 0 ? 50 : Settings.Default.TtsVolumeValue,
                 TtsForChannelPoints = Settings.Default.TtsForChannelPoints,
                 NameOfRewardTtsForChannelPoints = Settings.Default.NameOfRewardTtsForChannelPoints,
                 DoNotTtsIfStartWith = Settings.Default.TextBoxDoNotTtsIfStartWith,

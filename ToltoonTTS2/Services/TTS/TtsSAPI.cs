@@ -130,29 +130,36 @@ namespace ToltoonTTS2.Services.TTS
             }
 
             var reader = new WaveFileReader(ready.Wav);
-            string msg = ready.Original.Text;
-            var sampleProvider = reader.ToSampleProvider();
-            Random rand = new Random();
-            //робовойс_тест
+
+            // 1. Создаём провайдер для анализа
+            var analysisProvider = reader.ToSampleProvider();
+
+            // 2. Считаем RMS
+            float gain = VibratoSampleProvider.CalculateRmsNormalizationGain(analysisProvider);
+
+            // 3. Перематываем поток
+            reader.Position = 0;
+
+            // 4. Создаём основной провайдер
             ISampleProvider chain = reader.ToSampleProvider();
-            //if (rand.Next(0, 10) > 6)
-            //    chain = new VibratoSampleProvider(chain, rand.Next(0,10), rand.Next(10, 15));
-            //chain = new RobotSampleProvider(chain, 30f);
-            //if (rand.Next(0, 100) > 95)
-            //    chain = new DistortionSampleProvider(chain, rand.Next(3,8));
-            //float gain = CalculateNormalizationGain(sampleProvider);
+
+            Random rand = new Random();
+
+            //if (rand.Next(0, 10) > 9)
+            //    chain = new VibratoSampleProvider(chain, rand.Next(0, 10), rand.Next(10, 15));
+
+            //if (rand.Next(0, 10) > 9)
+            //    chain = new RobotSampleProvider(chain, 30f);
+            //if (rand.Next(0, 20) > 15)
+            //    chain = new DistortionSampleProvider(chain, rand.Next(3, 8));
+
+            // 5. Применяем нормализацию
             chain = new VolumeSampleProvider(chain)
             {
-                //Volume = gain + 5
+                //Volume = gain
             };
-            
-            // Нормализация
 
-            reader.Position = 0;
-            sampleProvider = reader.ToSampleProvider();
-            
-            //var effect = panning
-
+            // 6. Воспроизведение
             _waveOut = new WaveOutEvent();
             _waveOut.Init(chain);
 
@@ -163,11 +170,12 @@ namespace ToltoonTTS2.Services.TTS
                 _waveOut.Dispose();
                 _waveOut = null;
 
-                PlayNext(); // без паузы
+                PlayNext();
             };
 
             _waveOut.Play();
         }
+
 
         public void SetVoice(string voiceName)
         {
@@ -222,25 +230,6 @@ namespace ToltoonTTS2.Services.TTS
         public void SetDynamicSpeed(IEnumerable<int> settings)
         {
             _dynamicSpeedSettings = settings;
-        }
-
-        public static float CalculateNormalizationGain(ISampleProvider provider, float targetPeak = 0.99f)
-        {
-            float max = 0f;
-            float[] buffer = new float[4096];
-            int read;
-
-            while ((read = provider.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                for (int i = 0; i < read; i++)
-                {
-                    float abs = Math.Abs(buffer[i]);
-                    if (abs > max)
-                        max = abs;
-                }
-            }
-
-            return max == 0 ? 1f : targetPeak / max;
         }
     }
 

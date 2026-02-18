@@ -12,6 +12,15 @@ namespace ToltoonTTS2.ViewModels
             VipChecked = Properties.Settings.Default.VipChecked;
             AllChecked = Properties.Settings.Default.AllChecked;
             SubscriberlChecked = Properties.Settings.Default.SubscriberlChecked;
+
+            if (!StreamerChecked &&
+            !ModeratorChecked &&
+            !VipChecked &&
+            !AllChecked &&
+            !SubscriberlChecked)
+            {
+                AllChecked = true;
+            }
         }
 
 

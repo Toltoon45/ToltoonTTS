@@ -69,7 +69,7 @@ namespace ToltoonTTS2.Services.TTS
 
 
                 binding = db.Table<PlatformsIndividualVoices>().FirstOrDefault(x => x.UserName == username);
-                if (binding == null)
+                if (binding == null && _individualVoicesEnabled == true)
                 {
                     var enabledVoiceList = _LoadIndividualVoicesSettings.Table<VoiceItem>()
                               .Where(v => v.IsEnabled )

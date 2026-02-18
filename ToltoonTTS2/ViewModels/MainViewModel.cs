@@ -439,13 +439,13 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
                     _websocketService = new WebsocketHostedService(logger, websocketClient, TwitchApi, TwitchClientId, twitchId, TtsForChannelPoints, NameOfRewardTtsForChannelPoints); //передавай все параметры для подключения);
                     _ = _websocketService.StartAsync(CancellationToken.None);
-                    _websocketService.RewardRedeemed += (s, e) =>
-                    {
-                        var result = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "twitchPoints");
+                    //_websocketService.RewardRedeemed += (s, e) =>
+                    //{
+                    //    var result = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "twitchPoints");
 
-                        if (result != null && !string.IsNullOrEmpty(result.Text))
-                            _ttsService.Speak(result); //добавить отдельные голоса и один 
-                    };
+                    //    if (result != null && !string.IsNullOrEmpty(result.Text))
+                    //        _ttsService.Speak(result); //добавить отдельные голоса и один 
+                    //};
                 }
 
 

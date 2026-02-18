@@ -23,6 +23,42 @@ class VibratoSampleProvider : ISampleProvider
 
     public WaveFormat WaveFormat => source.WaveFormat;
 
+    public static float CalculateRmsNormalizationGain(ISampleProvider provider, float targetRms = 0.15f)
+    {
+        double sumSquares = 0.0;
+        long totalSamples = 0;
+
+        float[] buffer = new float[4096];
+        int read;
+
+        while ((read = provider.Read(buffer, 0, buffer.Length)) > 0)
+        {
+            for (int i = 0; i < read; i++)
+            {
+                float s = buffer[i];
+                sumSquares += s * s;
+            }
+            totalSamples += read;
+        }
+
+        if (totalSamples == 0)
+            return 1f;
+
+        double rms = Math.Sqrt(sumSquares / totalSamples);
+
+        if (rms <= 0.000001)
+            return 1f;
+
+        float gain = (float)(targetRms / rms);
+
+        // ограничение, чтобы не усиливать слишком сильно
+        if (gain > 10f)
+            gain = 10f;
+
+        return gain;
+    }
+
+
     public int Read(float[] buffer, int offset, int count)
     {
         int read = source.Read(buffer, offset, count);
