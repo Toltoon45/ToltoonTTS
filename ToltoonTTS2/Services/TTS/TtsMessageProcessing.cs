@@ -63,6 +63,7 @@ namespace ToltoonTTS2.Services.TTS
                 {
                     "goodgame" => _LoadIndividualVoicesGoodGameDb,
                     "twitch" => _LoadIndividualVoicesTwitchDb,
+                    "twitchpoints" => _LoadIndividualVoicesTwitchDb,
                     "vk" => _LoadIndividualVoicesVkDb,
                     _ => throw new ArgumentException($"Unknown platform: {platform}")
                 };

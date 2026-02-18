@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Speech.Synthesis;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using ToltoonTTS2.Services.BlackList;
 using ToltoonTTS2.Services.EnsureFolderAndFileExist;
 using ToltoonTTS2.Services.Goodgame.Connection;
@@ -368,16 +369,16 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
         private void OnTwitchMessageReceived(object sender, OnMessageReceivedArgs e)
         {
+            if (_ttsForChannelPoints)
+            {
+                if (!e.ChatMessage.IsHighlighted)
+                    return;
+            }
             var msg = e.ChatMessage;
 
             // Обрабатываем сообщение
             var result = _messageProcessing.ProcessIncomingMessage(msg.Username, msg.Message, "twitch");
 
-            if (_ttsForChannelPoints)
-            {
-                if (!msg.IsHighlighted)
-                    return;
-            }
             if (result != null)
                 _ttsService.Speak(result);
         }
@@ -424,6 +425,13 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
         private async Task ConnectToStreamingChats()
         {
+            if (string.IsNullOrWhiteSpace(SelectedVoice))
+            {
+                using var synth = new SpeechSynthesizer();
+                SelectedVoice = synth.GetInstalledVoices()
+                                     .FirstOrDefault()?
+                                     .VoiceInfo.Name;
+            }
             if (ConnectToTwitch)
             {
                 //ID канала нужен для подключения к вебсокету.
@@ -438,14 +446,13 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                     var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<WebsocketHostedService>();
 
                     _websocketService = new WebsocketHostedService(logger, websocketClient, TwitchApi, TwitchClientId, twitchId, TtsForChannelPoints, NameOfRewardTtsForChannelPoints); //передавай все параметры для подключения);
-                    _ = _websocketService.StartAsync(CancellationToken.None);
-                    //_websocketService.RewardRedeemed += (s, e) =>
-                    //{
-                    //    var result = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "twitchPoints");
+                    _ = Task.Run(() => _websocketService.StartAsync(CancellationToken.None)); _websocketService.RewardRedeemed += (s, e) =>
+                    {
+                        var result = _messageProcessing.ProcessIncomingMessage(e.UserName, e.Message, "twitchPoints");
 
-                    //    if (result != null && !string.IsNullOrEmpty(result.Text))
-                    //        _ttsService.Speak(result); //добавить отдельные голоса и один 
-                    //};
+                        if (result != null && !string.IsNullOrEmpty(result.Text))
+                            _ttsService.Speak(result); //добавить отдельные голоса и один 
+                    };
                 }
 
 
@@ -501,7 +508,6 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         {
             get => _twitchApi;
             set { _twitchApi = value; OnPropertyChanged();
-                if (_websocketService != null) ;
             }
         }
 
@@ -509,7 +515,6 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         {
             get => _twitchClientId;
             set { _twitchClientId = value; OnPropertyChanged();
-                if (_websocketService != null) ;
             }
         }
 

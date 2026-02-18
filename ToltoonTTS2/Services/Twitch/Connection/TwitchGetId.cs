@@ -22,11 +22,11 @@ namespace ToltoonTTS2.Services.Twitch.Connection
 
             string responseBody = await response.Content.ReadAsStringAsync();
             dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(responseBody);
-            if (data?.data?[0]?.id == null)
+            if (data?.data?[0]?.id != null)
             {
             _userId = data?.data?[0]?.id;
-            throw new Exception("Перепроверь ACCESS TOKEN и CLIENT ID");
             }
+            else throw new Exception("Перепроверь ACCESS TOKEN и CLIENT ID");
             return _userId;
         }
     }

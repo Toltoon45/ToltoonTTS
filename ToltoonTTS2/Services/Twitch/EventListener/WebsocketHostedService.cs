@@ -34,6 +34,7 @@ namespace TwitchLib.EventSub.Websockets.Example
             _eventSubWebsocketClient = eventSubWebsocketClient ?? throw new ArgumentNullException(nameof(eventSubWebsocketClient));
             _eventSubWebsocketClient.WebsocketDisconnected += OnWebsocketDisconnected;
             _eventSubWebsocketClient.WebsocketReconnected += OnWebsocketReconnected;
+            _eventSubWebsocketClient.WebsocketConnected += OnWebsocketConnected;
             _eventSubWebsocketClient.ChannelPointsCustomRewardRedemptionAdd += OnChannelPointsRedemption;
 
             _eventSubWebsocketClient.UnknownEventSubNotification += OnUnknownEventSubNotification;
@@ -41,6 +42,25 @@ namespace TwitchLib.EventSub.Websockets.Example
 
         public WebsocketHostedService()
         {
+        }
+
+        private async Task OnWebsocketConnected(object sender, WebsocketConnectedArgs e)
+        {
+            _logger.LogInformation($"WebSocket connected. Session ID: {_eventSubWebsocketClient.SessionId}");
+            if (!e.IsRequestedReconnect)
+            {
+                _logger.LogInformation("Creating EventSub subscription for channel points...");
+                var condition = new Dictionary<string,
+                    string>
+            {
+                {
+                    "broadcaster_user_id",
+                    _userId
+                }
+            };
+                await _twitchApi.Helix.EventSub.CreateEventSubSubscriptionAsync("channel.channel_points_custom_reward_redemption.add", "1", condition, TwitchLib.Api.Core.Enums.EventSubTransportMethod.Websocket, _eventSubWebsocketClient.SessionId);
+                _logger.LogInformation("Subscription created successfully.");
+            }
         }
 
         private async Task OnChannelPointsRedemption(object? sender, ChannelPointsCustomRewardRedemptionArgs e)
