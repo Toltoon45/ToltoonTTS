@@ -1,4 +1,5 @@
-﻿using PiperSharp;
+﻿using NickBuhro.Translit;
+using PiperSharp;
 using PiperSharp.Models;
 using System.Globalization;
 using System.IO;
@@ -32,11 +33,15 @@ namespace ToltoonTTS2.Services.TTS
             catch { return false; }
         }
 
-        public static async Task<MemoryStream> GenerateVoice(string voiceName, string text, float voiceSpeed)
+        public static async Task<MemoryStream> GenerateVoice(string voiceName, string text, float voiceSpeed, bool translitToRussian)
         {
             try
             {
                 text = CleanForTts(text);
+                if (translitToRussian)
+                {
+                    text = Transliteration.LatinToCyrillic(text);
+                }
                 var cwd = Directory.GetCurrentDirectory();
                 var model = await VoiceModel.LoadModelByKey(voiceName);
                 // чтобы избежать кэширования одинаковых запросов
@@ -45,7 +50,7 @@ namespace ToltoonTTS2.Services.TTS
                     ExecutableLocation = Path.Join(cwd, "piper", "piper.exe"),
                     WorkingDirectory = Path.Join(cwd, "piper"),
                     Model = model,
-                    SpeakingRate = 1 - voiceSpeed / 10
+                    SpeakingRate = 1 - voiceSpeed / 10 //войс спид 0 почему-то всегда
                 });
 
                 byte[] wavBytes = await piperModel.InferAsync(

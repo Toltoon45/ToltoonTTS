@@ -74,6 +74,10 @@
               "target": "Package",
               "version": "[13.0.4, )"
             },
+            "NickBuhro.Translit": {
+              "target": "Package",
+              "version": "[1.4.5, )"
+            },
             "PiperSharp": {
               "target": "Package",
               "version": "[1.0.6, )"

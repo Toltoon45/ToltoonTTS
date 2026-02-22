@@ -94,6 +94,7 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         private string _vkConnectionStatus;
         private string _nameToSaveProfile;
         private string _nameToLoadProfile;
+        private bool _translitToRussian;
         private ObservableCollection<string> _allProfiles;
         private TwitchConnectionState _twitchConnectionState;
         private GoodgameConnectionState _goodgameConnectionState;
@@ -710,6 +711,16 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             set
             {
                 _nameToSaveProfile = value; OnPropertyChanged();
+            }
+        }
+
+        public bool TranslitToRussian
+        {
+            get => _translitToRussian;
+            set
+            {
+                _translitToRussian = value; OnPropertyChanged();
+                //TtsSAPI добавить ттсапи в DI для нормальной передачи флага
             }
         }
 

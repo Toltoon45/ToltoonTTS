@@ -35,7 +35,7 @@ namespace ToltoonTTS2.Services.VK
         {
             MessageReceived?.Invoke(this, e);
         }
-
+        
         public async Task Connection(string channelNick, string VkSecretApi, string VkAppId)
         {
             UpdateState(VkConnectionState.Connecting);

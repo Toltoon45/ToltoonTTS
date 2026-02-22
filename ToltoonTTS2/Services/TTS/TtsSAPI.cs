@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using NickBuhro.Translit;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Speech.Synthesis;
@@ -16,6 +17,8 @@ namespace ToltoonTTS2.Services.TTS
 
         private bool _isPlaying = false;
         private readonly object _lock = new object();
+
+        private bool _translitToRussian = true;
 
         private IEnumerable<int> _dynamicSpeedSettings;
 
@@ -88,7 +91,8 @@ namespace ToltoonTTS2.Services.TTS
                 wav = await PiperSharpTTS.GenerateVoice(
                     msg.VoiceName,
                     text,
-                    msg.VoiceSpeed
+                    msg.VoiceSpeed,
+                    _translitToRussian
                 );
             }
 
@@ -230,6 +234,11 @@ namespace ToltoonTTS2.Services.TTS
         public void SetDynamicSpeed(IEnumerable<int> settings)
         {
             _dynamicSpeedSettings = settings;
+        }
+
+        public void SetTranslitVoiceToRussian(bool v)
+        {
+            _translitToRussian = v;
         }
     }
 
