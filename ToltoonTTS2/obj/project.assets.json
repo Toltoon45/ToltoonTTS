@@ -865,6 +865,19 @@
           }
         }
       },
+      "NHunspell/1.2.5554.16953": {
+        "type": "package",
+        "compile": {
+          "lib/net/NHunspell.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net/NHunspell.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
       "NickBuhro.Translit/1.4.5": {
         "type": "package",
         "dependencies": {
@@ -879,6 +892,15 @@
           "lib/netstandard1.3/NickBuhro.Translit.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "Nut/3.4.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Nut.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Nut.dll": {}
         }
       },
       "PiperSharp/1.0.6": {
@@ -4100,6 +4122,23 @@
         "packageIcon.png"
       ]
     },
+    "NHunspell/1.2.5554.16953": {
+      "sha512": "B2tr5kfwHu0jan5Gd3JEWdJkDVJxGAXmA230y0XeqJcL4zdZWk8Bmw9LVQ3p9/qKuun/7+FemxjspbjcTLGp6g==",
+      "type": "package",
+      "path": "nhunspell/1.2.5554.16953",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Tools/install.ps1",
+        "content/Hunspellx64.dll",
+        "content/Hunspellx86.dll",
+        "lib/net/NHunspell.dll",
+        "lib/net/NHunspell.pdb",
+        "nhunspell.1.2.5554.16953.nupkg.sha512",
+        "nhunspell.nuspec"
+      ]
+    },
     "NickBuhro.Translit/1.4.5": {
       "sha512": "C4Hy1hXOvmisfjsHdFIFCqrqT4y8wrn7UUHATDVNGQhDMg2StIVHr7SJ17yE6z1TjYjZnv1iYeoahzwN3FdtYg==",
       "type": "package",
@@ -4119,6 +4158,19 @@
         "lib/netstandard1.3/NickBuhro.Translit.xml",
         "nickbuhro.translit.1.4.5.nupkg.sha512",
         "nickbuhro.translit.nuspec"
+      ]
+    },
+    "Nut/3.4.1": {
+      "sha512": "Peb8YBdtVt4x1ECnLplp0FL5zq59jbBAWaHPPdtTyxHrBnj7WnV3sEev8wIMBZN6KxAbYM/9id76iLxtjv/Wfg==",
+      "type": "package",
+      "path": "nut/3.4.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/netstandard2.0/Nut.dll",
+        "nut.3.4.1.nupkg.sha512",
+        "nut.nuspec"
       ]
     },
     "PiperSharp/1.0.6": {
@@ -9381,8 +9433,10 @@
       "Microsoft.Data.Sqlite.Core >= 10.0.1",
       "Microsoft.Extensions.Hosting >= 10.0.1",
       "NAudio >= 2.2.1",
+      "NHunspell >= 1.2.5554.16953",
       "Newtonsoft.Json >= 13.0.4",
       "NickBuhro.Translit >= 1.4.5",
+      "Nut >= 3.4.1",
       "PiperSharp >= 1.0.6",
       "SQLitePCLRaw.bundle_e_sqlite3 >= 3.0.2",
       "SocketIOClient >= 4.0.0.2",
@@ -9463,6 +9517,10 @@
             "target": "Package",
             "version": "[2.2.1, )"
           },
+          "NHunspell": {
+            "target": "Package",
+            "version": "[1.2.5554.16953, )"
+          },
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.4, )"
@@ -9470,6 +9528,10 @@
           "NickBuhro.Translit": {
             "target": "Package",
             "version": "[1.4.5, )"
+          },
+          "Nut": {
+            "target": "Package",
+            "version": "[3.4.1, )"
           },
           "PiperSharp": {
             "target": "Package",
@@ -9534,6 +9596,16 @@
       "warningLevel": 1,
       "message": "Package 'CSCore 1.2.1.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "CSCore",
+      "targetGraphs": [
+        "net9.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'NHunspell 1.2.5554.16953' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "NHunspell",
       "targetGraphs": [
         "net9.0-windows7.0"
       ]
