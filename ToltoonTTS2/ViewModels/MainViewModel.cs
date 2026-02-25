@@ -98,7 +98,7 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         private ObservableCollection<string> _allProfiles;
         private TwitchConnectionState _twitchConnectionState;
         private GoodgameConnectionState _goodgameConnectionState;
-        private GoodgameConnectionState _youtubeConnectionState; //я сделаю сюда ютуб
+        private YoutubeConnectionState _youtubeConnectionState; //я сделаю сюда ютуб
         private VkConnectionState _vkConnectionState;
         private IndividualVoicesWindow IndividualVoicesWin;
         private bool _individualVoicesEnabled;
@@ -402,6 +402,17 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             }
         }
 
+        public YoutubeConnectionState YoutubeConnectionState
+        {
+            get => _youtubeConnectionState;
+            set
+            {
+                _youtubeConnectionState = value;
+                OnPropertyChanged();
+                YoutubeConnectionStatus = $"Ютуб: {value}";
+            }
+        }
+
         public GoodgameConnectionState GoodgameConnectionState
         {
             get => _goodgameConnectionState;
@@ -462,6 +473,11 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
             if (ConnectToYoutube)
             {
+                _youtubeConnectionToChat.ConnectionStateChanged += (s, state) =>
+                {
+                    YoutubeConnectionState = state;
+                };
+
                 await _youtubeConnectionToChat.Connect(YoutubeId, YoutubeConnectionStatus);
             }
             if (ConnectToGoodgame)

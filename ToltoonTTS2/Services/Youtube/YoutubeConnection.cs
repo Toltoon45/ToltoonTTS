@@ -1,12 +1,25 @@
 ﻿using System.Windows.Forms;
+using ToltoonTTS2.Services.VK;
 using YoutubeLiveChatSharp;
 
 namespace ToltoonTTS2.Services.Youtube
 {
+    public enum YoutubeConnectionState
+    {
+        Disconnected,
+        Connecting,
+        Connected,
+        Failed
+    }
+
 
     public class YoutubeConnection : IYoutubeConnection
     {
         private static CancellationTokenSource _cts;
+
+        public YoutubeConnectionState CurrentState { get; private set; }
+
+        public event EventHandler<YoutubeConnectionState> ConnectionStateChanged;
 
         public event EventHandler<YoutubeMessageEventArgs> MessageReceived;
 
@@ -21,14 +34,14 @@ namespace ToltoonTTS2.Services.Youtube
 
             if (string.IsNullOrEmpty(streamId))
             {
-                connectionStatus = "Youtube Failed";
+                UpdateState(YoutubeConnectionState.Failed);
                 return Task.CompletedTask;
             }
 
-            connectionStatus = "Youtube Connecting...";
+            UpdateState(YoutubeConnectionState.Connecting);
 
             _ = Task.Run(() => ListenLoop(streamId, _cts.Token));
-
+            UpdateState(YoutubeConnectionState.Connected);
             return Task.CompletedTask;
         }
 
@@ -53,9 +66,8 @@ namespace ToltoonTTS2.Services.Youtube
                             });
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        Console.WriteLine($"Ошибка: {ex.Message}");
                     }
 
                     await Task.Delay(1000, token);
@@ -69,6 +81,15 @@ namespace ToltoonTTS2.Services.Youtube
         internal static void StopYoutubeConnect()
         {
             _cts?.Cancel();
+        }
+
+        private void UpdateState(YoutubeConnectionState newState)
+        {
+            if (CurrentState != newState)
+            {
+                CurrentState = newState;
+                ConnectionStateChanged?.Invoke(this, newState);
+            }
         }
 
     }

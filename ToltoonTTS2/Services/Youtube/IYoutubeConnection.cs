@@ -4,5 +4,6 @@
     {
         Task Connect(string streamId, string connectionStatus);
         event EventHandler<YoutubeMessageEventArgs> MessageReceived;
+        event EventHandler<YoutubeConnectionState> ConnectionStateChanged;
     }
 }
