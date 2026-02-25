@@ -23,15 +23,17 @@ namespace ToltoonTTS2.Services.TTS
         private int _standartVoiceVolume;
         private int _standartVoiceSpeed;
 
+        private SQLiteConnection _LoadIndividualVoicesSettings;
         private SQLiteConnection _LoadIndividualVoicesTwitchDb;
         private SQLiteConnection _LoadIndividualVoicesGoodGameDb;
+        private SQLiteConnection __LoadIndividualVoicesYoutubeDb;
         private SQLiteConnection _LoadIndividualVoicesVkDb;
-        private SQLiteConnection _LoadIndividualVoicesSettings;
 
         public void SetDatabase(SQLiteConnection TwitchIndividualVoicesDb, SQLiteConnection IndividualVoicesSettingsDb, SQLiteConnection GoodgameIndividualVoicesDb, SQLiteConnection VkIndividualVoicesDb)
         {
-            _LoadIndividualVoicesTwitchDb = TwitchIndividualVoicesDb;
             _LoadIndividualVoicesSettings = IndividualVoicesSettingsDb;
+            _LoadIndividualVoicesTwitchDb = TwitchIndividualVoicesDb;
+            //_LoadIndividualVoicesYoutubeDb = null;
             _LoadIndividualVoicesGoodGameDb = GoodgameIndividualVoicesDb;
             _LoadIndividualVoicesVkDb = VkIndividualVoicesDb;
         }
@@ -57,19 +59,21 @@ namespace ToltoonTTS2.Services.TTS
                 return null;
             PlatformsIndividualVoices binding = null;
 
-            if (_individualVoicesEnabled || platform != "youtube")
+            if (_individualVoicesEnabled && platform != "youtube")
             {
                 var db = platform.ToLower() switch
                 {
                     "goodgame" => _LoadIndividualVoicesGoodGameDb,
                     "twitch" => _LoadIndividualVoicesTwitchDb,
-                    "twitchpoints" => _LoadIndividualVoicesTwitchDb,
                     "vk" => _LoadIndividualVoicesVkDb,
+                    //"youtube" => null, для индив. голосов на будущее
                     _ => throw new ArgumentException($"Unknown platform: {platform}")
                 };
 
+                if (platform != "youtube")
+                {
 
-                binding = db.Table<PlatformsIndividualVoices>().FirstOrDefault(x => x.UserName == username);
+                    binding = db.Table<PlatformsIndividualVoices>().FirstOrDefault(x => x.UserName == username);
                 if (binding == null && _individualVoicesEnabled == true)
                 {
                     var enabledVoiceList = _LoadIndividualVoicesSettings.Table<VoiceItem>()
@@ -88,6 +92,7 @@ namespace ToltoonTTS2.Services.TTS
                         VoiceName = selectedVoice.VoiceName
                     };
                     db.Insert(binding);
+                }
                 }
                 
             }
@@ -138,7 +143,7 @@ namespace ToltoonTTS2.Services.TTS
             var voiceSettings = _LoadIndividualVoicesSettings.Table<VoiceItem>()
     .FirstOrDefault(v => v.VoiceName == voiceName);
 
-            if (_individualVoicesEnabled)
+            if (_individualVoicesEnabled && platform != "youtube")
             {
                 return new ProcessedTtsMessage
                 {

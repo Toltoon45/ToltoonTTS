@@ -42,7 +42,7 @@
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10" ToolTip="Твич отключил PubSub, эта функция недоступна" >
                                             <TextBox Text="{Binding TwitchClientId, UpdateSourceTrigger=PropertyChanged}" ToolTip="Твич отключил PubSub, эта функция недоступна" 
-                                                 Margin="10,0,0,0" MaxHeight="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="50"/> 
+                                                 Margin="10,0,0,0" MaxHeight="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="50"/>
                                             <Label x:Name="labelClientID" HorizontalAlignment="Left" VerticalAlignment="Center">
                                                 <Hyperlink>Client ID</Hyperlink>
                                             </Label>
@@ -88,13 +88,13 @@
                         </Grid>
                         <Grid>
                             <StackPanel HorizontalAlignment="Left">
-                            <Label Content="Вконтакте" HorizontalAlignment="Center" />
-                            <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="190">
-                                <StackPanel x:Name="StackVkConnection" Orientation="Vertical" Margin="10,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
+                                <Label Content="Вконтакте" HorizontalAlignment="Center" />
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="5" Width="190">
+                                    <StackPanel x:Name="StackVkConnection" Orientation="Vertical" Margin="10,0,0,0">
+                                        <StackPanel Orientation="Horizontal">
                                             <TextBox Text="{Binding VkLogin, UpdateSourceTrigger=PropertyChanged}" x:Name="TextBoxVkLogin" Width="50" MaxHeight="20" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                        <Label x:Name="LabelVkLogin" Content="Куда подключаться"></Label>
-                                    </StackPanel>
+                                            <Label x:Name="LabelVkLogin" Content="Куда подключаться"></Label>
+                                        </StackPanel>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBox Text="{Binding VkAppId, UpdateSourceTrigger=PropertyChanged}" x:Name="TextBoxVkAppId" Width="50" MaxHeight="20" Margin="0,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                             <Label x:Name="LabelVkAppId" Content="App Id"></Label>
@@ -105,8 +105,8 @@
                                         </StackPanel>
                                         <CheckBox x:Name="CheckBoxConnectToVk" IsChecked="{Binding ConnectToVk, UpdateSourceTrigger=PropertyChanged}"
               Content="Подключаться (трогай)" Margin="0,5,0,10"/>
-                                </StackPanel>
-                            </Border>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </Grid>
 
@@ -157,21 +157,21 @@
                                         <ComboBox Width="100" Height="20" VerticalAlignment="Top" Margin="0,5,0,0" SelectedItem="{Binding PiperVoiceName, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InstalledPiperVoice}" AutomationProperties.Name="ComboBoxInstallPiperVoice"></ComboBox>
                                     </StackPanel>
                                     <StackPanel>
-                                            <Button x:Name="ButtonDownloadPiperVoice" Content="Скачать"  VerticalAlignment="Center" Margin="0,5,5,0"
+                                        <Button x:Name="ButtonDownloadPiperVoice" Content="Скачать"  VerticalAlignment="Center" Margin="0,5,5,0"
                                                 Command="{Binding InstallPiperVoice}" Width="50"></Button>
-                                        </StackPanel>
-                                    
+                                    </StackPanel>
+
                                     <Border Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1" Height="2" Width="220" Margin="0,5,0,0"></Border>
 
                                     <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
-                                            <Button HorizontalAlignment="Left" Width="50" Content="Удалить" Margin="5,0,5,0" VerticalAlignment="Center"
+                                        <Button HorizontalAlignment="Left" Width="50" Content="Удалить" Margin="5,0,5,0" VerticalAlignment="Center"
                                                 Command="{Binding DeletePiperVoice}"></Button>
-                                            <ListBox Name="ListBoxPiperSelectedVoice" Width="150" Height="100" Margin="0,0,0,5"
+                                        <ListBox Name="ListBoxPiperSelectedVoice" Width="150" Height="100" Margin="0,0,0,5"
                                                      ItemsSource="{Binding ListBoxPiperVoiceInstalledVoices, UpdateSourceTrigger=PropertyChanged}"
                                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                                      SelectedItem="{Binding PiperSelectedVoice, UpdateSourceTrigger=PropertyChanged}"></ListBox>
-                                        </StackPanel>
                                     </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                         <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Width="430" Height="82" HorizontalAlignment="Left">
@@ -261,7 +261,7 @@
                                 <Button x:Name="ButtonIndividualVoicesVk" Content="Голоса ВКонтакте" Margin="10,10,0,10"
                                         Command="{Binding OpenIndividualVoicesVkWindow}"></Button>
                             </StackPanel>
-                                <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить индивидуальные голоса"
+                            <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить индивидуальные голоса"
                           IsChecked="{Binding IndividualVoicesEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,0,10"/>
                             <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
                                 <!-- Закомментированная часть -->
@@ -413,76 +413,76 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Margin="0,5,0,0">
-                            <Grid Margin="10">
+                                <Grid Margin="10">
 
-                                <!-- 2 колонки: слева настройки, справа TextBox -->
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="20"/>
-                                    <!-- отступ -->
-                                    <ColumnDefinition Width="220"/>
-                                </Grid.ColumnDefinitions>
+                                    <!-- 2 колонки: слева настройки, справа TextBox -->
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <!-- отступ -->
+                                        <ColumnDefinition Width="220"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <!-- ================= Левая часть ================= -->
-                                <StackPanel Grid.Column="0">
+                                    <!-- ================= Левая часть ================= -->
+                                    <StackPanel Grid.Column="0">
 
-                                    <!-- Выбор голоса -->
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                        <ComboBox x:Name="comboBoxInstalledVoicesForSingleSpeech"
+                                        <!-- Выбор голоса -->
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <ComboBox x:Name="comboBoxInstalledVoicesForSingleSpeech"
                       SelectedItem="{Binding SelectedVoice, UpdateSourceTrigger=PropertyChanged}"
                       ItemsSource="{Binding AvailableVoices}" 
                       Width="150"/>
 
-                                        <Label Content="Голос" Margin="10,0,0,0"/>
-                                    </StackPanel>
+                                            <Label Content="Голос" Margin="10,0,0,0"/>
+                                        </StackPanel>
 
-                                    <!-- Скорость -->
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                        <Slider x:Name="sliderTtsSpeedValueForSingleSpeech"
+                                        <!-- Скорость -->
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <Slider x:Name="sliderTtsSpeedValueForSingleSpeech"
                     Value="{Binding TtsSpeedValue, UpdateSourceTrigger=PropertyChanged}"
                     IsSnapToTickEnabled="True"
                     Minimum="-10"
                     Width="120"/>
 
-                                        <Label Content="{Binding LabelTtsSpeed}"
+                                            <Label Content="{Binding LabelTtsSpeed}"
                    Margin="10,0,0,0"/>
 
-                                        <Label Content="Скорость"
+                                            <Label Content="Скорость"
                    Margin="10,0,0,0"/>
-                                    </StackPanel>
+                                        </StackPanel>
 
-                                    <!-- Громкость -->
-                                    <StackPanel Orientation="Horizontal">
-                                        <Slider x:Name="sliderTtsVolumeValueForSingleSpeech"
+                                        <!-- Громкость -->
+                                        <StackPanel Orientation="Horizontal">
+                                            <Slider x:Name="sliderTtsVolumeValueForSingleSpeech"
                     Value="{Binding TtsVolumeValue, UpdateSourceTrigger=PropertyChanged}"
                     IsSnapToTickEnabled="True"
                     Minimum="-10"
                     Width="120"/>
 
-                                        <Label Content="{Binding LabelTtsVolume}"
+                                            <Label Content="{Binding LabelTtsVolume}"
                    Margin="10,0,0,0"/>
 
-                                        <Label Content="Громкость"
+                                            <Label Content="Громкость"
                    Margin="10,0,0,0"/>
-                                    </StackPanel>
+                                        </StackPanel>
                                         <StackPanel Orientation="Horizontal">
                                             <Button x:Name="buttonSpeechForSingleSpeech" Command="{Binding SpeechForSingleSpeech}" Content="Озвучить" Margin="0,0,0,5"></Button>
                                             <Button x:Name="buttonStopPlayingForSingleSpeech" Command="{Binding StopForSingleSpeech}" Content="Остановить озвучку" Margin="49,0,0,5"></Button>
                                         </StackPanel>
                                         <Button x:Name="buttonSaveWavForSingleSpeech" Command="{Binding SaveWavForSingleSpeech}" Content="Сохранить файликом в wav озвучку"></Button>
-                                    
-                                    
-                                </StackPanel>
 
-                                <!-- ================= Правая часть ================= -->
-                                <StackPanel Grid.Column="2">
-                                    <Label Content="Озвучивание сообщений"/>
-                                    <TextBox Width="200"
+
+                                    </StackPanel>
+
+                                    <!-- ================= Правая часть ================= -->
+                                    <StackPanel Grid.Column="2">
+                                        <Label Content="Озвучивание сообщений"/>
+                                        <TextBox Width="200"
                  Height="100"
                  VerticalAlignment="Top"/>
-                                </StackPanel>
+                                    </StackPanel>
 
-                            </Grid>
+                                </Grid>
                             </Border>
 
                         </Grid>
@@ -490,7 +490,7 @@
                 </TabItem>
             </TabControl>
             <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="510,0,0,0">
-                <Border HorizontalAlignment="Right">
+                <Border>
                     <StackPanel Orientation="Vertical">
                         <Label x:Name="LabelTwitchStatusMessage"
                    Content="{Binding TwitchConnectionStatus, UpdateSourceTrigger=PropertyChanged}" />
@@ -501,6 +501,9 @@
                         <Label x:Name="LabelVkStatusMessage"
                    Content="{Binding VkConnectionStatus, UpdateSourceTrigger=PropertyChanged}" />
 
+                        <Label x:Name="LabelYoutubeStatusMessage"
+                   Content="{Binding YoutubeConnectionStatus, UpdateSourceTrigger=PropertyChanged}" />
+
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                                 <Button x:Name="buttonConnect" Command="{Binding ConnectToChats}" Content="Connect" HorizontalAlignment="Left" Margin="10,10,0,0"/>
@@ -509,19 +512,19 @@
 
                             <StackPanel>
                                 <Button x:Name="ButtonOpenProgramData" Command="{Binding OpenDataDirectory}" Margin="10,10,10,0" Content="Файлы программы" Width="120" HorizontalAlignment="Left"/>
+
                             </StackPanel>
                         </StackPanel>
 
                         <Label x:Name="LabelVoiceErrorMessage"
                    Content="{Binding VoiceTestErrorMessage, FallbackValue='Ожидание'}"/>
-
                         <Label x:Name="LabelDownloadPiperVoiceStatus"
                    Content="{Binding VoicePiperDownload, FallbackValue=''}"/>
                     </StackPanel>
                 </Border>
             </Grid>
+                <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>
+                <Label x:Name="LabelProgramVersion" Content="1.2.3" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
         </Grid>
-        <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>
-        <Label x:Name="LabelProgramVersion" Content="1.2.3 preview x86" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
     </Grid>
 </Window>

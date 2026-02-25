@@ -84,7 +84,11 @@ namespace ToltoonTTS2.Services.TTS
                 int rate = (int)Math.Clamp(msg.VoiceSpeed + adjust, -10f, 10f);
                 SetRate(rate);
 
-                wav = GenerateSpeech(text);
+                wav = GenerateSpeech(
+    text,
+    msg.VoiceName,
+    volume,
+    rate);
             }
             else
             {
@@ -102,15 +106,22 @@ namespace ToltoonTTS2.Services.TTS
                 Original = msg
             };
         }
-
-        private MemoryStream GenerateSpeech(string text)
+        private MemoryStream GenerateSpeech(string text, string voice,
+                                             int volume, int rate)
         {
+            using var synth = new SpeechSynthesizer();
+
+            synth.SelectVoice(voice);
+            synth.Volume = volume;
+            synth.Rate = rate;
+
             var stream = new MemoryStream();
 
-            _synth.SetOutputToWaveStream(stream);
-            _synth.Speak(text);
+            synth.SetOutputToWaveStream(stream);
+            synth.Speak(text);
 
             stream.Position = 0;
+
             return stream;
         }
 

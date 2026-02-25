@@ -15,38 +15,42 @@ namespace ToltoonTTS2.Services.Youtube
             MessageReceived?.Invoke(this, e);
         }
 
-        public async Task Connect(string streamId, string connectionStatus)
+        public Task Connect(string streamId, string connectionStatus)
         {
             _cts = new CancellationTokenSource();
 
             if (string.IsNullOrEmpty(streamId))
             {
-                connectionStatus = "Youtube  Failed";
-                return;
+                connectionStatus = "Youtube Failed";
+                return Task.CompletedTask;
             }
-            //библиотека для получения сообщений чата выдаёт только comment.text, остальное всё "". Может потом переделаю
+
+            connectionStatus = "Youtube Connecting...";
+
+            _ = Task.Run(() => ListenLoop(streamId, _cts.Token));
+
+            return Task.CompletedTask;
+        }
+
+        private async Task ListenLoop(string streamId, CancellationToken token)
+        {
             try
             {
-                connectionStatus = "Youtube  Connecting...";
                 var chatFetch = new ChatFetch(streamId);
-                while (!_cts.IsCancellationRequested)
+
+                while (!token.IsCancellationRequested)
                 {
                     try
                     {
-                        var fetchTask = Task.Run(() => chatFetch.Fetch(), _cts.Token);
-                        var timeoutTask = Task.Delay(5000, _cts.Token);
+                        var comments = await Task.Run(() => chatFetch.Fetch(), token);
 
-                        if (await Task.WhenAny(fetchTask, timeoutTask) == fetchTask)
+                        foreach (var comment in comments)
                         {
-                            var comments = await fetchTask;
-                            foreach (var comment in comments)
+                            OnMessageReceived(new YoutubeMessageEventArgs
                             {
-                                OnMessageReceived(new YoutubeMessageEventArgs
-                                {
-                                    UserName = comment.userName,
-                                    Message = comment.text
-                                });
-                            }
+                                UserName = comment.userName,
+                                Message = comment.text
+                            });
                         }
                     }
                     catch (Exception ex)
@@ -54,16 +58,11 @@ namespace ToltoonTTS2.Services.Youtube
                         Console.WriteLine($"Ошибка: {ex.Message}");
                     }
 
-                    await Task.Delay(1000, _cts.Token); // Задержка между запросами
+                    await Task.Delay(1000, token);
                 }
             }
             catch (OperationCanceledException)
             {
-                connectionStatus = "Youtube Disconnected";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
