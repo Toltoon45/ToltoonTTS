@@ -95,14 +95,29 @@ public class PlaceVoicesInfoInWPF : INotifyPropertyChanged
     {
         if (Db == null) return;
 
-        var existing = Db.Table<VoiceItem>().FirstOrDefault(v => v.Id == Id);
-        if (existing != null)
+        var existing = Db.Table<VoiceItem>().FirstOrDefault(v => v.VoiceName == Name)
+                      ?? Db.Table<VoiceItem>().FirstOrDefault(v => v.Id == Id);
+
+        if (existing == null) 
         {
-            existing.Volume = TextBoxVolume;
-            existing.Speed = TextBoxSpeed;
-            existing.IsEnabled = IsEnabled;
-            Db.Update(existing);
+            var newVoice = new VoiceItem
+            {
+                VoiceName = Name,
+                Volume = TextBoxVolume,
+                Speed = TextBoxSpeed,
+                IsEnabled = IsEnabled
+            };
+
+            Db.Insert(newVoice);
+            Id = newVoice.Id;
+            return;
         }
+
+        existing.Volume = TextBoxVolume;
+        existing.Speed = TextBoxSpeed;
+        existing.IsEnabled = IsEnabled;
+        Db.Update(existing);
+        Id = existing.Id;
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

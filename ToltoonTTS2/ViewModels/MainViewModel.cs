@@ -52,58 +52,58 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         public AdditionalSettingsViewModel AdditionalSettings { get; } = new();
 
 
-        private string _twitchApi;
-        private string _twitchClientId;
-        private string _twitchNickname;
-        private string _vkLogin;
-        private string _VkAppId;
-        private string _vkSecretApi;
+        private string _twitchApi = string.Empty;
+        private string _twitchClientId = string.Empty;
+        private string _twitchNickname = string.Empty;
+        private string _vkLogin = string.Empty;
+        private string _VkAppId = string.Empty;
+        private string _vkSecretApi = string.Empty;
         private bool _connectToTwitch;
-        private string _goodgamenickname;
+        private string _goodgamenickname = string.Empty;
         private bool _connectToGoodgame;
         private bool _connectToYoutube;
         private bool _connectToVk;
-        private string _youtubeId;
+        private string _youtubeId = string.Empty;
         private bool _removeEmoji;
-        private string _selectedVoice;
+        private string _selectedVoice = string.Empty;
         private int _ttsSpeedValue;
         private int _ttsVolumeValue;
         private bool _ttsForChannelPoints;
-        private string _nameOfRewardTtsForChannelPoints;
-        private string _voicePiperDownload;
-        private string _labelTtsSpeedValue;
-        private string _labelTtsVolumeValue;
-        private string _doNotTtsIfStartWith;
-        private string _skipMessage;
-        private string _skipMessageAll;
-        private ObservableCollection<string> _blackList;
-        private ObservableCollection<string> _wordToReplace;
-        private ObservableCollection<string> _wordToReplaceWith;
-        private ObservableCollection<string> _dynamicSpeedMessage;
-        private string _wordToReplaceInput;
-        private string _wordReplaceToWith;
-        private string _blackListInput;
-        private string _blackListSelectedItem;
-        private string _profileSelected;
+        private string _nameOfRewardTtsForChannelPoints = string.Empty;
+        private string _voicePiperDownload = string.Empty;
+        private string _labelTtsSpeedValue = string.Empty;
+        private string _labelTtsVolumeValue = string.Empty;
+        private string _doNotTtsIfStartWith = string.Empty;
+        private string _skipMessage = string.Empty;
+        private string _skipMessageAll = string.Empty;
+        private ObservableCollection<string> _blackList = [];
+        private ObservableCollection<string> _wordToReplace = [];
+        private ObservableCollection<string> _wordToReplaceWith = [];
+        private ObservableCollection<string> _dynamicSpeedMessage = [];
+        private string _wordToReplaceInput = string.Empty;
+        private string _wordReplaceToWith = string.Empty;
+        private string _blackListInput = string.Empty;
+        private string _blackListSelectedItem = string.Empty;
+        private string _profileSelected = string.Empty;
         private int _wordReplaceSelectedIndex;
-        private ObservableCollection<string> _availableVoices;
-        private ObservableCollection<string> _profiles;
-        private string _twitchConnectionStatus;
-        private string _goodgameConnectionStatus;
-        private string _youtubeConnectionStatus;
-        private string _vkConnectionStatus;
-        private string _nameToSaveProfile;
-        private string _nameToLoadProfile;
+        private ObservableCollection<string> _availableVoices = [];
+        private ObservableCollection<string> _profiles = [];
+        private string _twitchConnectionStatus = string.Empty;
+        private string _goodgameConnectionStatus = string.Empty;
+        private string _youtubeConnectionStatus = string.Empty;
+        private string _vkConnectionStatus = string.Empty;
+        private string _nameToSaveProfile = string.Empty;
+        private string _nameToLoadProfile = string.Empty;
         private bool _translitToRussian;
-        private ObservableCollection<string> _allProfiles;
+        private ObservableCollection<string> _allProfiles = [];
         private TwitchConnectionState _twitchConnectionState;
         private GoodgameConnectionState _goodgameConnectionState;
         private YoutubeConnectionState _youtubeConnectionState; //я сделаю сюда ютуб
         private VkConnectionState _vkConnectionState;
         private IndividualVoicesWindow IndividualVoicesWin;
         private bool _individualVoicesEnabled;
-        private string _piperVoiceForInstall;
-        private string _piperVoiceForDeleting;
+        private string _piperVoiceForInstall = string.Empty;
+        private string _piperVoiceForDeleting = string.Empty;
         private readonly ITwitchGetID _twitchGetId;
         private readonly ITwitchConnectToChat _twitchConnectToChat;
         private readonly IGoodgameConnection _goodgameConnectionToChat;
@@ -117,11 +117,11 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         private readonly IBlackListServices _blackListServices;
         private readonly IWordreplace _wordReplaceService;
         private readonly ITtsMessageProcessing _messageProcessing;
-        private string _voiceTestErrorMessage;
+        private string _voiceTestErrorMessage = string.Empty;
         private WebsocketHostedService _websocketService = new WebsocketHostedService();
         private EventSubWebsocketClient websocketClient = new EventSubWebsocketClient();
         private bool _isTtsForChannelPointsEnabled;
-        private CancellationTokenSource _clearCts;
+        private CancellationTokenSource _clearCts = new();
 
         public MainViewModel
             (ITwitchGetID twitchGetId, 
@@ -437,12 +437,14 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
         private async Task ConnectToStreamingChats()
         {
-            if (string.IsNullOrWhiteSpace(SelectedVoice))
+            if (string.IsNullOrWhiteSpace(SelectedVoice) || SelectedVoice.Length <= 2)
             {
                 using var synth = new SpeechSynthesizer();
-                SelectedVoice = synth.GetInstalledVoices()
-                                     .FirstOrDefault()?
-                                     .VoiceInfo.Name;
+                var voice = synth.GetInstalledVoices().FirstOrDefault();
+                if (voice != null)
+                {
+                    SelectedVoice = voice.VoiceInfo.Name;
+                }
             }
             if (ConnectToTwitch)
             {

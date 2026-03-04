@@ -6,7 +6,6 @@ namespace ToltoonTTS2.ViewModels
     {
         public AdditionalSettingsViewModel()
         {
-            // Загружаем значения при старте
             StreamerChecked = Properties.Settings.Default.StreamerChecked;
             ModeratorChecked = Properties.Settings.Default.ModeratorChecked;
             VipChecked = Properties.Settings.Default.VipChecked;

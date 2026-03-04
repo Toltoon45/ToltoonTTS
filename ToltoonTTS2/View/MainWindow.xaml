@@ -524,7 +524,7 @@
                 </Border>
             </Grid>
                 <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>
-                <Label x:Name="LabelProgramVersion" Content="1.2.3" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
+                <Label x:Name="LabelProgramVersion" Content="1.2.3.1 превью" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
         </Grid>
     </Grid>
 </Window>

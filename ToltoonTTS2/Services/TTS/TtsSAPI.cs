@@ -77,7 +77,8 @@ namespace ToltoonTTS2.Services.TTS
             {
                 SetVoice(msg.VoiceName);
 
-                int volume = (int)(Math.Clamp(msg.VoiceVolume, 0f, 1f) * 100);
+                //int volume = (int)(Math.Clamp(msg.VoiceVolume, 0f, 1f) * 100);
+                int volume = msg.VoiceVolume;
                 SetVolume(volume);
 
                 int adjust = GetDynamicRateAdjustment(text.Length);

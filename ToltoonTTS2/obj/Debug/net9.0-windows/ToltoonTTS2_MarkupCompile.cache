@@ -1,20 +1,20 @@
 ﻿ToltoonTTS2
-
+1.0.0.0
 
 winexe
 C#
 .cs
-C:\ываавы\Toltoon-TTS-new-version-test3\ToltoonTTS\ToltoonTTS2\obj\Debug\net9.0-windows\
+C:\ToltoonTTS versions\Toltoon-TTS-new-version-test3\ToltoonTTS\ToltoonTTS2\obj\Debug\net9.0-windows\
 ToltoonTTS2
 none
 false
-TRACE;DEBUG;NET;NET9_0;NETCOREAPP
-C:\ываавы\Toltoon-TTS-new-version-test3\ToltoonTTS\ToltoonTTS2\App.xaml
-2-985367383
+TRACE;DEBUG;NET;NET9_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
+C:\ToltoonTTS versions\Toltoon-TTS-new-version-test3\ToltoonTTS\ToltoonTTS2\App.xaml
+21689121016
 
-321171276693
-2271817689082
-MainWindow.xaml;Voices\IndividualVoicesWindow.xaml;
+47-1791616309
+277344816963
+Services\Voices\IndividualVoicesWindow.xaml;View\MainWindow.xaml;
 
-False
+True
 
