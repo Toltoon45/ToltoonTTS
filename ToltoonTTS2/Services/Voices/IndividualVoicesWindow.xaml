@@ -12,8 +12,8 @@
         <Button Content="Сохранить" Height="30" Margin="5" Command="{Binding SaveCommand}"/>
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
-            <ItemsControl ItemsSource="{Binding UserVoiceBindings}">
-                <ItemsControl.ItemTemplate>
+            <ListBox ItemsSource="{Binding UserVoiceBindings}">
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <Label Content="{Binding UserName}" Width="150"/>
@@ -22,8 +22,8 @@
                                       Width="200"/>
                         </StackPanel>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </ScrollViewer>
     </StackPanel>
 

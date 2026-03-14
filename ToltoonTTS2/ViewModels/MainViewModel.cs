@@ -71,6 +71,7 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         private bool _ttsForChannelPoints;
         private string _nameOfRewardTtsForChannelPoints = string.Empty;
         private string _voicePiperDownload = string.Empty;
+        private string _warningMessage = string.Empty;
         private string _labelTtsSpeedValue = string.Empty;
         private string _labelTtsVolumeValue = string.Empty;
         private string _doNotTtsIfStartWith = string.Empty;
@@ -612,10 +613,25 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         public bool IndividualVoicesEnabled
         {
             get => _individualVoicesEnabled;
-            set { _individualVoicesEnabled = value; OnPropertyChanged();
+            set
+            {
+                _individualVoicesEnabled = value;
+                OnPropertyChanged();
+
                 _messageProcessing.SetIndividualVoicesEnabled(value);
+
+                if (_individualVoicesEnabled)
+                {
+                    if (!ItemSourceAllVoices.Any(v => v.IsEnabled))
+                    {
+                        WarningMessage = "Не выбрано ни одного включённого голоса.";
+                    }
+                    else
+                    {
+                        WarningMessage = "";
+                    }
+                }
             }
-            
         }
 
         public string PiperVoiceName
@@ -848,7 +864,7 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             {
                 _voiceTestErrorMessage = value;
                 OnPropertyChanged(nameof(VoiceTestErrorMessage));
-                //_ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
+                _ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
             }
         }
 
@@ -859,7 +875,19 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             {
                 _voicePiperDownload = value;
                 OnPropertyChanged();
-                _ = ClearStatusAsync(v => VoiceTestErrorMessage = v);
+                _ = ClearStatusAsync(v => VoicePiperDownload = v);
+            }
+        }
+
+
+        public string WarningMessage
+        {
+            get => _warningMessage;
+            set
+            {
+                _warningMessage = value;
+                OnPropertyChanged();
+                _ = ClearStatusAsync(v => WarningMessage = v);
             }
         }
 

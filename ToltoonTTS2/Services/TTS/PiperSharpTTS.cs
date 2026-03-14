@@ -36,7 +36,7 @@ namespace ToltoonTTS2.Services.TTS
             catch { return false; }
         }
 
-        public static async Task<MemoryStream> GenerateVoice(string voiceName, string text, float voiceSpeed, bool translitToRussian)
+        public static async Task<MemoryStream> GenerateVoice(string voiceName, int voiceVolume, string text, float voiceSpeed, bool translitToRussian)
         {
             try
             {
@@ -67,6 +67,8 @@ namespace ToltoonTTS2.Services.TTS
                 // чтобы избежать кэширования одинаковых запросов
                 var piperModel = new PiperProvider(new PiperConfiguration()
                 {
+                    //допили громкость 
+                    //P.S нельзя менять громкость в piper!!!!!!!
                     ExecutableLocation = Path.Join(cwd, "piper", "piper.exe"),
                     WorkingDirectory = Path.Join(cwd, "piper"),
                     Model = model,

@@ -264,7 +264,6 @@
                             <CheckBox x:Name="checkBoxVoiceIndividualVoices" Content="Включить индивидуальные голоса"
                           IsChecked="{Binding IndividualVoicesEnabled, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,0,10"/>
                             <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
-                                <!-- Закомментированная часть -->
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBox IsEnabled="false" x:Name="TextBoxGetUserVoices" Text="{Binding CommandToGetOtherUserVoiceName, UpdateSourceTrigger=PropertyChanged}" Width="100" ToolTip="![команда] [никнейм]" Margin="10,5,0,10"/>
@@ -273,7 +272,6 @@
                                 <Button Command="{Binding buttonMakeEnabledVoicesQuiet}" x:Name="buttonMakeAllEnabledVoiceQuiet" Content="Сделать тише на 1" Height="20"></Button>
                             </StackPanel>
                         </StackPanel>
-
                         <!-- Прокручиваемый список голосов -->
                         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                             <ItemsControl x:Name="ItemControlAllVoicesChildren"
@@ -520,11 +518,12 @@
                    Content="{Binding VoiceTestErrorMessage, FallbackValue='Ожидание'}"/>
                         <Label x:Name="LabelDownloadPiperVoiceStatus"
                    Content="{Binding VoicePiperDownload, FallbackValue=''}"/>
+                        <Label x:Name="LabelWarnings" Content="{Binding WarningMessage, FallbackValue=''}"></Label>
                     </StackPanel>
                 </Border>
             </Grid>
                 <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>
-                <Label x:Name="LabelProgramVersion" Content="1.2.3.1 превью" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
+                <Label x:Name="LabelProgramVersion" Content="1.2.3.1" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
         </Grid>
     </Grid>
 </Window>

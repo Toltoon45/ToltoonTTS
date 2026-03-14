@@ -95,6 +95,7 @@ namespace ToltoonTTS2.Services.TTS
             {
                 wav = await PiperSharpTTS.GenerateVoice(
                     msg.VoiceName,
+                    msg.VoiceVolume,
                     text,
                     msg.VoiceSpeed,
                     _translitToRussian
@@ -161,8 +162,8 @@ namespace ToltoonTTS2.Services.TTS
 
             Random rand = new Random();
 
-            //if (rand.Next(0, 10) > 9)
-            //    chain = new VibratoSampleProvider(chain, rand.Next(0, 10), rand.Next(10, 15));
+            if (rand.Next(0, 10) > 9)
+                chain = new VibratoSampleProvider(chain, rand.Next(0, 10), rand.Next(10, 15));
 
             //if (rand.Next(0, 10) > 9)
             //    chain = new RobotSampleProvider(chain, 30f);
