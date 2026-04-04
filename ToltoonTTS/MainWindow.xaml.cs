@@ -9,6 +9,7 @@ using ToltoonTTS.Scripts.Twitch;
 using ToltoonTTS.Scripts.GoodGame;
 using SharpHook;
 using SharpHook.Native;
+using System.Windows.Threading;
 
 namespace ToltoonTTS
 {
@@ -18,6 +19,8 @@ namespace ToltoonTTS
         SpeechSynthesizer Synth = new SpeechSynthesizer();
 
         bool ConnectToTwitch;
+        readonly DateTime appStartTime = DateTime.Now;
+        readonly DispatcherTimer uptimeTimer = new DispatcherTimer();
 
         private static HashSet<KeyCode> pressedKeys = new HashSet<KeyCode>();
 
@@ -55,6 +58,16 @@ namespace ToltoonTTS
                 TwitchConnection.TwitchBlackList.Items.Add(items.ToLower());
             }
 
+            uptimeTimer.Interval = TimeSpan.FromSeconds(1);
+            uptimeTimer.Tick += UptimeTimer_Tick;
+            uptimeTimer.Start();
+
+        }
+
+        private void UptimeTimer_Tick(object? sender, EventArgs e)
+        {
+            TimeSpan uptime = DateTime.Now - appStartTime;
+            LabelProgramUptime.Content = $"Время работы: {uptime:hh\\:mm\\:ss}";
         }
 
         private void OnKeyReleased(object? sender, KeyboardHookEventArgs e)

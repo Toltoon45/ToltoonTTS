@@ -218,6 +218,7 @@
             </StackPanel>
         </StackPanel>
         <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" Click="Button_Click"></Button>
+        <Label x:Name="LabelProgramUptime" Content="Время работы: 00:00:00" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,20"/>
         <Label Content="1.1.0" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
 
 
