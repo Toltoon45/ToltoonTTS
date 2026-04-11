@@ -9,10 +9,14 @@
 
     <StackPanel>
         <StackPanel>
-        <Button Content="Сохранить" Height="30" Margin="5" Command="{Binding SaveCommand}"/>
+            <Button Content="Сохранить" Height="30" Margin="5" Command="{Binding SaveCommand}"/>
+            <TextBox Margin="5,0,5,5"
+                     Height="24"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     ToolTip="Поиск по нику пользователя"/>
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Height="300">
-            <ListBox ItemsSource="{Binding UserVoiceBindings}">
+            <ListBox ItemsSource="{Binding FilteredUserVoiceBindings}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5">
