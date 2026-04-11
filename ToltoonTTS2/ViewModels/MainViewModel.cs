@@ -119,10 +119,13 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         private readonly IWordreplace _wordReplaceService;
         private readonly ITtsMessageProcessing _messageProcessing;
         private string _voiceTestErrorMessage = string.Empty;
+        private double _piperLoadProgress;
+        private string _piperLoadStatus = "Piper: ожидание";
         private WebsocketHostedService _websocketService = new WebsocketHostedService();
         private EventSubWebsocketClient websocketClient = new EventSubWebsocketClient();
         private bool _isTtsForChannelPointsEnabled;
         private CancellationTokenSource _clearCts = new();
+        private bool _autoSaveEnabled;
 
         public MainViewModel
             (ITwitchGetID twitchGetId, 
@@ -163,6 +166,9 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             BlackListMembers = _blackListServices.BlackList;
             WordToReplace = _wordReplaceService.WordToReplace;
             WordWhatToReplaceWith = _wordReplaceService.WordWhatToReplaceWith;
+            BlackListMembers.CollectionChanged += (_, __) => SaveSettingsIfEnabled();
+            WordToReplace.CollectionChanged += (_, __) => SaveSettingsIfEnabled();
+            WordWhatToReplaceWith.CollectionChanged += (_, __) => SaveSettingsIfEnabled();
             AvailableVoices = new ObservableCollection<string>();
             AvailableProfiles = new ObservableCollection<string>();
             IndividualVoicesWin = new IndividualVoicesWindow();
@@ -248,17 +254,22 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 if (message != null)
                     _ttsService.Speak(message);
             };
+
+            _autoSaveEnabled = true;
         }
 
         private async void InstallPiperVoices(string piperVoiceName)
         {
             if (!string.IsNullOrEmpty(piperVoiceName))
             {
+                PiperLoadStatus = $"Piper: загрузка голоса {piperVoiceName}";
+                PiperLoadProgress = 10;
                 VoicePiperDownload = "Голос качается...";
                 //скачивать голос, добавлять в список скачанных голосов и индив. голосов.
                 bool DownloadSuccsess = await PiperSharpTTS.DownloadPiper(piperVoiceName);
                 if (DownloadSuccsess)
                 {
+                    PiperLoadProgress = 85;
                     AvailableVoices.Add(piperVoiceName);
                     ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
                     {
@@ -271,6 +282,22 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                     });
                     ListBoxPiperVoiceInstalledVoices.Add(piperVoiceName);
                     VoicePiperDownload = "Готово";
+                    PiperLoadProgress = 100;
+                    PiperLoadStatus = $"Piper: голос {piperVoiceName} загружен";
+                }
+                else
+                {
+                    var voiceDir = Path.Combine(Environment.CurrentDirectory, "models", piperVoiceName);
+                    if (Directory.Exists(voiceDir))
+                    {
+                        PiperLoadProgress = 100;
+                        PiperLoadStatus = $"Piper: голос {piperVoiceName} уже установлен";
+                    }
+                    else
+                    {
+                        PiperLoadProgress = 0;
+                        PiperLoadStatus = "Piper: ошибка загрузки голоса";
+                    }
                 }
             }
         }
@@ -387,9 +414,12 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
 
         public async Task InitializeAsync()
         {
+            PiperLoadStatus = "Piper: создание папок";
+            PiperLoadProgress = 10;
             await _directoryService.EnsureAppStructureExists();
+            PiperLoadProgress = 25;
 
-            LoadSettings();
+            await LoadSettings();
         }
 
         public TwitchConnectionState TwitchConnectionState
@@ -868,6 +898,26 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             }
         }
 
+        public double PiperLoadProgress
+        {
+            get => _piperLoadProgress;
+            set
+            {
+                _piperLoadProgress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string PiperLoadStatus
+        {
+            get => _piperLoadStatus;
+            set
+            {
+                _piperLoadStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string VoicePiperDownload
         {
             get => _voicePiperDownload;
@@ -896,8 +946,10 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             // Логика отключения от Twitch
         }
 
-        private async void LoadSettings()
+        private async Task LoadSettings()
         {
+            PiperLoadStatus = "Piper: загрузка настроек";
+            PiperLoadProgress = 35;
             var settings = _serviceSettings.LoadSettings();
 
             TwitchApi = settings.TwitchApi;
@@ -941,16 +993,32 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             {
                 _wordToReplaceWith.Add(item);
             }
+            PiperLoadStatus = "Piper: проверка движка и списка голосов";
+            PiperLoadProgress = 55;
             await PiperVoicesData.EnsureFileExists();
 
-            foreach (var item in File.ReadAllLines("models/PiperVoices.txt"))
+            string modelsPath = Path.Combine(Environment.CurrentDirectory, "models");
+            string voicesFilePath = Path.Combine(modelsPath, "PiperVoices.txt");
+
+            if (File.Exists(voicesFilePath))
             {
-                InstalledPiperVoice.Add(item);
+                foreach (var item in File.ReadAllLines(voicesFilePath))
+                {
+                    if (!string.IsNullOrWhiteSpace(item))
+                        InstalledPiperVoice.Add(item);
+                }
             }
-            foreach(string dir in Directory.GetDirectories("models"))
+
+            if (Directory.Exists(modelsPath))
             {
-                ListBoxPiperVoiceInstalledVoices.Add(dir.Replace("models\\", ""));
+                foreach (string dir in Directory.GetDirectories(modelsPath))
+                {
+                    ListBoxPiperVoiceInstalledVoices.Add(Path.GetFileName(dir));
+                }
             }
+
+            PiperLoadProgress = 100;
+            PiperLoadStatus = "Piper: готов";
         }
         private void LoadInstalledVoices()
         {
@@ -1154,6 +1222,33 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            AutoSaveSettings(propertyName);
+        }
+
+        private void AutoSaveSettings(string propertyName)
+        {
+            if (!_autoSaveEnabled)
+                return;
+
+            if (propertyName is nameof(TwitchApi) or nameof(TwitchClientId) or nameof(TwitchNickname)
+                or nameof(ConnectToTwitch) or nameof(GoodgameNickname) or nameof(ConnectToGoodgame)
+                or nameof(RemoveEmoji) or nameof(SelectedVoice) or nameof(TtsSpeedValue)
+                or nameof(TtsVolumeValue) or nameof(DoNotTtsIfStartWith) or nameof(SkipMessage)
+                or nameof(SkipMessageAll) or nameof(BlackListMembers) or nameof(WordToReplace)
+                or nameof(WordWhatToReplaceWith) or nameof(IndividualVoicesEnabled)
+                or nameof(TtsForChannelPoints) or nameof(NameOfRewardTtsForChannelPoints)
+                or nameof(VkLogin) or nameof(VkAppId) or nameof(VkSecretApi) or nameof(ConnectToVk))
+            {
+                SaveSettings();
+            }
+        }
+
+        private void SaveSettingsIfEnabled()
+        {
+            if (_autoSaveEnabled)
+            {
+                SaveSettings();
+            }
         }
     }
 

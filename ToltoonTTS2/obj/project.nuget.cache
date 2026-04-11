@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BvOvTLyfD9E=",
+  "dgSpecHash": "MlEfL3O4G8U=",
   "success": true,
-  "projectFilePath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
+  "projectFilePath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\fedor\\.nuget\\packages\\cscore\\1.2.1.2\\cscore.1.2.1.2.nupkg.sha512",
     "C:\\Users\\fedor\\.nuget\\packages\\htmlagilitypack\\1.12.4\\htmlagilitypack.1.12.4.nupkg.sha512",
@@ -164,9 +164,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "Package 'CSCore 1.2.1.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-windows7.0'. This package may not be fully compatible with your project.",
-      "projectPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
+      "projectPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
+      "filePath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj",
       "libraryId": "CSCore",
       "targetGraphs": [
         "net9.0-windows7.0"
@@ -176,9 +176,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "Package 'NHunspell 1.2.5554.16953' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-windows7.0'. This package may not be fully compatible with your project.",
-      "projectPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
+      "projectPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
+      "filePath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj",
       "libraryId": "NHunspell",
       "targetGraphs": [
         "net9.0-windows7.0"

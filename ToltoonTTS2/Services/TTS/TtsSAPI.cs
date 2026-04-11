@@ -59,10 +59,19 @@ namespace ToltoonTTS2.Services.TTS
             // Асинхронная подготовка сообщения
             Task.Run(async () =>
             {
-                var ready = await PrepareMessageAsync(msg);
-                _audioQueue.Enqueue(ready);
+                try
+                {
+                    var ready = await PrepareMessageAsync(msg);
+                    if (ready?.Wav == null || ready.Wav.Length == 0)
+                        return;
 
-                StartPlayback();
+                    _audioQueue.Enqueue(ready);
+                    StartPlayback();
+                }
+                catch
+                {
+                    // Проглатываем ошибку подготовки сообщения, чтобы не ронять поток озвучки.
+                }
             });
         }
 
@@ -146,7 +155,17 @@ namespace ToltoonTTS2.Services.TTS
                 return;
             }
 
-            var reader = new WaveFileReader(ready.Wav);
+            WaveFileReader reader;
+            try
+            {
+                reader = new WaveFileReader(ready.Wav);
+            }
+            catch
+            {
+                ready.Wav?.Dispose();
+                PlayNext();
+                return;
+            }
 
             // 1. Создаём провайдер для анализа
             var analysisProvider = reader.ToSampleProvider();
@@ -162,11 +181,11 @@ namespace ToltoonTTS2.Services.TTS
 
             Random rand = new Random();
 
-            if (rand.Next(0, 10) > 9)
+            if (rand.Next(0, 100) > 85)
                 chain = new VibratoSampleProvider(chain, rand.Next(0, 10), rand.Next(10, 15));
 
-            //if (rand.Next(0, 10) > 9)
-            //    chain = new RobotSampleProvider(chain, 30f);
+            if (rand.Next(0, 100) > 85)
+                chain = new RobotSampleProvider(chain, 30f);
             //if (rand.Next(0, 20) > 15)
             //    chain = new DistortionSampleProvider(chain, rand.Next(3, 8));
 

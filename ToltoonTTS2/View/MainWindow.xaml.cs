@@ -17,7 +17,7 @@ namespace ToltoonTTS2
         {
 
             var additionalSettings = new AdditionalSettingsViewModel();
- 
+
             ITwitchConnectToChat twitchConnectToChat = new TwitchConnectToChat(additionalSettings);
             ITwitchGetID twitchGetId = new TwitchGetId();
             IGoodgameConnection goodgameConnectionToChat = new GoodgameConnectionToChat();
@@ -46,15 +46,6 @@ namespace ToltoonTTS2
                 vkConnectionToChat,
                 additionalSettings);
 
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (DataContext is MainViewModel viewModel)
-            {
-                viewModel.SaveSettings();
-            }
-            Application.Current.Shutdown();
         }
 
         private void ListBoxWhatToReplace_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)

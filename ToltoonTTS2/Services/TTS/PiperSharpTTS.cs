@@ -11,14 +11,23 @@ namespace ToltoonTTS2.Services.TTS
 {
     public static class PiperSharpTTS
     {
+        private static readonly SemaphoreSlim DownloadLock = new(1, 1);
 
         async public static Task<bool> DownloadPiper(string VoiceName)
         {
+            if (string.IsNullOrWhiteSpace(VoiceName))
+                return false;
+
+            var lockTaken = false;
             try
             {
+                await DownloadLock.WaitAsync();
+                lockTaken = true;
+
                 var cwd = Directory.GetCurrentDirectory();
                 var modelsPath = Path.Combine(cwd, "models");
-                var voiceModelPath = Path.Combine(modelsPath, VoiceName);
+                var normalizedVoiceName = VoiceName.Trim();
+                var voiceModelPath = Path.Combine(modelsPath, normalizedVoiceName);
 
                 // Проверяем, есть ли папка модели
                 if (Directory.Exists(voiceModelPath))
@@ -28,18 +37,32 @@ namespace ToltoonTTS2.Services.TTS
 
                 Directory.CreateDirectory(modelsPath);
 
-                var model = await PiperDownloader.GetModelByKey(VoiceName);
+                var model = await PiperDownloader.GetModelByKey(normalizedVoiceName);
                 await model.DownloadModel("models");
 
                 return true; // модель скачана
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                if (lockTaken)
+                    DownloadLock.Release();
+            }
         }
 
         public static async Task<MemoryStream> GenerateVoice(string voiceName, int voiceVolume, string text, float voiceSpeed, bool translitToRussian)
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(voiceName))
+                    return null;
+
+                if (string.IsNullOrWhiteSpace(text))
+                    return null;
+
                 text = ConvertNumbers(text);
                 bool NeedToTranslitToRussian = voiceName.StartsWith("ru_RU") || voiceName.StartsWith("uk_UA");
                 if (NeedToTranslitToRussian)
@@ -63,16 +86,21 @@ namespace ToltoonTTS2.Services.TTS
                 //    text = Transliteration.LatinToCyrillic(text);
                 //}
                 var cwd = Directory.GetCurrentDirectory();
+                var piperExecutable = Path.Join(cwd, "piper", "piper.exe");
+                if (!File.Exists(piperExecutable))
+                    return null;
+
                 var model = await VoiceModel.LoadModelByKey(voiceName);
+                float speakingRate = Math.Clamp(1 - voiceSpeed / 10f, 0.1f, 3f);
                 // чтобы избежать кэширования одинаковых запросов
                 var piperModel = new PiperProvider(new PiperConfiguration()
                 {
                     //допили громкость 
                     //P.S нельзя менять громкость в piper!!!!!!!
-                    ExecutableLocation = Path.Join(cwd, "piper", "piper.exe"),
+                    ExecutableLocation = piperExecutable,
                     WorkingDirectory = Path.Join(cwd, "piper"),
                     Model = model,
-                    SpeakingRate = 1 - voiceSpeed / 10 //войс спид 0 почему-то всегда
+                    SpeakingRate = speakingRate //войс спид 0 почему-то всегда
                 });
 
                 byte[] wavBytes = await piperModel.InferAsync(

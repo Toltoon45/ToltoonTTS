@@ -5,23 +5,23 @@ namespace ToltoonTTS2.Services.EnsureFolderAndFileExist
     public class DirectoryService : IDirectoryService
     {
         private string DefaultJsonContent = "[]";
-        string cwd = Environment.CurrentDirectory;
+        private readonly string _cwd = Environment.CurrentDirectory;
         public Task EnsureAppStructureExists()
         {
             // Проверка и создание папок
-            CreateFolder("DataForProgram", "DataForProgram");
-            CreateFolder("BlackList", "DataForProgram/BlackList");
-            CreateFolder("Profiles", "DataForProgram/Profiles");
-            CreateFolder("WordReplace", "DataForProgram/WordReplace");
-            CreateFolder("Voices", "DataForProgram/Voices");
-            CreateFolder("SoundEffects", "DataForProgram/SoundEffects");
-            CreateFolder("models", cwd);
-            CreateFolder("piper", cwd);
+            CreateFolder("DataForProgram", _cwd);
+            CreateFolder("BlackList", Path.Combine(_cwd, "DataForProgram"));
+            CreateFolder("Profiles", Path.Combine(_cwd, "DataForProgram"));
+            CreateFolder("WordReplace", Path.Combine(_cwd, "DataForProgram"));
+            CreateFolder("Voices", Path.Combine(_cwd, "DataForProgram"));
+            CreateFolder("SoundEffects", Path.Combine(_cwd, "DataForProgram"));
+            CreateFolder("models", _cwd);
+            CreateFolder("piper", _cwd);
 
             // Проверка и создание файлов с дефолтным содержимым
-            CreateFile("BlackListUsers.json", "DataForProgram/BlackList");
-            CreateFile("WhatToReplace.json", "DataForProgram/WordReplace");
-            CreateFile("WhatToReplaceWith.json", "DataForProgram/WordReplace");
+            CreateFile("BlackListUsers.json", Path.Combine(_cwd, "DataForProgram", "BlackList"));
+            CreateFile("WhatToReplace.json", Path.Combine(_cwd, "DataForProgram", "WordReplace"));
+            CreateFile("WhatToReplaceWith.json", Path.Combine(_cwd, "DataForProgram", "WordReplace"));
 
             return Task.CompletedTask;
         }
