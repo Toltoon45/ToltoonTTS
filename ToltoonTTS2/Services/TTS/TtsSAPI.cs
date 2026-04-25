@@ -280,7 +280,7 @@ namespace ToltoonTTS2.Services.TTS
                     float strength = NormalizeStrength(_audioEffectsSettings.Vibrato.Strength);
                     float rate = 1f + strength * 11f;
                     float depth = 1f + strength * 19f;
-                    return new VibratoSampleProvider(sp, rate, depth);
+                    return new VibratoSampleProvider(sp, rate, depth, wetMix: 1f);
                 });
             }
 
@@ -290,8 +290,8 @@ namespace ToltoonTTS2.Services.TTS
                 {
                     float strength = NormalizeStrength(_audioEffectsSettings.Robot.Strength);
                     float frequency = 10f + strength * 110f;
-                    float mix = 0.2f + strength * 0.8f;
-                    return new RobotSampleProvider(sp, frequency, mix);
+                    float depth = 0.2f + strength * 0.8f;
+                    return new RobotSampleProvider(sp, frequency, depth);
                 });
             }
 
@@ -313,7 +313,7 @@ namespace ToltoonTTS2.Services.TTS
                 {
                     float strength = NormalizeStrength(_audioEffectsSettings.Distortion.Strength);
                     float gain = 1f + strength * 19f;
-                    float mix = 0.15f + strength * 0.85f;
+                    float mix = 1f;
                     return new DistortionSampleProvider(sp, gain, mix);
                 });
             }

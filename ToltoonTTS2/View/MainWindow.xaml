@@ -587,7 +587,7 @@
             </Grid>
         </Grid>
         <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>
-        <Label x:Name="LabelProgramVersion" Content="1.2.3 preview x86" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
+        <Label x:Name="LabelProgramVersion" Content="1.2.4 x86" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,55" BorderBrush="DarkGray" BorderThickness="1" Padding="6">
                 <StackPanel Width="140">
                     <Label Content="{Binding PiperLoadStatus}" FontSize="10" Padding="0"/>

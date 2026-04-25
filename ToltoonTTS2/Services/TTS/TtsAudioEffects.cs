@@ -114,7 +114,6 @@ class RobotSampleProvider : ISampleProvider
     private readonly ISampleProvider source;
     private double phase;
     private readonly float freq;
-    private readonly float mix;
     private readonly float depth;
     private float smoothedMod = 1f;
 
@@ -122,7 +121,6 @@ class RobotSampleProvider : ISampleProvider
     {
         this.source = source;
         this.freq = frequency;
-        this.mix = Math.Clamp(mix, 0f, 1f);
         this.depth = Math.Clamp(depth, 0f, 1f);
     }
 
