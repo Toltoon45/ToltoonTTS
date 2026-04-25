@@ -1,4 +1,6 @@
 ﻿using ToltoonTTS2.Properties;
+using ToltoonTTS2.Services.TTS;
+using System.Text.Json;
 
 namespace ToltoonTTS2.Services.SaveLoadSettings
 {
@@ -9,7 +11,8 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
             var dynamicSpeedList = Settings.Default.DynamicSpeed?
                 .Split(',')
                 .Select(s => int.TryParse(s, out var val) ? val : 0)
-                .ToList() ; // Значения по умолчанию
+                .ToList(); // Значения по умолчанию
+            var effects = ReadEffects();
 
             return new AppSettings
             {
@@ -37,6 +40,19 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
                 ConnectToVk = Settings.Default.ConnectToVkCheckBox,
                 VkOpenApi = Settings.Default.ConnectToVkAppId,
                 VkSecretApi = Settings.Default.ConnectToVkSecretApi,
+                VibratoEnabled = effects.Vibrato.Enabled,
+                VibratoStrength = effects.Vibrato.Strength,
+                VibratoChance = effects.Vibrato.Chance,
+                RobotEnabled = effects.Robot.Enabled,
+                RobotStrength = effects.Robot.Strength,
+                RobotChance = effects.Robot.Chance,
+                DelayEnabled = effects.Delay.Enabled,
+                DelayStrength = effects.Delay.Strength,
+                DelayChance = effects.Delay.Chance,
+                DistortionEnabled = effects.Distortion.Enabled,
+                DistortionStrength = effects.Distortion.Strength,
+                DistortionChance = effects.Distortion.Chance,
+                NormalizationEnabled = effects.Normalization.Enabled
             };
         }
 
@@ -63,6 +79,19 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
             Settings.Default.ConnectToVkCheckBox = settings.ConnectToVk;
             Settings.Default.ConnectToVkAppId = settings.VkOpenApi;
             Settings.Default.ConnectToVkSecretApi = settings.VkSecretApi;
+            var effectSettings = new AudioEffectSettings
+            {
+                Vibrato = new EffectSetting { Enabled = settings.VibratoEnabled, Strength = settings.VibratoStrength, Chance = settings.VibratoChance },
+                Robot = new EffectSetting { Enabled = settings.RobotEnabled, Strength = settings.RobotStrength, Chance = settings.RobotChance },
+                Delay = new EffectSetting { Enabled = settings.DelayEnabled, Strength = settings.DelayStrength, Chance = settings.DelayChance },
+                Distortion = new EffectSetting { Enabled = settings.DistortionEnabled, Strength = settings.DistortionStrength, Chance = settings.DistortionChance },
+                Normalization = new EffectSetting
+                {
+                    Enabled = settings.NormalizationEnabled,
+                    Strength = settings.NormalizationTargetVolume
+                },
+            };
+            Settings.Default.AudioEffectsJson = JsonSerializer.Serialize(effectSettings);
 
             var blackListMembers = new System.Collections.Specialized.StringCollection();
             foreach (var item in settings.BlackListMembers)
@@ -86,12 +115,26 @@ namespace ToltoonTTS2.Services.SaveLoadSettings
             Settings.Default.WhatToReplaceWith = WhatToReplaceWith;
 
             var DynamicSpeed = new System.Collections.Specialized.StringCollection();
-            foreach(var item in settings.DynamicSpeedThresholds)
+            foreach (var item in settings.DynamicSpeedThresholds)
             {
                 DynamicSpeed.Add(Convert.ToString(item));
             }
 
             Settings.Default.Save();
+        }
+
+        private static AudioEffectSettings ReadEffects()
+        {
+            try
+            {
+                return string.IsNullOrWhiteSpace(Settings.Default.AudioEffectsJson)
+                    ? new AudioEffectSettings()
+                    : JsonSerializer.Deserialize<AudioEffectSettings>(Settings.Default.AudioEffectsJson) ?? new AudioEffectSettings();
+            }
+            catch
+            {
+                return new AudioEffectSettings();
+            }
         }
     }
 }

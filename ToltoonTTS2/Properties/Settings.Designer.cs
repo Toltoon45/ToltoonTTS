@@ -367,5 +367,17 @@ namespace ToltoonTTS2.Properties {
                 this["ConnectToVkSecretApi"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AudioEffectsJson {
+            get {
+                return ((string)(this["AudioEffectsJson"]));
+            }
+            set {
+                this["AudioEffectsJson"] = value;
+            }
+        }
     }
 }

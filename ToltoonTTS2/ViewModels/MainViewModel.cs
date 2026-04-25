@@ -126,6 +126,22 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         private bool _isTtsForChannelPointsEnabled;
         private CancellationTokenSource _clearCts = new();
         private bool _autoSaveEnabled;
+        private bool _vibratoEffectEnabled;
+        private int _vibratoEffectStrength = 50;
+        private int _vibratoEffectChance;
+        private bool _robotEffectEnabled;
+        private int _robotEffectStrength = 50;
+        private int _robotEffectChance;
+        private bool _delayEffectEnabled;
+        private bool _normalizationEffectEnabled;
+        private int _normalizationTargetVolume = 50;
+        private int _delayEffectStrength = 50;
+        private int _delayEffectChance;
+        private bool _distortionEffectEnabled;
+        private int _distortionEffectStrength = 50;
+        private int _distortionEffectChance;
+        private CancellationTokenSource? _autoSaveDebounceCts;
+        private const int AutoSaveDebounceMs = 600;
 
         public MainViewModel
             (ITwitchGetID twitchGetId, 
@@ -266,7 +282,19 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 PiperLoadProgress = 10;
                 VoicePiperDownload = "Голос качается...";
                 //скачивать голос, добавлять в список скачанных голосов и индив. голосов.
-                bool DownloadSuccsess = await PiperSharpTTS.DownloadPiper(piperVoiceName);
+                var voiceDir = Path.Combine(Environment.CurrentDirectory, "models", piperVoiceName);
+                var downloadTask = PiperSharpTTS.DownloadPiper(piperVoiceName);
+                while (!downloadTask.IsCompleted)
+                {
+                    var downloadedBytes = GetDirectorySizeSafe(voiceDir);
+                    var downloadedMegabytes = downloadedBytes / 1024d / 1024d;
+                    PiperLoadProgress = EstimateDownloadProgress(downloadedMegabytes);
+                    VoicePiperDownload = $"Скачано: {downloadedMegabytes:0.0} МБ";
+
+                    await Task.Delay(300);
+                }
+
+                bool DownloadSuccsess = await downloadTask;
                 if (DownloadSuccsess)
                 {
                     PiperLoadProgress = 85;
@@ -274,8 +302,8 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                     ItemSourceAllVoices.Add(new PlaceVoicesInfoInWPF
                     {
                         Name = piperVoiceName,
-                        TextBoxVolume = "100",
-                        TextBoxSpeed = "5",
+                        TextBoxVolume = "50",
+                        TextBoxSpeed = "0",
                         IsEnabled = true,
                         Db = _LoadIndividualVoicesSettingsDb,
                         StatusReporter = this
@@ -287,7 +315,6 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 }
                 else
                 {
-                    var voiceDir = Path.Combine(Environment.CurrentDirectory, "models", piperVoiceName);
                     if (Directory.Exists(voiceDir))
                     {
                         PiperLoadProgress = 100;
@@ -301,6 +328,31 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 }
             }
         }
+
+        private static long GetDirectorySizeSafe(string directoryPath)
+        {
+            try
+            {
+                if (!Directory.Exists(directoryPath))
+                    return 0;
+
+                return Directory.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories)
+                    .Select(filePath => new FileInfo(filePath).Length)
+                    .Sum();
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private static double EstimateDownloadProgress(double downloadedMegabytes)
+        {
+            
+            var estimated = 10 + downloadedMegabytes;
+            return Math.Clamp(estimated, 10, 95);
+        }
+
 
         private void DeletePiperVoices(string piperSelectedVoice)
         {
@@ -812,6 +864,160 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             }
         }
 
+        public bool VibratoEffectEnabled
+        {
+            get => _vibratoEffectEnabled;
+            set
+            {
+                _vibratoEffectEnabled = value;
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int VibratoEffectStrength
+        {
+            get => _vibratoEffectStrength;
+            set
+            {
+                _vibratoEffectStrength = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int VibratoEffectChance
+        {
+            get => _vibratoEffectChance;
+            set
+            {
+                _vibratoEffectChance = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public bool RobotEffectEnabled
+        {
+            get => _robotEffectEnabled;
+            set
+            {
+                _robotEffectEnabled = value;
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int RobotEffectStrength
+        {
+            get => _robotEffectStrength;
+            set
+            {
+                _robotEffectStrength = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int RobotEffectChance
+        {
+            get => _robotEffectChance;
+            set
+            {
+                _robotEffectChance = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public bool DelayEffectEnabled
+        {
+            get => _delayEffectEnabled;
+            set
+            {
+                _delayEffectEnabled = value;
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int DelayEffectStrength
+        {
+            get => _delayEffectStrength;
+            set
+            {
+                _delayEffectStrength = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int DelayEffectChance
+        {
+            get => _delayEffectChance;
+            set
+            {
+                _delayEffectChance = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public bool DistortionEffectEnabled
+        {
+            get => _distortionEffectEnabled;
+            set
+            {
+                _distortionEffectEnabled = value;
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int DistortionEffectStrength
+        {
+            get => _distortionEffectStrength;
+            set
+            {
+                _distortionEffectStrength = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int DistortionEffectChance
+        {
+            get => _distortionEffectChance;
+            set
+            {
+                _distortionEffectChance = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public bool NormalizationEffectEnabled
+        {
+            get => _normalizationEffectEnabled;
+            set
+            {
+                _normalizationEffectEnabled = value;
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
+        public int NormalizationTargetVolume
+        {
+            get => _normalizationTargetVolume;
+            set
+            {
+                _normalizationTargetVolume = Math.Clamp(value, 0, 100);
+                OnPropertyChanged();
+                ApplyAudioEffectSettings();
+            }
+        }
+
         public ObservableCollection<string> BlackListMembers
         {
             get => _blackList;
@@ -976,6 +1182,21 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
             ConnectToVk = settings.ConnectToVk;
             VkAppId = settings.VkOpenApi;
             VkSecretApi = settings.VkSecretApi;
+            VibratoEffectEnabled = settings.VibratoEnabled;
+            VibratoEffectStrength = settings.VibratoStrength;
+            VibratoEffectChance = settings.VibratoChance;
+            RobotEffectEnabled = settings.RobotEnabled;
+            RobotEffectStrength = settings.RobotStrength;
+            RobotEffectChance = settings.RobotChance;
+            DelayEffectEnabled = settings.DelayEnabled;
+            DelayEffectStrength = settings.DelayStrength;
+            DelayEffectChance = settings.DelayChance;
+            DistortionEffectEnabled = settings.DistortionEnabled;
+            DistortionEffectStrength = settings.DistortionStrength;
+            DistortionEffectChance = settings.DistortionChance;
+            NormalizationEffectEnabled = settings.NormalizationEnabled;
+            NormalizationTargetVolume = settings.NormalizationTargetVolume;
+            ApplyAudioEffectSettings();
             //напоминание сделать для выделения сообщения цветом
 
             IndividualVoicesEnabled = settings.IndividualVoicesEnabled;
@@ -1132,6 +1353,12 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
         {
             var values = DynamicSpeedValues.Select(x => x.Value);
             _ttsService.SetDynamicSpeed(values);
+            ScheduleAutoSave();
+        }
+
+        private void SaveDynamicSpeedToSettings()
+        {
+            var values = DynamicSpeedValues.Select(x => x.Value);
             var joined = string.Join(",", values);
             Properties.Settings.Default.DynamicSpeed = joined;
             Properties.Settings.Default.Save();
@@ -1165,7 +1392,21 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 VkLogin = VkLogin,
                 VkOpenApi = VkAppId,
                 VkSecretApi = VkSecretApi,
-                ConnectToVk = ConnectToVk
+                ConnectToVk = ConnectToVk,
+                VibratoEnabled = VibratoEffectEnabled,
+                VibratoStrength = VibratoEffectStrength,
+                VibratoChance = VibratoEffectChance,
+                RobotEnabled = RobotEffectEnabled,
+                RobotStrength = RobotEffectStrength,
+                RobotChance = RobotEffectChance,
+                DelayEnabled = DelayEffectEnabled,
+                DelayStrength = DelayEffectStrength,
+                DelayChance = DelayEffectChance,
+                DistortionEnabled = DistortionEffectEnabled,
+                DistortionStrength = DistortionEffectStrength,
+                DistortionChance = DistortionEffectChance,
+                NormalizationEnabled = NormalizationEffectEnabled,
+                NormalizationTargetVolume = NormalizationTargetVolume
             };
             foreach (var uiItem in ItemSourceAllVoices)
             {
@@ -1182,6 +1423,7 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 _LoadIndividualVoicesSettingsDb.Update(dbItem);
             }
             _serviceSettings.SaveSettings(settings);
+            SaveDynamicSpeedToSettings();
         }
 
         private async Task ClearStatusAsync(Action<string> setValue, int ms = 5000)
@@ -1237,18 +1479,100 @@ AppDomain.CurrentDomain.BaseDirectory, @"DataForProgram\Voices\", "VkIndividualV
                 or nameof(SkipMessageAll) or nameof(BlackListMembers) or nameof(WordToReplace)
                 or nameof(WordWhatToReplaceWith) or nameof(IndividualVoicesEnabled)
                 or nameof(TtsForChannelPoints) or nameof(NameOfRewardTtsForChannelPoints)
-                or nameof(VkLogin) or nameof(VkAppId) or nameof(VkSecretApi) or nameof(ConnectToVk))
+                or nameof(VkLogin) or nameof(VkAppId) or nameof(VkSecretApi) or nameof(ConnectToVk)
+                or nameof(VibratoEffectEnabled) or nameof(VibratoEffectStrength) or nameof(VibratoEffectChance)
+                or nameof(RobotEffectEnabled) or nameof(RobotEffectStrength) or nameof(RobotEffectChance)
+                or nameof(DelayEffectEnabled) or nameof(DelayEffectStrength) or nameof(DelayEffectChance)
+                or nameof(DistortionEffectEnabled) or nameof(DistortionEffectStrength) or nameof(DistortionEffectChance)
+                or nameof(NormalizationEffectEnabled) or nameof(NormalizationTargetVolume))
             {
-                SaveSettings();
+                //SaveSettings();
+                ScheduleAutoSave();
             }
         }
+
+        private void ApplyAudioEffectSettings()
+        {
+            _ttsService.SetAudioEffectsSettings(new AudioEffectSettings
+            {
+                Vibrato = new EffectSetting
+                {
+                    Enabled = VibratoEffectEnabled,
+                    Strength = VibratoEffectStrength,
+                    Chance = VibratoEffectChance
+                },
+                Robot = new EffectSetting
+                {
+                    Enabled = RobotEffectEnabled,
+                    Strength = RobotEffectStrength,
+                    Chance = RobotEffectChance
+                },
+                Delay = new EffectSetting
+                {
+                    Enabled = DelayEffectEnabled,
+                    Strength = DelayEffectStrength,
+                    Chance = DelayEffectChance
+                },
+                Distortion = new EffectSetting
+                {
+                    Enabled = DistortionEffectEnabled,
+                    Strength = DistortionEffectStrength,
+                    Chance = DistortionEffectChance
+                },
+                Normalization = new EffectSetting
+                {
+
+                    Enabled = NormalizationEffectEnabled,
+                    Strength = NormalizationTargetVolume
+                }
+
+
+            });
+        }
+
 
         private void SaveSettingsIfEnabled()
         {
             if (_autoSaveEnabled)
             {
-                SaveSettings();
+                //SaveSettings();
+                ScheduleAutoSave();
             }
+        }
+
+        private void ScheduleAutoSave()
+        {
+            _autoSaveDebounceCts?.Cancel();
+            _autoSaveDebounceCts?.Dispose();
+
+            var cts = new CancellationTokenSource();
+            _autoSaveDebounceCts = cts;
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(AutoSaveDebounceMs, cts.Token);
+                    var dispatcher = Application.Current?.Dispatcher;
+                    if (dispatcher != null)
+                    {
+                        await dispatcher.InvokeAsync(() =>
+                        {
+                            if (_autoSaveEnabled && !cts.Token.IsCancellationRequested)
+                            {
+                                SaveSettings();
+                            }
+                        });
+                    }
+                    else if (_autoSaveEnabled && !cts.Token.IsCancellationRequested)
+                    {
+                        SaveSettings();
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                }
+            });
         }
     }
 

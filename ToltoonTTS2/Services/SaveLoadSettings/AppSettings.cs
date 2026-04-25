@@ -27,5 +27,19 @@
         public string VkOpenApi {  get; set; }
         public string VkSecretApi { get; set; }
         public bool ConnectToVk { get; set; }
+        public bool VibratoEnabled { get; set; }
+        public int VibratoStrength { get; set; }
+        public int VibratoChance { get; set; }
+        public bool RobotEnabled { get; set; }
+        public int RobotStrength { get; set; }
+        public int RobotChance { get; set; }
+        public bool DelayEnabled { get; set; }
+        public int DelayStrength { get; set; }
+        public int DelayChance { get; set; }
+        public bool DistortionEnabled { get; set; }
+        public int DistortionStrength { get; set; }
+        public int DistortionChance { get; set; }
+        public bool NormalizationEnabled { get; set; }
+        public int NormalizationTargetVolume { get; set; }
     }
 }

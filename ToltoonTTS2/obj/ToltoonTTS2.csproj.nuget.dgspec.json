@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj": {}
+    "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj": {}
   },
   "projects": {
-    "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj": {
+    "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj",
+        "projectUniqueName": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
         "projectName": "ToltoonTTS2",
-        "projectPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\ToltoonTTS2.csproj",
+        "projectPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\ToltoonTTS2.csproj",
         "packagesPath": "C:\\Users\\fedor\\.nuget\\packages\\",
-        "outputPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTSsecret2\\ToltoonTTS2\\obj\\",
+        "outputPath": "C:\\ToltoonTTS versions\\Toltoon-TTS-new-version-test3\\ToltoonTTS\\ToltoonTTS2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -60,15 +60,15 @@
             },
             "Microsoft.Data.Sqlite.Core": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[10.0.7, )"
             },
             "Microsoft.Extensions.Hosting": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[10.0.7, )"
             },
             "NAudio": {
               "target": "Package",
-              "version": "[2.2.1, )"
+              "version": "[2.3.0, )"
             },
             "NHunspell": {
               "target": "Package",
@@ -96,11 +96,11 @@
             },
             "SocketIOClient": {
               "target": "Package",
-              "version": "[4.0.0.2, )"
+              "version": "[4.0.3, )"
             },
             "System.Speech": {
               "target": "Package",
-              "version": "[10.0.1, )"
+              "version": "[10.0.7, )"
             },
             "TwitchLib": {
               "target": "Package",

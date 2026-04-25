@@ -7,8 +7,10 @@
         xmlns:helpers="clr-namespace:ToltoonTTS2.Services"
         xmlns:behaviors="clr-namespace:ToltoonTTS2.Behaviors"
         mc:Ignorable="d"
-        Title="ToltoonTTS2" Height="450" Width="670" MinWidth="400" MinHeight="400">
-    <Grid>
+        Title="ToltoonTTS2" Height="450" Width="670" MinWidth="400" MinHeight="400" Closing="Window_Closing_1">
+
+    <Viewbox Stretch="Uniform">
+        <Grid Width="670" Height="450">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -37,14 +39,14 @@
              Width="50" 
              ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!"/>
                                             <Label x:Name="LabelTwitchApi" VerticalAlignment="Center" Margin="0,0,5,0" ToolTip="Если выдать НЕ ВСЕ разрешения при генерации API, то твич не будет видеть награды за баллы канала! И заметить это очень сложно!">
-                                                <Hyperlink>Access Token</Hyperlink>
+                                                    <Hyperlink NavigateUri="https://twitchtokengenerator.com/">Access Token</Hyperlink>
                                             </Label>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10" ToolTip="Твич отключил PubSub, эта функция недоступна" >
                                             <TextBox Text="{Binding TwitchClientId, UpdateSourceTrigger=PropertyChanged}" ToolTip="Твич отключил PubSub, эта функция недоступна" 
                                                  Margin="10,0,0,0" MaxHeight="20" TextWrapping="Wrap" VerticalAlignment="Center" Width="50"/>
                                             <Label x:Name="labelClientID" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                <Hyperlink>Client ID</Hyperlink>
+                                                    <Hyperlink NavigateUri="https://twitchtokengenerator.com/">Client ID</Hyperlink>
                                             </Label>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
@@ -370,7 +372,70 @@
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
+                    <TabItem Header="Звуковые эффекты">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10">
+                                <Label Content="Эффекты не накладываются: за одно сообщение применяется только один эффект."/>
 
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,5" Padding="8">
+                                    <StackPanel>
+                                        <CheckBox Content="Вибрато" IsChecked="{Binding VibratoEffectEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Сила" Width="70"/>
+                                            <Slider Width="180" Minimum="0" Maximum="100" Value="{Binding VibratoEffectStrength, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="{Binding VibratoEffectStrength}" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Шанс, %" Width="70"/>
+                                            <Slider Width="180" Minimum="0" Maximum="100" Value="{Binding VibratoEffectChance, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="{Binding VibratoEffectChance}" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,5" Padding="8">
+                                    <StackPanel>
+                                        <CheckBox Content="Робот" IsChecked="{Binding RobotEffectEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Сила" Width="70"/>
+                                            <Slider Width="180" Minimum="0" Maximum="100" Value="{Binding RobotEffectStrength, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="{Binding RobotEffectStrength}" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Шанс, %" Width="70"/>
+                                            <Slider Width="180" Minimum="0" Maximum="100" Value="{Binding RobotEffectChance, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="{Binding RobotEffectChance}" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,5" Padding="8">                                    <StackPanel>
+                                        <CheckBox Content="Нормализация" IsChecked="{Binding NormalizationEffectEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Громкость, %" Width="90"/>
+                                            <Slider Width="180" Minimum="0" Maximum="100" Value="{Binding NormalizationTargetVolume, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="{Binding NormalizationTargetVolume}" Margin="10,0,0,0"/>
+                                        </StackPanel>                                    </StackPanel>
+                                </Border>
+
+                                <Border BorderBrush="Black" BorderThickness="1" Margin="0,5,0,5" Padding="8">
+                                    <StackPanel>
+                                        <CheckBox Content="Дисторшн" IsChecked="{Binding DistortionEffectEnabled, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Сила" Width="70"/>
+                                            <Slider Width="180" Minimum="0" Maximum="100" Value="{Binding DistortionEffectStrength, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="{Binding DistortionEffectStrength}" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="Шанс, %" Width="70"/>
+                                            <Slider Width="180" Minimum="0" Maximum="100" Value="{Binding DistortionEffectChance, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock Text="{Binding DistortionEffectChance}" Margin="10,0,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
                 <TabItem x:Name="TabItemAdditionalFunction" 
                          Header="Разное">
                     <TabItem.Style>
@@ -523,5 +588,12 @@
         </Grid>
         <Button Margin="0,0,45,20" Content="Переподключиться" ToolTip="Работает только с Twitch (пока что)" VerticalAlignment="Bottom" HorizontalAlignment="right" IsEnabled="False"/>
         <Label x:Name="LabelProgramVersion" Content="1.2.3 preview x86" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Label>
+            <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,55" BorderBrush="DarkGray" BorderThickness="1" Padding="6">
+                <StackPanel Width="140">
+                    <Label Content="{Binding PiperLoadStatus}" FontSize="10" Padding="0"/>
+                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding PiperLoadProgress}" Height="16"/>
+                </StackPanel>
+            </Border>
     </Grid>
+    </Viewbox>
 </Window>

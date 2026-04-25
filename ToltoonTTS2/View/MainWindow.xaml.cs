@@ -62,5 +62,10 @@ namespace ToltoonTTS2
         {
 
         }
+
+        private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }
