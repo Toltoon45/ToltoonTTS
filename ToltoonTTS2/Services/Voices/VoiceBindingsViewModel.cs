@@ -1,17 +1,13 @@
 ﻿using SQLite;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
-using System.Windows.Data;
 
-public class VoiceBindingsViewModel : INotifyPropertyChanged
+public class VoiceBindingsViewModel
 {
     private readonly SQLiteConnection _platformDb;
     private readonly ObservableCollection<PlaceVoicesInfoInWPF> _allVoices;
-    private string _searchText = string.Empty;
 
     public ObservableCollection<UserVoiceBinding> UserVoiceBindings { get; set; }
-    public ICollectionView FilteredUserVoiceBindings { get; }
 
     public ICommand SaveCommand { get; }
 
@@ -79,36 +75,9 @@ public class VoiceBindingsViewModel : INotifyPropertyChanged
             })
         );
 
-
-        FilteredUserVoiceBindings = CollectionViewSource.GetDefaultView(UserVoiceBindings);
-        FilteredUserVoiceBindings.Filter = FilterUser;
         SaveCommand = new RelayCommand(SaveAllUserVoiceBindings);
     }
 
-    public string SearchText
-    {
-        get => _searchText;
-        set
-        {
-            if (_searchText == value)
-                return;
-
-            _searchText = value;
-            OnPropertyChanged(nameof(SearchText));
-            FilteredUserVoiceBindings.Refresh();
-        }
-    }
-
-    private bool FilterUser(object obj)
-    {
-        if (obj is not UserVoiceBinding binding)
-            return false;
-
-        if (string.IsNullOrWhiteSpace(SearchText))
-            return true;
-
-        return binding.UserName?.Contains(SearchText, StringComparison.OrdinalIgnoreCase) == true;
-    }
 
     public void SaveAllUserVoiceBindings()
     {
@@ -146,7 +115,4 @@ public class VoiceBindingsViewModel : INotifyPropertyChanged
         public void Execute(object parameter) => _execute();
         public event EventHandler CanExecuteChanged;
     }
-    public event PropertyChangedEventHandler PropertyChanged;
-    private void OnPropertyChanged(string propertyName)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
